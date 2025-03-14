@@ -1,0 +1,13 @@
+@model C4FAMS.Models.SinhVien
+
+<h1>Xóa Sinh viên</h1>
+
+<h3>Bạn có chắc muốn xóa sinh viên này?</h3>
+<div>
+    <h4>@Model.HoTen</h4>
+    <form asp-action="Delete" method="post">
+        <input type="hidden" asp-for="MSSV" />
+        <input type="submit" value="Xóa" class="btn btn-danger" /> |
+        <a asp-action="Index">Quay lại</a>
+    </form>
+</div>

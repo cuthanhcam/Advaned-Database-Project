@@ -1,0 +1,140 @@
+/* Reset mặc định và cấu hình font */
+html {
+  font-size: 14px;
+  position: relative;
+  min-height: 100%;
+}
+
+@media (min-width: 768px) {
+  html {
+      font-size: 16px;
+  }
+}
+
+body {
+  margin-bottom: 60px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f8f9fa;
+  color: #333;
+}
+
+/* Cải thiện nút bấm */
+.btn {
+  padding: 8px 16px;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus {
+  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+.btn-primary {
+  background-color: #007bff;
+  border-color: #007bff;
+}
+
+.btn-primary:hover {
+  background-color: #0056b3;
+  border-color: #0056b3;
+}
+
+.btn-danger {
+  background-color: #dc3545;
+  border-color: #dc3545;
+}
+
+.btn-danger:hover {
+  background-color: #b02a37;
+  border-color: #b02a37;
+}
+
+/* Cải thiện bảng */
+.table {
+  width: 100%;
+  margin-bottom: 1rem;
+  background-color: #fff;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.table th, .table td {
+  padding: 12px;
+  vertical-align: middle;
+}
+
+.table thead th {
+  background-color: #007bff;
+  color: white;
+  border-bottom: 2px solid #0056b3;
+}
+
+.table tbody tr:hover {
+  background-color: #f1f3f5;
+}
+
+/* Cải thiện form */
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-control {
+  border-radius: 4px;
+  border: 1px solid #ced4da;
+  padding: 8px 12px;
+  transition: border-color 0.3s ease;
+}
+
+.form-control:focus {
+  border-color: #258cfb;
+  box-shadow: 0 0 0 0.2rem rgba(37, 140, 251, 0.25);
+}
+
+label {
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+/* Định dạng tiêu đề */
+h1, h3 {
+  color: #007bff;
+  margin-bottom: 1.5rem;
+}
+
+/* Footer */
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  background-color: #343a40;
+  color: #fff;
+  padding: 10px 0;
+  text-align: center;
+}
+
+/* Navbar */
+.navbar {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.nav-link {
+  color: #fff !important;
+  padding: 8px 16px;
+}
+
+.nav-link:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+
+/* Container */
+.container {
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+/* Validation messages */
+.text-danger {
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+}

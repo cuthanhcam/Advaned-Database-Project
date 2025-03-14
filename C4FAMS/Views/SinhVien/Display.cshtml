@@ -1,0 +1,31 @@
+@model C4FAMS.Models.SinhVien
+
+<h1>Chi tiết Sinh viên</h1>
+
+<div>
+    <h4>@Model.HoTen</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">MSSV</dt>
+        <dd class="col-sm-10">@Model.MSSV</dd>
+        <dt class="col-sm-2">Họ Tên</dt>
+        <dd class="col-sm-10">@Model.HoTen</dd>
+        <dt class="col-sm-2">Giới Tính</dt>
+        <dd class="col-sm-10">@(Model.GioiTinh ? "Nam" : "Nữ")</dd>
+        <dt class="col-sm-2">Ngày Sinh</dt>
+        <dd class="col-sm-10">@Model.NgaySinh.ToShortDateString()</dd>
+        <dt class="col-sm-2">Quê Quán</dt>
+        <dd class="col-sm-10">@Model.QueQuan</dd>
+        <dt class="col-sm-2">Khoa</dt>
+        <dd class="col-sm-10">@Model.Khoa.TenKhoa</dd>
+        <dt class="col-sm-2">Email</dt>
+        <dd class="col-sm-10">@Model.Email</dd>
+        <dt class="col-sm-2">Số Điện Thoại</dt>
+        <dd class="col-sm-10">@Model.SoDienThoai</dd>
+    </dl>
+</div>
+
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.MSSV">Sửa</a> |
+    <a asp-action="Index">Quay lại</a>
+</div>

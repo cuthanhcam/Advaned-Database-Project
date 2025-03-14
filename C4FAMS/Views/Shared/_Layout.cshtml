@@ -1,0 +1,72 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<NguoiDung> SignInManager
+@inject UserManager<NguoiDung> UserManager
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>@ViewData["Title"] - C4FAMS</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
+            <div class="container">
+                <a class="navbar-brand" asp-controller="Home" asp-action="Index">C4FAMS</a>
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav flex-grow-1">
+                        @if (SignInManager.IsSignedIn(User))
+                        {
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <li class="nav-item"><a class="nav-link" asp-controller="Khoa" asp-action="Index">Khoa</a></li>
+                                <li class="nav-item"><a class="nav-link" asp-controller="SinhVien" asp-action="Index">Sinh viên</a></li>
+                                <li class="nav-item"><a class="nav-link" asp-controller="SinhVien" asp-action="GroupByKhoa">Nhóm theo Khoa</a></li>
+                                <li class="nav-item"><a class="nav-link" asp-controller="CuuSinhVien" asp-action="Index">Cựu Sinh viên</a></li>
+                                <li class="nav-item"><a class="nav-link" asp-controller="SuKien" asp-action="Index">Sự kiện</a></li>
+                                <li class="nav-item"><a class="nav-link" asp-controller="DangKySuKien" asp-action="Index">Đăng ký Sự kiện</a></li>
+                                <li class="nav-item"><a class="nav-link" asp-controller="CongViec" asp-action="Index">Công việc</a></li>
+                                <li class="nav-item"><a class="nav-link" asp-controller="ThanhTuu" asp-action="Index">Thành tựu</a></li>
+                                <li class="nav-item"><a class="nav-link" asp-controller="ThongBao" asp-action="Index">Thông báo</a></li>
+                            }
+                            @if (User.IsInRole("Khoa"))
+                            {
+                                <li class="nav-item"><a class="nav-link" asp-controller="SinhVien" asp-action="Index">Sinh viên</a></li>
+                                <li class="nav-item"><a class="nav-link" asp-controller="CuuSinhVien" asp-action="Index">Cựu Sinh viên</a></li>
+                                <li class="nav-item"><a class="nav-link" asp-controller="SuKien" asp-action="Index">Sự kiện</a></li>
+                                <li class="nav-item"><a class="nav-link" asp-controller="ThongBao" asp-action="Index">Thông báo</a></li>
+                            }
+                            @if (User.IsInRole("CuuSinhVien"))
+                            {
+                                <li class="nav-item"><a class="nav-link" asp-controller="CuuSinhVien" asp-action="Index">Thông tin cá nhân</a></li>
+                                <li class="nav-item"><a class="nav-link" asp-controller="CongViec" asp-action="Index">Công việc</a></li>
+                                <li class="nav-item"><a class="nav-link" asp-controller="ThanhTuu" asp-action="Index">Thành tựu</a></li>
+                                <li class="nav-item"><a class="nav-link" asp-controller="SuKien" asp-action="Index">Sự kiện</a></li>
+                                <li class="nav-item"><a class="nav-link" asp-controller="DangKySuKien" asp-action="Index">Đăng ký Sự kiện</a></li>
+                                <li class="nav-item"><a class="nav-link" asp-controller="ThongBao" asp-action="Index">Thông báo</a></li>
+                            }
+                        }
+                    </ul>
+                    <partial name="_LoginPartial" />
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2025 - C4FAMS
+        </div>
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

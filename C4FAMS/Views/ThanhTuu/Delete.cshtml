@@ -1,0 +1,13 @@
+@model C4FAMS.Models.ThanhTuu
+
+<h1>Xóa Thành tựu</h1>
+
+<h3>Bạn có chắc muốn xóa thành tựu này?</h3>
+<div>
+    <h4>@Model.TenThanhTuu</h4>
+    <form asp-action="Delete" method="post">
+        <input type="hidden" asp-for="MaThanhTuu" />
+        <input type="submit" value="Xóa" class="btn btn-danger" /> |
+        <a asp-action="Index">Quay lại</a>
+    </form>
+</div>

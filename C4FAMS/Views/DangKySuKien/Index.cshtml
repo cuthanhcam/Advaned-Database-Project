@@ -1,0 +1,31 @@
+@model IEnumerable<C4FAMS.Models.DangKySuKien>
+
+<h1>Danh sách Đăng ký Sự kiện</h1>
+
+<p>
+    <a asp-action="Create">Thêm Đăng ký mới</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Cựu Sinh viên</th>
+            <th>Sự Kiện</th>
+            <th>Ngày Đăng Ký</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.CuuSinhVien.SinhVien.HoTen</td>
+                <td>@item.SuKien.TenSuKien</td>
+                <td>@item.NgayDangKy.ToString("dd/MM/yyyy HH:mm")</td>
+                <td>
+                    <a asp-action="Delete" asp-route-id="@item.MaDangKy">Xóa</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

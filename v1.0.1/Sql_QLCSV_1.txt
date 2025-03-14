@@ -38,12 +38,16 @@ CREATE TABLE SinhVien (
 -- Tạo bảng CuuSinhVien
 CREATE TABLE CuuSinhVien (
     MaSinhVien VARCHAR(10) PRIMARY KEY,
-    NgayTotNghiep DATE NOT NULL,
+    NgayTotNghiep DATE NOT NULL, 
     CongViecHienTai NVARCHAR(100),
     CongTy NVARCHAR(100),
     ViTri NVARCHAR(100),
     EmailCongTy VARCHAR(100),
     SoDienThoaiCongTy VARCHAR(20),
+
+    -- Cập nhật:
+    -- Ngày tôt nghiệp > ngày sinh 
+    CONSTRAINT CK_CuuSinhVien_NgayTotNghiep CHECK (NgayTotNghiep > (SELECT NgaySinh FROM SinhVien WHERE SinhVien.MaSinhVien = CuuSinhVien.MaSinhVien))
     CONSTRAINT FK_CuuSinhVien_SinhVien FOREIGN KEY (MaSinhVien) REFERENCES SinhVien(MaSinhVien)
 );
 
@@ -78,6 +82,12 @@ CREATE TABLE Diem (
     CONSTRAINT FK_Diem_SinhVien FOREIGN KEY (MaSinhVien) REFERENCES SinhVien(MaSinhVien),
     CONSTRAINT FK_Diem_MonHoc FOREIGN KEY (MaMonHoc) REFERENCES MonHoc(MaMonHoc),
     CONSTRAINT UQ_Diem UNIQUE (MaSinhVien, MaMonHoc, HocKy, NamHoc, LanThi)
+
+    -- Cập nhật:
+    -- Nếu Sinh viên bị xóa, điểm của họ vẫn còn.
+    CONSTRAINT FK_Diem_SinhVien FOREIGN KEY (MaSinhVien) REFERENCES SinhVien(MaSinhVien) ON DELETE CASCADE
+    -- Lần thi lớn hơn 1.
+    CONSTRAINT CK_LanThi CHECK (LanThi >= 1)
 );
 
 -- Tạo bảng SuKien
@@ -87,6 +97,11 @@ CREATE TABLE SuKien (
     NgayToChuc DATETIME NOT NULL CHECK (NgayToChuc >= GETDATE()),
     DiaDiem NVARCHAR(200),
     MoTa NVARCHAR(MAX)
+
+
+    -- Cập nhật: 
+    -- GETDATE() không tính tại thời điểm chèn mà tại thời điểm tạo bảng
+    CHECK (NgayToChuc >= CONVERT(DATE, GETDATE()))
 );
 
 -- Tạo bảng ThamGiaSuKien
@@ -119,4 +134,12 @@ CREATE TABLE TaiKhoan (
     LoaiTaiKhoan VARCHAR(20) NOT NULL CHECK (LoaiTaiKhoan IN ('Admin', 'SinhVien', 'CuuSinhVien')),
     MaSinhVien VARCHAR(10) UNIQUE,
     CONSTRAINT FK_TaiKhoan_SinhVien FOREIGN KEY (MaSinhVien) REFERENCES SinhVien(MaSinhVien)
+
+    -- Cập nhật:
+    -- Không phải tài khoản nào cũng có msv, ví dụ như "admin"
+    MaSinhVien VARCHAR(10) UNIQUE NULL, 
+    -- Mật khẩu có độ dài 8 kí tự trở lên
+    CONSTRAINT CK_MatKhau CHECK (LEN(MatKhau) >= 8)
 );
+
+

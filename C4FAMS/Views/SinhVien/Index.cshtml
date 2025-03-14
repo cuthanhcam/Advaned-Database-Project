@@ -1,0 +1,37 @@
+@model IEnumerable<C4FAMS.Models.SinhVien>
+
+<h1>Danh sách Sinh viên</h1>
+
+<p>
+    <a asp-action="Create">Thêm Sinh viên mới</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>MSSV</th>
+            <th>Họ Tên</th>
+            <th>Giới Tính</th>
+            <th>Ngày Sinh</th>
+            <th>Khoa</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.MSSV</td>
+                <td>@item.HoTen</td>
+                <td>@(item.GioiTinh ? "Nam" : "Nữ")</td>
+                <td>@item.NgaySinh.ToShortDateString()</td>
+                <td>@item.Khoa.TenKhoa</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.MSSV">Sửa</a> |
+                    <a asp-action="Display" asp-route-id="@item.MSSV">Chi tiết</a> |
+                    <a asp-action="Delete" asp-route-id="@item.MSSV">Xóa</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

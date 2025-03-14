@@ -1,0 +1,38 @@
+@model C4FAMS.Models.Khoa
+
+<h1>Chi tiết Khoa</h1>
+
+<div>
+    <h4>@Model.TenKhoa</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">Tên Khoa</dt>
+        <dd class="col-sm-10">@Model.TenKhoa</dd>
+        <dt class="col-sm-2">Email</dt>
+        <dd class="col-sm-10">@Model.Email</dd>
+        <dt class="col-sm-2">Số Điện Thoại</dt>
+        <dd class="col-sm-10">@Model.SoDienThoai</dd>
+    </dl>
+</div>
+
+<h3>Danh sách Chuyên ngành</h3>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Tên Chuyên ngành</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in ViewBag.ChuyenNganhList)
+        {
+            <tr>
+                <td>@item.TenChuyenNganh</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.MaKhoa">Sửa</a> |
+    <a asp-action="Index">Quay lại</a>
+</div>
