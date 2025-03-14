@@ -1,76 +1,158 @@
--- Bảng Alumni: Thông tin cựu sinh viên
-CREATE TABLE Alumni (
-    MSSV VARCHAR(10) PRIMARY KEY,
-    HoTen NVARCHAR(100) NOT NULL,
-    GioiTinh BIT NOT NULL, -- 1: Nam, 0: Nữ
-    NgaySinh DATE NOT NULL,
-    NganhHoc NVARCHAR(50) NOT NULL,
-    NamTotNghiep INT NOT NULL,
-    Email VARCHAR(100) NOT NULL,
-    SoDienThoai VARCHAR(15) NULL,
-    DiaChi NVARCHAR(200) NULL,
-    HinhThucUuThich NVARCHAR(20) DEFAULT 'Email',
-    CONSTRAINT CHK_MSSV_Length CHECK (LEN(MSSV) = 10), -- RBTV: MSSV phải đúng 10 ký tự
-    CONSTRAINT CHK_Email_Format CHECK (Email LIKE '%@%.%'), -- RBTV: Email phải có định dạng hợp lệ
-    CONSTRAINT CHK_NamTotNghiep CHECK (NamTotNghiep BETWEEN 1900 AND 2100), -- RBTV: Năm tốt nghiệp hợp lý
-    CONSTRAINT CHK_SoDienThoai CHECK (SoDienThoai IS NULL OR SoDienThoai LIKE '[0-9]%'), -- RBTV: SĐT chỉ chứa số nếu có
-    CONSTRAINT UQ_Alumni_Email UNIQUE (Email) -- RBTV: Email phải duy nhất
+CREATE TABLE Khoa (
+    MaKhoa INT IDENTITY(1,1) PRIMARY KEY,
+    TenKhoa NVARCHAR(100) NOT NULL UNIQUE,
+    Email NVARCHAR(100) NOT NULL UNIQUE CHECK (Email LIKE '%@%.%'),
+    SoDienThoai NVARCHAR(15) NULL CHECK (SoDienThoai LIKE '[0-9]%')
 );
 
--- Bảng Jobs: Công việc của cựu sinh viên
-CREATE TABLE Jobs (
-    ID INT IDENTITY(1,1) PRIMARY KEY,
-    MSSV VARCHAR(10) NOT NULL,
+Ràng buộc:
+MaKhoa: Khóa chính, tự tăng.
+TenKhoa: Không null, duy nhất (tránh trùng tên khoa).
+Email: Không null, duy nhất, phải có định dạng email cơ bản.
+SoDienThoai: Có thể null, nếu có thì phải bắt đầu bằng số.
+
+CREATE TABLE NguoiDung (
+    MaNguoiDung INT IDENTITY(1,1) PRIMARY KEY,
+    Email NVARCHAR(100) NOT NULL UNIQUE CHECK (Email LIKE '%@%.%'),
+    MatKhau NVARCHAR(255) NOT NULL,
+    VaiTro NVARCHAR(20) NOT NULL CHECK (VaiTro IN ('Admin', 'Khoa', 'CuuSinhVien')),
+    MaKhoa INT NULL,
+    TrangThai BIT NOT NULL DEFAULT 1,
+    FOREIGN KEY (MaKhoa) REFERENCES Khoa(MaKhoa)
+);
+
+Ràng buộc:
+MaNguoiDung: Khóa chính, tự tăng.
+Email: Không null, duy nhất, định dạng email.
+MatKhau: Không null (sẽ được mã hóa bởi Identity Core).
+VaiTro: Không null, chỉ nhận giá trị "Admin", "Khoa", "CuuSinhVien".
+MaKhoa: Khóa ngoại liên kết với Khoa, có thể null (Admin không cần khoa).
+TrangThai: Không null, mặc định là 1 (hoạt động).
+
+CREATE TABLE SinhVien (
+    MSSV NVARCHAR(20) PRIMARY KEY,
+    HoTen NVARCHAR(100) NOT NULL,
+    GioiTinh BIT NOT NULL CHECK (GioiTinh IN (0, 1)),
+    NgaySinh DATE NOT NULL CHECK (NgaySinh <= GETDATE()),
+    QueQuan NVARCHAR(200) NULL,
+    NganhHoc NVARCHAR(100) NOT NULL,
+    MaKhoa INT NOT NULL,
+    Email NVARCHAR(100) NULL UNIQUE CHECK (Email LIKE '%@%.%'),
+    SoDienThoai NVARCHAR(15) NULL CHECK (SoDienThoai LIKE '[0-9]%'),
+    FOREIGN KEY (MaKhoa) REFERENCES Khoa(MaKhoa)
+);
+
+Ràng buộc:
+MSSV: Khóa chính, không null.
+HoTen, NganhHoc: Không null.
+GioiTinh: Không null, chỉ nhận 0 (Nữ) hoặc 1 (Nam).
+NgaySinh: Không null, phải nhỏ hơn hoặc bằng ngày hiện tại.
+MaKhoa: Khóa ngoại, không null, liên kết với Khoa.
+Email: Có thể null, nếu có thì duy nhất và đúng định dạng.
+SoDienThoai: Có thể null, nếu có thì bắt đầu bằng số.
+
+CREATE TABLE CuuSinhVien (
+    MSSV NVARCHAR(20) PRIMARY KEY,
+    NamTotNghiep INT NOT NULL CHECK (NamTotNghiep BETWEEN 1900 AND YEAR(GETDATE())),
+    XepLoaiTotNghiep NVARCHAR(50) NOT NULL CHECK (XepLoaiTotNghiep IN ('Xuất sắc', 'Giỏi', 'Khá', 'Trung bình')),
+    DiaChiHienTai NVARCHAR(200) NULL,
+    HinhThucLienLac NVARCHAR(20) NOT NULL CHECK (HinhThucLienLac IN ('Email', 'Phone')),
+    FOREIGN KEY (MSSV) REFERENCES SinhVien(MSSV)
+);
+
+Ràng buộc:
+MSSV: Khóa chính, khóa ngoại liên kết với SinhVien.
+NamTotNghiep: Không null, phải nằm trong khoảng hợp lý (1900 đến năm hiện tại).
+XepLoaiTotNghiep: Không null, chỉ nhận các giá trị hợp lệ.
+HinhThucLienLac: Không null, chỉ nhận "Email" hoặc "Phone".
+
+CREATE TABLE CongViec (
+    MaCongViec INT IDENTITY(1,1) PRIMARY KEY,
+    MSSV NVARCHAR(20) NOT NULL,
     ViTri NVARCHAR(100) NULL,
     CongTy NVARCHAR(100) NULL,
-    LinhVuc NVARCHAR(50) NULL,
-    ThuNhap DECIMAL(15,2) NULL,
-    CONSTRAINT CHK_ThuNhap CHECK (ThuNhap IS NULL OR ThuNhap >= 0), -- RBTV: Thu nhập phải >= 0 nếu có
-    CONSTRAINT FK_Jobs_Alumni FOREIGN KEY (MSSV) REFERENCES Alumni(MSSV) ON DELETE CASCADE
+    LinhVuc NVARCHAR(100) NULL,
+    ThuNhap DECIMAL(18,2) NULL CHECK (ThuNhap >= 0),
+    FOREIGN KEY (MSSV) REFERENCES CuuSinhVien(MSSV)
 );
 
--- Bảng Achievements: Thành tựu của cựu sinh viên
-CREATE TABLE Achievements (
-    ID INT IDENTITY(1,1) PRIMARY KEY,
-    MSSV VARCHAR(10) NOT NULL,
-    TenThanhTuu NVARCHAR(200) NOT NULL, -- Thay NULL thành NOT NULL để đảm bảo dữ liệu có ý nghĩa
+Ràng buộc:
+MaCongViec: Khóa chính, tự tăng.
+MSSV: Khóa ngoại, không null, liên kết với CuuSinhVien.
+ThuNhap: Có thể null, nếu có thì phải >= 0.
+
+CREATE TABLE ThanhTuu (
+    MaThanhTuu INT IDENTITY(1,1) PRIMARY KEY,
+    MSSV NVARCHAR(20) NOT NULL,
+    TenThanhTuu NVARCHAR(100) NOT NULL,
     MoTa NVARCHAR(500) NULL,
-    NamDatDuoc INT NULL,
-    CONSTRAINT CHK_NamDatDuoc CHECK (NamDatDuoc IS NULL OR NamDatDuoc BETWEEN 1900 AND 2100), -- RBTV: Năm đạt được hợp lý
-    CONSTRAINT FK_Achievements_Alumni FOREIGN KEY (MSSV) REFERENCES Alumni(MSSV) ON DELETE CASCADE
+    NamDatDuoc INT NOT NULL CHECK (NamDatDuoc BETWEEN 1900 AND YEAR(GETDATE())),
+    FOREIGN KEY (MSSV) REFERENCES CuuSinhVien(MSSV)
 );
 
--- Bảng Events: Sự kiện
-CREATE TABLE Events (
-    MaSuKien VARCHAR(10) PRIMARY KEY,
-    TenSuKien NVARCHAR(200) NOT NULL,
-    NgayToChuc DATE NOT NULL,
-    DiaDiem NVARCHAR(200) NULL,
-    CONSTRAINT CHK_NgayToChuc CHECK (NgayToChuc >= CAST(GETDATE() AS DATE)) -- RBTV: Ngày tổ chức không được ở quá khứ
+Ràng buộc:
+MaThanhTuu: Khóa chính, tự tăng.
+MSSV: Khóa ngoại, không null, liên kết với CuuSinhVien.
+TenThanhTuu: Không null.
+NamDatDuoc: Không null, trong khoảng hợp lý.
+
+CREATE TABLE SuKien (
+    MaSuKien INT IDENTITY(1,1) PRIMARY KEY,
+    TenSuKien NVARCHAR(100) NOT NULL,
+    NgayToChuc DATETIME NOT NULL CHECK (NgayToChuc >= GETDATE()),
+    DiaDiem NVARCHAR(200) NOT NULL,
+    MaKhoa INT NOT NULL,
+    FOREIGN KEY (MaKhoa) REFERENCES Khoa(MaKhoa)
 );
 
--- Bảng EventRegistrations: Đăng ký sự kiện
-CREATE TABLE EventRegistrations (
-    ID INT IDENTITY(1,1) PRIMARY KEY,
-    MSSV VARCHAR(10) NOT NULL,
-    MaSuKien VARCHAR(10) NOT NULL,
-    NgayDangKy DATE NOT NULL DEFAULT GETDATE(),
-    CONSTRAINT FK_EventRegistrations_Alumni FOREIGN KEY (MSSV) REFERENCES Alumni(MSSV) ON DELETE CASCADE,
-    CONSTRAINT FK_EventRegistrations_Events FOREIGN KEY (MaSuKien) REFERENCES Events(MaSuKien) ON DELETE CASCADE,
-    CONSTRAINT UQ_EventRegistration UNIQUE (MSSV, MaSuKien), -- RBTV: Một Alumni chỉ đăng ký một sự kiện một lần
-    CONSTRAINT CHK_NgayDangKy CHECK (NgayDangKy <= NgayToChuc) -- RBTV: Ngày đăng ký phải trước ngày tổ chức (kiểm tra qua trigger nếu cần)
+Ràng buộc:
+MaSuKien: Khóa chính, tự tăng.
+TenSuKien, DiaDiem: Không null.
+NgayToChuc: Không null, phải từ ngày hiện tại trở đi.
+MaKhoa: Khóa ngoại, không null, liên kết với Khoa.
+
+CREATE TABLE DangKySuKien (
+    MaDangKy INT IDENTITY(1,1) PRIMARY KEY,
+    MSSV NVARCHAR(20) NOT NULL,
+    MaSuKien INT NOT NULL,
+    NgayDangKy DATETIME NOT NULL DEFAULT GETDATE() CHECK (NgayDangKy <= GETDATE()),
+    CONSTRAINT UK_DangKySuKien UNIQUE (MSSV, MaSuKien),
+    FOREIGN KEY (MSSV) REFERENCES CuuSinhVien(MSSV),
+    FOREIGN KEY (MaSuKien) REFERENCES SuKien(MaSuKien)
 );
 
--- Bảng Notifications: Thông báo
-CREATE TABLE Notifications (
-    ID INT IDENTITY(1,1) PRIMARY KEY,
-    MSSV VARCHAR(10) NOT NULL,
+Ràng buộc:
+MaDangKy: Khóa chính, tự tăng.
+MSSV, MaSuKien: Khóa ngoại, không null, liên kết với CuuSinhVien và SuKien.
+NgayDangKy: Không null, mặc định là ngày hiện tại, không được lớn hơn ngày hiện tại.
+UNIQUE (MSSV, MaSuKien): Đảm bảo một cựu sinh viên chỉ đăng ký một sự kiện một lần.
+
+CREATE TABLE ThongBao (
+    MaThongBao INT IDENTITY(1,1) PRIMARY KEY,
+    MSSV NVARCHAR(20) NOT NULL,
     NoiDung NVARCHAR(500) NOT NULL,
-    NgayGui DATE NOT NULL DEFAULT GETDATE(),
-    TrangThai BIT DEFAULT 0, -- 0: Chưa đọc, 1: Đã đọc (thêm để quản lý trạng thái)
-    CONSTRAINT FK_Notifications_Alumni FOREIGN KEY (MSSV) REFERENCES Alumni(MSSV) ON DELETE CASCADE
+    NgayGui DATETIME NOT NULL DEFAULT GETDATE() CHECK (NgayGui <= GETDATE()),
+    TrangThai BIT NOT NULL DEFAULT 0,
+    FOREIGN KEY (MSSV) REFERENCES CuuSinhVien(MSSV)
 );
 
--- Bảng AspNetUsers: Kết nối với Identity
-ALTER TABLE AspNetUsers ADD MSSV VARCHAR(10) NULL;
-ALTER TABLE AspNetUsers ADD CONSTRAINT FK_AspNetUsers_Alumni FOREIGN KEY (MSSV) REFERENCES Alumni(MSSV) ON DELETE SET NULL; -- Sửa ON DELETE CASCADE thành SET NULL để tránh xóa user khi xóa Alumni
+Ràng buộc:
+MaThongBao: Khóa chính, tự tăng.
+MSSV: Khóa ngoại, không null, liên kết với CuuSinhVien.
+NoiDung: Không null.
+NgayGui: Không null, mặc định ngày hiện tại, không lớn hơn ngày hiện tại.
+TrangThai: Không null, mặc định 0 (chưa đọc).
+
+Các mối quan hệ và chuẩn hóa
+Quan hệ:
+NguoiDung -> Khoa (1-N, qua MaKhoa)
+SinhVien -> Khoa (N-1, qua MaKhoa)
+CuuSinhVien -> SinhVien (1-1, qua MSSV)
+CongViec -> CuuSinhVien (N-1, qua MSSV)
+ThanhTuu -> CuuSinhVien (N-1, qua MSSV)
+SuKien -> Khoa (N-1, qua MaKhoa)
+DangKySuKien -> CuuSinhVien (N-1, qua MSSV)
+DangKySuKien -> SuKien (N-1, qua MaSuKien)
+ThongBao -> CuuSinhVien (N-1, qua MSSV)
+
+Chuẩn hóa: Các bảng đều đạt BCNF vì mỗi bảng có khóa chính xác định đầy đủ các thuộc tính không khóa, không có phụ thuộc hàm dư thừa.
