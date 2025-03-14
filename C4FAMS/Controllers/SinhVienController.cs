@@ -1,6 +1,7 @@
 using C4FAMS.Interfaces;
 using C4FAMS.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,11 +12,13 @@ namespace C4FAMS.Controllers
     {
         private readonly ISinhVienRepository _sinhVienRepository;
         private readonly IKhoaRepository _khoaRepository;
+        private readonly UserManager<NguoiDung> _userManager;
 
-        public SinhVienController(ISinhVienRepository sinhVienRepository, IKhoaRepository khoaRepository)
+        public SinhVienController(ISinhVienRepository sinhVienRepository, IKhoaRepository khoaRepository, UserManager<NguoiDung> userManager)
         {
             _sinhVienRepository = sinhVienRepository;
             _khoaRepository = khoaRepository;
+            _userManager = userManager;
         }
 
         public async Task<IActionResult> Index()
@@ -78,6 +81,20 @@ namespace C4FAMS.Controllers
         {
             await _sinhVienRepository.DeleteAsync(id);
             return RedirectToAction(nameof(Index));
+        }
+
+        public async Task<IActionResult> Display(string id)
+        {
+            var sinhVien = await _sinhVienRepository.GetByIdAsync(id);
+            if (sinhVien == null) return NotFound();
+            return View(sinhVien);
+        }
+
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> GroupByKhoa()
+        {
+            var sinhVienByKhoa = await _sinhVienRepository.GetGroupedByKhoaAsync();
+            return View(sinhVienByKhoa);
         }
     }
 }

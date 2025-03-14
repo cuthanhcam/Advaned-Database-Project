@@ -1,53 +1,53 @@
-﻿<!DOCTYPE html>
-<html lang="en">
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<NguoiDung> SignInManager
+@inject UserManager<NguoiDung> UserManager
 
+<!DOCTYPE html>
+<html lang="en">
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - C4FAMS</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/C4FAMS.styles.css" asp-append-version="true" />
 </head>
-
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">C4FAMS</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse"
-                    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
+        <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
+            <div class="container">
+                <a class="navbar-brand" asp-controller="Home" asp-action="Index">C4FAMS</a>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link" asp-controller="Home" asp-action="Index">Trang chủ</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-controller="Khoa" asp-action="Index">Khoa</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-controller="SinhVien" asp-action="Index">Sinh viên</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-controller="CuuSinhVien" asp-action="Index">Cựu Sinh viên</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-controller="SuKien" asp-action="Index">Sự Kiện</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-controller="DangKySuKien" asp-action="Index">Đăng Ký Sự Kiện</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-controller="CongViec" asp-action="Index">Công Việc</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-controller="ThanhTuu" asp-action="Index">Thành Tựu</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-controller="ThongBao" asp-action="Index">Thông Báo</a>
-                        </li>
+                        @if (SignInManager.IsSignedIn(User))
+                        {
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <li class="nav-item"><a class="nav-link" asp-controller="Khoa" asp-action="Index">Khoa</a></li>
+                                <li class="nav-item"><a class="nav-link" asp-controller="SinhVien" asp-action="Index">Sinh viên</a></li>
+                                <li class="nav-item"><a class="nav-link" asp-controller="SinhVien" asp-action="GroupByKhoa">Nhóm theo Khoa</a></li>
+                                <li class="nav-item"><a class="nav-link" asp-controller="CuuSinhVien" asp-action="Index">Cựu Sinh viên</a></li>
+                                <li class="nav-item"><a class="nav-link" asp-controller="SuKien" asp-action="Index">Sự kiện</a></li>
+                                <li class="nav-item"><a class="nav-link" asp-controller="DangKySuKien" asp-action="Index">Đăng ký Sự kiện</a></li>
+                                <li class="nav-item"><a class="nav-link" asp-controller="CongViec" asp-action="Index">Công việc</a></li>
+                                <li class="nav-item"><a class="nav-link" asp-controller="ThanhTuu" asp-action="Index">Thành tựu</a></li>
+                                <li class="nav-item"><a class="nav-link" asp-controller="ThongBao" asp-action="Index">Thông báo</a></li>
+                            }
+                            @if (User.IsInRole("Khoa"))
+                            {
+                                <li class="nav-item"><a class="nav-link" asp-controller="SinhVien" asp-action="Index">Sinh viên</a></li>
+                                <li class="nav-item"><a class="nav-link" asp-controller="CuuSinhVien" asp-action="Index">Cựu Sinh viên</a></li>
+                                <li class="nav-item"><a class="nav-link" asp-controller="SuKien" asp-action="Index">Sự kiện</a></li>
+                                <li class="nav-item"><a class="nav-link" asp-controller="ThongBao" asp-action="Index">Thông báo</a></li>
+                            }
+                            @if (User.IsInRole("CuuSinhVien"))
+                            {
+                                <li class="nav-item"><a class="nav-link" asp-controller="CuuSinhVien" asp-action="Index">Thông tin cá nhân</a></li>
+                                <li class="nav-item"><a class="nav-link" asp-controller="CongViec" asp-action="Index">Công việc</a></li>
+                                <li class="nav-item"><a class="nav-link" asp-controller="ThanhTuu" asp-action="Index">Thành tựu</a></li>
+                                <li class="nav-item"><a class="nav-link" asp-controller="SuKien" asp-action="Index">Sự kiện</a></li>
+                                <li class="nav-item"><a class="nav-link" asp-controller="DangKySuKien" asp-action="Index">Đăng ký Sự kiện</a></li>
+                                <li class="nav-item"><a class="nav-link" asp-controller="ThongBao" asp-action="Index">Thông báo</a></li>
+                            }
+                        }
                     </ul>
                     <partial name="_LoginPartial" />
                 </div>
@@ -59,10 +59,9 @@
             @RenderBody()
         </main>
     </div>
-
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2025 - C4FAMS - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; 2025 - C4FAMS
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
@@ -70,5 +69,4 @@
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
-
 </html>

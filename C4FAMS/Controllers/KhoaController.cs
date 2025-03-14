@@ -9,10 +9,12 @@ namespace C4FAMS.Controllers
     public class KhoaController : Controller
     {
         private readonly IKhoaRepository _khoaRepository;
+        private readonly IChuyenNganhRepository _chuyenNganhRepository;
 
-        public KhoaController(IKhoaRepository khoaRepository)
+        public KhoaController(IKhoaRepository khoaRepository, IChuyenNganhRepository chuyenNganhRepository)
         {
             _khoaRepository = khoaRepository;
+            _chuyenNganhRepository = chuyenNganhRepository;
         }
 
         public async Task<IActionResult> Index()
@@ -71,6 +73,15 @@ namespace C4FAMS.Controllers
         {
             await _khoaRepository.DeleteAsync(id);
             return RedirectToAction(nameof(Index));
+        }
+
+        public async Task<IActionResult> Details(int id)
+        {
+            var khoa = await _khoaRepository.GetByIdAsync(id);
+            if (khoa == null) return NotFound();
+            var chuyenNganhList = await _chuyenNganhRepository.GetAllByKhoaAsync(id);
+            ViewBag.ChuyenNganhList = chuyenNganhList;
+            return View(khoa);
         }
     }
 }

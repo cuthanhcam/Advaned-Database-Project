@@ -8,7 +8,7 @@ namespace C4FAMS.Repositories
     public class KhoaRepository : IKhoaRepository
     {
         private readonly ApplicationDbContext _context;
-
+    
         public KhoaRepository(ApplicationDbContext context)
         {
             _context = context;

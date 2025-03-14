@@ -28,7 +28,7 @@ namespace C4FAMS.Controllers
             ViewBag.CuuSinhVienList = await _cuuSinhVienRepository.GetAllAsync();
             return View();
         }
-
+            
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CongViec congViec)

@@ -1,9 +1,9 @@
 @model IEnumerable<C4FAMS.Models.Khoa>
 
-<h1>Danh sách Khoa</h1>
+<h1 class="mb-4">Danh sách Khoa</h1>
 
 <p>
-    <a asp-action="Create">Thêm Khoa mới</a>
+    <a asp-action="Create" class="btn btn-primary">Thêm Khoa mới</a>
 </p>
 
 <table class="table">
@@ -23,8 +23,9 @@
                 <td>@item.Email</td>
                 <td>@item.SoDienThoai</td>
                 <td>
-                    <a asp-action="Edit" asp-route-id="@item.MaKhoa">Sửa</a> |
-                    <a asp-action="Delete" asp-route-id="@item.MaKhoa">Xóa</a>
+                    <a asp-action="Edit" asp-route-id="@item.MaKhoa" class="btn btn-sm btn-primary">Sửa</a>
+                    <a asp-action="Details" asp-route-id="@item.MaKhoa" class="btn btn-sm btn-info">Chi tiết</a>
+                    <a asp-action="Delete" asp-route-id="@item.MaKhoa" class="btn btn-sm btn-danger">Xóa</a>
                 </td>
             </tr>
         }

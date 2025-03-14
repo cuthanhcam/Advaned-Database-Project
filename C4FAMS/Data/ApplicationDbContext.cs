@@ -15,7 +15,7 @@ namespace C4FAMS.Data
         public DbSet<CongViec> CongViec { get; set; }
         public DbSet<ThanhTuu> ThanhTuu { get; set; }
         public DbSet<ThongBao> ThongBao { get; set; }
-
+        public DbSet<ChuyenNganh> ChuyenNganh { get; set; }
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
@@ -42,6 +42,10 @@ namespace C4FAMS.Data
                 .WithMany()
                 .HasForeignKey(d => d.MaSuKien)
                 .OnDelete(DeleteBehavior.NoAction); // Chuyển sang NO ACTION cho MaSuKien
+
+            modelBuilder.Entity<ChuyenNganh>()
+                .HasIndex(c => c.TenChuyenNganh)
+                .IsUnique();
         }
     }
 }

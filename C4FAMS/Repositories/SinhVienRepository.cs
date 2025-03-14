@@ -45,5 +45,13 @@ namespace C4FAMS.Repositories
                 await _context.SaveChangesAsync();
             }
         }
+
+        public async Task<IEnumerable<IGrouping<string, SinhVien>>> GetGroupedByKhoaAsync()
+        {
+            return await _context.SinhVien
+                .Include(s => s.Khoa)
+                .GroupBy(s => s.Khoa.TenKhoa)
+                .ToListAsync();
+        }
     }
 }

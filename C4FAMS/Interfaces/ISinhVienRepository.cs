@@ -9,5 +9,6 @@ namespace C4FAMS.Interfaces
         Task AddAsync(SinhVien sinhVien);
         Task UpdateAsync(SinhVien sinhVien);
         Task DeleteAsync(string mssv);
+        Task<IEnumerable<IGrouping<string, SinhVien>>> GetGroupedByKhoaAsync();
     }
 }

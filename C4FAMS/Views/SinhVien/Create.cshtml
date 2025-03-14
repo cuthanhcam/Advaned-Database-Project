@@ -27,8 +27,14 @@
         <span asp-validation-for="NgaySinh" class="text-danger"></span>
     </div>
     <div class="form-group">
+        <label asp-for="QueQuan" class="control-label"></label>
+        <input asp-for="QueQuan" class="form-control" />
+        <span asp-validation-for="QueQuan" class="text-danger"></span>
+    </div>
+    <div class="form-group">
         <label asp-for="MaKhoa" class="control-label"></label>
-        <select asp-for="MaKhoa" class="form-control" asp-items="@(new SelectList(ViewBag.KhoaList, "MaKhoa", "TenKhoa"))"></select>
+        <select asp-for="MaKhoa" class="form-control"
+            asp-items="@(new SelectList(ViewBag.KhoaList, "MaKhoa", "TenKhoa"))"></select>
         <span asp-validation-for="MaKhoa" class="text-danger"></span>
     </div>
     <div class="form-group">
