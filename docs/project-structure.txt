@@ -1,65 +1,50 @@
-C4F-Alumni-Management-System/
-├── Controllers/                    // Chứa các controller xử lý request
-│   ├── HomeController.cs           // Trang chủ (Feeders thông báo sự kiện)
-│   ├── AccountController.cs        // Đăng nhập, đăng ký, phân quyền
-│   ├── AlumniController.cs         // Quản lý thông tin cựu sinh viên
-│   ├── JobController.cs            // Quản lý thông tin việc làm
-│   ├── AchievementController.cs    // Quản lý thành tựu
-│   ├── EventController.cs          // Quản lý sự kiện và đăng ký
-│   └── NotificationController.cs   // Quản lý thông báo
-├── Data/                           // Chứa DbContext và cấu hình database
-│   ├── ApplicationDbContext.cs             // EF Core DbContext
-│   └── Migrations/                 // Thư mục migrations tự động tạo
-├── Repositories/                   // Chứa các repository để truy vấn dữ liệu
-│   ├── Interfaces/                 // Định nghĩa interface
-│   │   ├── IAlumniRepository.cs
-│   │   ├── IJobRepository.cs
-│   │   ├── IAchievementRepository.cs
-│   │   ├── IEventRepository.cs
-│   │   └── INotificationRepository.cs
-│   ├── Implementations/            // Triển khai interface
-│   │   ├── AlumniRepository.cs
-│   │   ├── JobRepository.cs
-│   │   ├── AchievementRepository.cs
-│   │   ├── EventRepository.cs
-│   │   └── NotificationRepository.cs
-├── Models/                         // Chứa các entity với annotations
-│   ├── Alumni.cs                   // Cựu sinh viên
-│   ├── Job.cs                      // Việc làm
-│   ├── Achievement.cs              // Thành tựu
-│   ├── Event.cs                    // Sự kiện
-│   ├── EventRegistration.cs        // Đăng ký sự kiện
-│   ├── Notification.cs             // Thông báo
-│   └── ApplicationUser.cs          // Kế thừa IdentityUser
-├── Views/                          // Chứa các giao diện Razor
-│   ├── Home/
-│   │   └── Index.cshtml            // Trang chủ (Feeders sự kiện)
-│   ├── Account/
-│   │   ├── Login.cshtml            // Đăng nhập
-│   │   ├── Register.cshtml         // Đăng ký
-│   ├── Alumni/
-│   │   ├── Index.cshtml            // Danh sách cựu sinh viên
-│   │   ├── Details.cshtml          // Chi tiết thông tin
-│   │   ├── Edit.cshtml             // Cập nhật thông tin
-│   ├── Job/
-│   │   ├── Index.cshtml            // Danh sách việc làm
-│   │   ├── Create.cshtml           // Thêm việc làm
-│   ├── Event/
-│   │   ├── Index.cshtml            // Danh sách sự kiện
-│   │   ├── Register.cshtml         // Đăng ký sự kiện
-│   ├── Notification/
-│   │   └── Index.cshtml            // Danh sách thông báo
-│   └── Shared/
-│       ├── _Layout.cshtml          // Layout chung (Bootstrap)
-│       └── _LoginPartial.cshtml    // Thanh điều hướng đăng nhập/đăng xuất
-├── wwwroot/                        // Tài nguyên tĩnh
-│   ├── css/
-│   │   └── site.css                // CSS tùy chỉnh
-│   ├── js/
-│   │   └── site.js                 // JS tùy chỉnh
-│   └── lib/
-│       ├── bootstrap/              // Bootstrap CSS & JS
-│       └── jquery/                 // jQuery
-├── appsettings.json                // Chuỗi kết nối SQL Server
-├── Program.cs                      // Cấu hình dịch vụ
-└── Startup.cs                      // Cấu hình Identity, DbContext
+C4FAMS
+├── Controllers
+│   ├── KhoaController.cs          // CRUD Khoa
+│   ├── SinhVienController.cs      // CRUD SinhVien
+│   ├── CuuSinhVienController.cs   // CRUD CuuSinhVien
+│   ├── SuKienController.cs        // CRUD SuKien
+│   ├── DangKySuKienController.cs  // CRUD DangKySuKien
+│   └── HomeController.cs          // Trang chủ
+├── Data
+│   ├── ApplicationDbContext.cs    // DbContext cho EF Core
+│   └── Migrations                 // Thư mục chứa migration files
+├── Repositories
+│   ├── KhoaRepository.cs          // Logic truy vấn Khoa
+│   ├── SinhVienRepository.cs      // Logic truy vấn SinhVien
+│   ├── CuuSinhVienRepository.cs   // Logic truy vấn CuuSinhVien
+│   ├── SuKienRepository.cs        // Logic truy vấn SuKien
+│   └── DangKySuKienRepository.cs  // Logic truy vấn DangKySuKien
+├── Interfaces
+│   ├── IKhoaRepository.cs         // Interface cho KhoaRepository
+│   ├── ISinhVienRepository.cs     // Interface cho SinhVienRepository
+│   ├── ICuuSinhVienRepository.cs  // Interface cho CuuSinhVienRepository
+│   ├── ISuKienRepository.cs       // Interface cho SuKienRepository
+│   └── IDangKySuKienRepository.cs // Interface cho DangKySuKienRepository
+├── Models
+│   ├── Khoa.cs                    // Model Khoa
+│   ├── NguoiDung.cs               // Model NguoiDung (kế thừa IdentityUser)
+│   ├── SinhVien.cs                // Model SinhVien
+│   ├── CuuSinhVien.cs             // Model CuuSinhVien
+│   ├── CongViec.cs                // Model CongViec
+│   ├── ThanhTuu.cs                // Model ThanhTuu
+│   ├── SuKien.cs                  // Model SuKien
+│   ├── DangKySuKien.cs            // Model DangKySuKien
+│   └── ThongBao.cs                // Model ThongBao
+├── Views
+│   ├── Khoa                       // Views cho Khoa (Index, Create, Edit, Delete)
+│   ├── SinhVien                   // Views cho SinhVien
+│   ├── CuuSinhVien                // Views cho CuuSinhVien
+│   ├── SuKien                     // Views cho SuKien
+│   ├── DangKySuKien               // Views cho DangKySuKien
+│   ├── Shared                     // Layout chung (_Layout.cshtml)
+│   └── Home                       // Trang chủ (Index.cshtml)
+├── wwwroot
+│   ├── css                        // CSS files
+│   ├── js                         // JavaScript files
+│   └── images                     // Hình ảnh
+├── Services                       // Thư mục bổ sung
+│   ├── NotificationService.cs     // Dịch vụ gửi thông báo
+│   └── EmailService.cs            // Dịch vụ gửi email (nếu cần)
+├── Program.cs                     // Cấu hình ứng dụng
+└── appsettings.json               // Cấu hình connection string
