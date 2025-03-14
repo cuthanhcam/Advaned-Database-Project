@@ -1,0 +1,13 @@
+@model C4FAMS.Models.CongViec
+
+<h1>Xóa Công việc</h1>
+
+<h3>Bạn có chắc muốn xóa công việc này?</h3>
+<div>
+    <h4>@Model.CuuSinhVien.SinhVien.HoTen - @Model.ViTri</h4>
+    <form asp-action="Delete" method="post">
+        <input type="hidden" asp-for="MaCongViec" />
+        <input type="submit" value="Xóa" class="btn btn-danger" /> |
+        <a asp-action="Index">Quay lại</a>
+    </form>
+</div>

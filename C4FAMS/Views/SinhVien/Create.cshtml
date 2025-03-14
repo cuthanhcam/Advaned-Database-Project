@@ -1,0 +1,41 @@
+@model C4FAMS.Models.SinhVien
+
+<h1>Thêm Sinh viên</h1>
+
+<form asp-action="Create" method="post">
+    <div class="form-group">
+        <label asp-for="MSSV" class="control-label"></label>
+        <input asp-for="MSSV" class="form-control" />
+        <span asp-validation-for="MSSV" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="HoTen" class="control-label"></label>
+        <input asp-for="HoTen" class="form-control" />
+        <span asp-validation-for="HoTen" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="GioiTinh" class="control-label"></label>
+        <select asp-for="GioiTinh" class="form-control">
+            <option value="true">Nam</option>
+            <option value="false">Nữ</option>
+        </select>
+        <span asp-validation-for="GioiTinh" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="NgaySinh" class="control-label"></label>
+        <input asp-for="NgaySinh" class="form-control" type="date" />
+        <span asp-validation-for="NgaySinh" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="MaKhoa" class="control-label"></label>
+        <select asp-for="MaKhoa" class="form-control" asp-items="@(new SelectList(ViewBag.KhoaList, "MaKhoa", "TenKhoa"))"></select>
+        <span asp-validation-for="MaKhoa" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <input type="submit" value="Thêm" class="btn btn-primary" />
+    </div>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

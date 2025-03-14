@@ -1,0 +1,32 @@
+@model IEnumerable<C4FAMS.Models.ThanhTuu>
+
+<h1>Danh sách Thành tựu</h1>
+
+<p>
+    <a asp-action="Create">Thêm Thành tựu mới</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Cựu Sinh viên</th>
+            <th>Tên Thành tựu</th>
+            <th>Năm Đạt Được</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.CuuSinhVien.SinhVien.HoTen</td>
+                <td>@item.TenThanhTuu</td>
+                <td>@item.NamDatDuoc</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.MaThanhTuu">Sửa</a> |
+                    <a asp-action="Delete" asp-route-id="@item.MaThanhTuu">Xóa</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

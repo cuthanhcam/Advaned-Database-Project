@@ -1,0 +1,2 @@
+Đã thực hiện xong cơ bản CRUD trên tất cả các bản
+Chưa thực hiện phân quyền chuẩn

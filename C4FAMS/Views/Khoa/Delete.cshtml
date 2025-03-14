@@ -1,0 +1,13 @@
+@model C4FAMS.Models.Khoa
+
+<h1>Xóa Khoa</h1>
+
+<h3>Bạn có chắc muốn xóa khoa này?</h3>
+<div>
+    <h4>@Model.TenKhoa</h4>
+    <form asp-action="Delete" method="post">
+        <input type="hidden" asp-for="MaKhoa" />
+        <input type="submit" value="Xóa" class="btn btn-danger" /> |
+        <a asp-action="Index">Quay lại</a>
+    </form>
+</div>
