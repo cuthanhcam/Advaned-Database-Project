@@ -1,0 +1,27 @@
+/YourProject
+│── /YourProject.Web/              # Dự án chính (ASP.NET Core MVC)
+│   │── Controllers/               # Controller xử lý logic
+│   │── Views/                     # Razor Views
+│   │── Models/                    # (Chỉ dùng ViewModels nếu có)
+│   │── wwwroot/                   # Tệp tĩnh (CSS, JS, ảnh)
+│   │── Program.cs                 
+│   │── appsettings.json
+│
+│── /YourProject.Business/         # Xử lý logic nghiệp vụ
+│   │── Services/                  # Xử lý logic nghiệp vụ
+│   │── Interfaces/                # Interface của Service
+│
+│── /YourProject.Data/             # Tầng truy vấn dữ liệu (Database)
+│   │── Entities/                  # Các Entity đại diện bảng DB
+│   │── Repositories/              # Repository xử lý CRUD
+│   │── YourProjectDbContext.cs     # DbContext cho Entity Framework
+│
+│── /YourProject.Common/            # Chứa các tiện ích dùng chung
+│   │── Constants.cs                 # Hằng số chung
+│   │── Helpers/                     # Các helper hỗ trợ (convert, validate...)
+│
+│── /YourProject.Tests/              # Unit Test
+│   │── Business.Tests/              # Test tầng Business
+│   │── Data.Tests/                  # Test tầng Data
+│
+│── YourProject.sln                  # File solution của toàn bộ dự án

@@ -1,0 +1,85 @@
+-- Bảng Alumni: Thông tin cựu sinh viên
+CREATE TABLE Alumni (
+    ID INT IDENTITY(1,1) PRIMARY KEY,
+    MSSV VARCHAR(10) UNIQUE NOT NULL,
+    HoTen NVARCHAR(100) NOT NULL,
+    GioiTinh TINYINT NOT NULL CHECK (GioiTinh IN (0,1,2)), -- 0: Nữ, 1: Nam, 2: Khác
+    NgaySinh DATE NOT NULL,
+    NganhHoc NVARCHAR(50) NOT NULL,
+    NamTotNghiep INT NOT NULL CHECK (NamTotNghiep BETWEEN 1900 AND 2100),
+    Email VARCHAR(100) NOT NULL UNIQUE CHECK (Email LIKE '%@%.%'),
+    SoDienThoai VARCHAR(15) NULL CHECK (SoDienThoai LIKE '[0-9]%'),
+    DiaChi NVARCHAR(200) NULL,
+    HinhThucUuThich TINYINT DEFAULT 1 CHECK (HinhThucUuThich BETWEEN 1 AND 3) 
+    -- 1: Email, 2: SMS, 3: App Notification
+);
+
+
+-- Bảng Jobs: Công việc của cựu sinh viên
+CREATE TABLE Jobs (
+    ID INT IDENTITY(1,1) PRIMARY KEY,
+    MSSV VARCHAR(10) NOT NULL,
+    ViTri NVARCHAR(100) NULL,
+    CongTy NVARCHAR(100) NULL,
+    LinhVuc NVARCHAR(50) NULL,
+    LoaiCongViec TINYINT NOT NULL CHECK (LoaiCongViec BETWEEN 1 AND 3), 
+    -- 1: Full-time, 2: Part-time, 3: Internship
+    ThuNhap DECIMAL(15,2) NULL CHECK (ThuNhap >= 0),
+    NgayBatDau DATE NULL,
+    NgayKetThuc DATE NULL,
+    CONSTRAINT FK_Jobs_Alumni FOREIGN KEY (MSSV) REFERENCES Alumni(MSSV) ON DELETE CASCADE
+);
+
+
+-- Bảng Achievements: Thành tựu của cựu sinh viên
+CREATE TABLE Achievements (
+    ID INT IDENTITY(1,1) PRIMARY KEY,
+    MSSV VARCHAR(10) NOT NULL,
+    TenThanhTuu NVARCHAR(200) NOT NULL,
+    LoaiThanhTuu TINYINT NOT NULL CHECK (LoaiThanhTuu BETWEEN 1 AND 4), 
+    -- 1: Giải thưởng, 2: Nghiên cứu, 3: Cá nhân, 4: Khác
+    MoTa NVARCHAR(300) NULL,
+    NamDatDuoc INT NULL CHECK (NamDatDuoc BETWEEN 1900 AND 2100),
+    CONSTRAINT FK_Achievements_Alumni FOREIGN KEY (MSSV) REFERENCES Alumni(MSSV) ON DELETE CASCADE
+);
+
+-- Bảng Events: Sự kiện
+CREATE TABLE Events (
+    MaSuKien VARCHAR(10) PRIMARY KEY,
+    TenSuKien NVARCHAR(200) NOT NULL,
+    NgayToChuc DATE NOT NULL,
+    DiaDiem NVARCHAR(200) NULL,
+    TrangThai TINYINT NOT NULL CHECK (TrangThai BETWEEN 1 AND 4), 
+    -- 1: Sắp diễn ra, 2: Đang diễn ra, 3: Đã kết thúc, 4: Hoãn
+    MoTa NVARCHAR(500) NULL
+);
+
+-- Bảng EventRegistrations: Đăng ký sự kiện
+CREATE TABLE EventRegistrations (
+    ID INT IDENTITY(1,1) PRIMARY KEY,
+    MSSV VARCHAR(10) NOT NULL,
+    MaSuKien VARCHAR(10) NOT NULL,
+    NgayDangKy DATE NOT NULL DEFAULT GETDATE(),
+    TrangThaiDangKy TINYINT NOT NULL DEFAULT 1 CHECK (TrangThaiDangKy BETWEEN 1 AND 3), 
+    -- 1: Đã đăng ký, 2: Đã tham gia, 3: Hủy đăng ký
+    CONSTRAINT FK_EventRegistrations_Alumni FOREIGN KEY (MSSV) REFERENCES Alumni(MSSV) ON DELETE CASCADE,
+    CONSTRAINT FK_EventRegistrations_Events FOREIGN KEY (MaSuKien) REFERENCES Events(MaSuKien) ON DELETE CASCADE,
+    CONSTRAINT UQ_EventRegistration UNIQUE (MSSV, MaSuKien)
+);
+
+-- Bảng Notifications: Thông báo
+CREATE TABLE Notifications (
+    ID INT IDENTITY(1,1) PRIMARY KEY,
+    MSSV VARCHAR(10) NOT NULL,
+    NoiDung NVARCHAR(500) NOT NULL,
+    LoaiThongBao TINYINT NOT NULL CHECK (LoaiThongBao BETWEEN 1 AND 3), 
+    -- 1: Hệ thống, 2: Sự kiện, 3: Công việc
+    NgayGui DATETIME NOT NULL DEFAULT GETDATE(),
+    TrangThai TINYINT DEFAULT 0 CHECK (TrangThai BETWEEN 0 AND 2) 
+    -- 0: Chưa đọc, 1: Đã đọc, 2: Đã xóa
+);
+
+
+-- Bảng AspNetUsers: Kết nối với Identity
+ALTER TABLE AspNetUsers ADD MSSV VARCHAR(10) NULL;
+ALTER TABLE AspNetUsers ADD CONSTRAINT FK_AspNetUsers_Alumni FOREIGN KEY (MSSV) REFERENCES Alumni(MSSV) ON DELETE SET NULL; -- Sửa ON DELETE CASCADE thành SET NULL để tránh xóa user khi xóa Alumni
