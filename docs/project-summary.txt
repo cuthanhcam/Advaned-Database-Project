@@ -1,0 +1,130 @@
+PROJECT SUMMARY: C4F-ALUMNI-MANAGEMENT-SYSTEM
+1. Giới thiệu chung
+Trong thời đại công nghệ số phát triển mạnh mẽ, việc ứng dụng công nghệ thông tin vào quản lý thông tin cựu sinh viên ngày càng trở nên quan trọng. Các trường đại học và tổ chức giáo dục thường gặp khó khăn trong việc theo dõi thông tin, kết nối cựu sinh viên, quản lý sự kiện và chia sẻ cơ hội việc làm. Những vấn đề này không chỉ ảnh hưởng đến hiệu quả quản lý mà còn làm giảm sự gắn kết giữa cựu sinh viên và nhà trường.
+
+Nhận thấy tầm quan trọng của việc tối ưu hóa quản lý thông tin cựu sinh viên, nhóm chúng tôi đã phát triển C4F-Alumni-Management-System – một hệ thống quản lý cựu sinh viên dựa trên nền tảng web, sử dụng ASP.NET Core MVC (.NET 8.0). Dự án nhằm cung cấp một giải pháp tin học hóa giúp quản lý thông tin cá nhân, công việc, thành tựu, sự kiện và thông báo dành cho cựu sinh viên. Hệ thống không chỉ hỗ trợ nhà trường trong việc tổ chức dữ liệu mà còn tạo điều kiện để cựu sinh viên cập nhật thông tin, tham gia sự kiện và kết nối với cộng đồng.
+
+Báo cáo này được tổ chức như sau:
+
+Phần 1: Giới thiệu chung và mục tiêu dự án.
+Phần 2: Cơ sở lý thuyết và phân tích yêu cầu hệ thống.
+Phần 3: Thiết kế và triển khai hệ thống.
+Phần 4: Kết luận và định hướng phát triển.
+
+Dưới đây là Project Summary chi tiết cho dự án C4F-Alumni-Management-System, được viết dựa trên những trao đổi giữa chúng ta và cấu trúc dự án bạn cung cấp. Tôi đã tham khảo cách trình bày từ tài liệu "Quản lý hoạt động kinh doanh tại một quán ăn" để đảm bảo báo cáo của nhóm bạn có bố cục tương tự, dễ dàng chỉnh sửa và sử dụng trong báo cáo đồ án. Dự án sử dụng ASP.NET Core Web MVC (.NET 8.0) với các package version 8.0.3.
+
+PROJECT SUMMARY: C4F-ALUMNI-MANAGEMENT-SYSTEM
+1. Giới thiệu chung
+Trong thời đại công nghệ số phát triển mạnh mẽ, việc ứng dụng công nghệ thông tin vào quản lý thông tin cựu sinh viên ngày càng trở nên quan trọng. Các trường đại học và tổ chức giáo dục thường gặp khó khăn trong việc theo dõi thông tin, kết nối cựu sinh viên, quản lý sự kiện và chia sẻ cơ hội việc làm. Những vấn đề này không chỉ ảnh hưởng đến hiệu quả quản lý mà còn làm giảm sự gắn kết giữa cựu sinh viên và nhà trường.
+
+Nhận thấy tầm quan trọng của việc tối ưu hóa quản lý thông tin cựu sinh viên, nhóm chúng tôi đã phát triển C4F-Alumni-Management-System – một hệ thống quản lý cựu sinh viên dựa trên nền tảng web, sử dụng ASP.NET Core MVC (.NET 8.0). Dự án nhằm cung cấp một giải pháp tin học hóa giúp quản lý thông tin cá nhân, công việc, thành tựu, sự kiện và thông báo dành cho cựu sinh viên. Hệ thống không chỉ hỗ trợ nhà trường trong việc tổ chức dữ liệu mà còn tạo điều kiện để cựu sinh viên cập nhật thông tin, tham gia sự kiện và kết nối với cộng đồng.
+
+Báo cáo này được tổ chức như sau:
+
+Phần 1: Giới thiệu chung và mục tiêu dự án.
+Phần 2: Cơ sở lý thuyết và phân tích yêu cầu hệ thống.
+Phần 3: Thiết kế và triển khai hệ thống.
+Phần 4: Kết luận và định hướng phát triển.
+2. Mục tiêu dự án
+Tối ưu hóa quản lý thông tin: Lưu trữ và cập nhật thông tin cựu sinh viên (họ tên, MSSV, ngành học, năm tốt nghiệp, công việc, thành tựu) một cách có hệ thống.
+Kết nối cộng đồng: Cung cấp tính năng quản lý sự kiện, đăng ký tham gia và thông báo để tăng cường sự gắn kết giữa cựu sinh viên và nhà trường.
+Dễ bảo trì và mở rộng: Xây dựng hệ thống với cấu trúc phân layer rõ ràng (Controllers, Data, Repositories, Models, Views) để dễ dàng chỉnh sửa và nâng cấp trong tương lai.
+Tính bảo mật: Sử dụng ASP.NET Core Identity để quản lý đăng nhập, phân quyền (Admin, Alumni), đảm bảo an toàn dữ liệu.
+3. Cơ sở lý thuyết
+3.1 Tổng quan về hệ thống quản lý thông tin
+Hệ thống được xây dựng theo mô hình MVC (Model-View-Controller), một kiến trúc phổ biến trong phát triển ứng dụng web, giúp tách biệt logic nghiệp vụ, dữ liệu và giao diện người dùng.
+
+Model: Đại diện cho dữ liệu và logic nghiệp vụ (các entity như Alumni, Job, Event).
+View: Giao diện hiển thị dữ liệu cho người dùng (Razor Views).
+Controller: Xử lý yêu cầu từ người dùng và điều phối giữa Model và View.
+3.2 Cơ sở dữ liệu
+Hệ thống sử dụng Entity Framework Core 8.0.3 với SQL Server để quản lý cơ sở dữ liệu. Các giai đoạn thiết kế cơ sở dữ liệu bao gồm:
+
+Phân tích yêu cầu: Xác định các thực thể chính (Alumni, Job, Achievement, Event, EventRegistration, Notification) và mối quan hệ giữa chúng.
+Thiết kế quan niệm: Sử dụng mô hình ERD (Entity-Relationship Diagram) để mô tả thực thể và ràng buộc.
+Thiết kế logic: Chuẩn hóa dữ liệu đến dạng BCNF để giảm dư thừa và đảm bảo tính toàn vẹn.
+Thiết kế vật lý: Triển khai cơ sở dữ liệu với migrations, sử dụng annotations để ràng buộc dữ liệu.
+3.3 Công nghệ sử dụng
+Backend: ASP.NET Core MVC (.NET 8.0), EF Core 8.0.3, Identity 8.0.3.
+Frontend: Razor Views, Bootstrap 5, jQuery.
+Database: SQL Server.
+4. Phân tích yêu cầu hệ thống
+4.1 Yêu cầu chức năng
+Quản lý thông tin cựu sinh viên: Thêm, sửa, xóa, xem chi tiết thông tin (MSSV, họ tên, ngành học, năm tốt nghiệp, email, công việc, thành tựu).
+Quản lý việc làm: Lưu trữ thông tin công việc của cựu sinh viên (vị trí, công ty, lĩnh vực, thu nhập).
+Quản lý thành tựu: Ghi nhận các thành tựu nổi bật (tên thành tựu, mô tả, ngày đạt).
+Quản lý sự kiện: Tạo, xem, đăng ký sự kiện (mã sự kiện, tên, ngày tổ chức, địa điểm).
+Thông báo: Gửi thông báo đến cựu sinh viên qua email hoặc giao diện web.
+Phân quyền: Admin quản lý toàn bộ hệ thống; Alumni chỉ chỉnh sửa thông tin cá nhân và đăng ký sự kiện.
+4.2 Yêu cầu phi chức năng
+Hiệu suất: Phản hồi nhanh với số lượng truy vấn lớn.
+Bảo mật: Xác thực và phân quyền người dùng.
+Khả năng mở rộng: Dễ dàng thêm tính năng mới (ví dụ: tích hợp thanh toán, chat).
+4.3 Ràng buộc toàn vẹn dữ liệu (RBTV)
+RBTV 1: MSSV phải duy nhất và có đúng 8 ký tự.
+RBTV 2: Email của cựu sinh viên phải duy nhất.
+RBTV 3: Mỗi Job/Achievement/EventRegistration phải liên kết với một Alumni hợp lệ.
+RBTV 4: Ngày tổ chức sự kiện phải lớn hơn hoặc bằng ngày hiện tại.
+5. Thiết kế và triển khai hệ thống
+5.1 Cấu trúc dự án
+Dự án được tổ chức thành các layer rõ ràng để đảm bảo tính bảo trì và mở rộng:
+
+Controllers: Xử lý request từ người dùng.
+HomeController: Trang chủ với feeders sự kiện.
+AlumniController: Quản lý thông tin cựu sinh viên.
+JobController, AchievementController, EventController, NotificationController: Quản lý các chức năng tương ứng.
+AccountController: Đăng nhập, đăng ký, phân quyền.
+Data: Quản lý cơ sở dữ liệu.
+ApplicationDbContext: DbContext chứa các DbSet và cấu hình migrations.
+Migrations: Tự động tạo schema từ các model.
+Repositories: Tách biệt logic truy vấn dữ liệu.
+Interfaces: Định nghĩa các phương thức (GetAllAsync, GetByIdAsync, AddAsync, v.v.).
+Implementations: Triển khai truy vấn sử dụng EF Core.
+Models: Các entity với annotations để ràng buộc dữ liệu.
+Alumni: Thông tin cựu sinh viên (MSSV, Email, NganhHoc, v.v.).
+Job, Achievement, Event, EventRegistration, Notification: Các thực thể liên quan.
+Views: Giao diện người dùng với Razor Views và Bootstrap.
+Home/Index: Trang chủ hiển thị thông báo sự kiện.
+Alumni/Index, Job/Index, Event/Index: Danh sách dữ liệu.
+Shared/_Layout: Layout chung với thanh điều hướng.
+wwwroot: Tài nguyên tĩnh (CSS, JS, Bootstrap, jQuery).
+5.2 Công nghệ triển khai
+Framework: ASP.NET Core MVC 8.0.
+Packages:
+Microsoft.EntityFrameworkCore.SqlServer (8.0.3).
+Microsoft.EntityFrameworkCore.Design (8.0.3).
+Microsoft.AspNetCore.Identity.EntityFrameworkCore (8.0.3).
+Database: SQL Server, kết nối qua chuỗi trong appsettings.json.
+Frontend: Razor Views tích hợp Bootstrap 5.
+5.3 Quy trình triển khai
+Thiết kế Models: Xây dựng các entity với annotations (ví dụ: [Required], [StringLength], [ForeignKey]).
+Cấu hình DbContext: Thêm ràng buộc trong OnModelCreating (ví dụ: Index duy nhất cho MSSV, Email).
+Tạo Migrations: Sử dụng lệnh dotnet ef migrations add InitialCreate và dotnet ef database update.
+Triển khai Repositories: Viết các phương thức truy vấn dữ liệu bất đồng bộ.
+Xây dựng Controllers và Views: Tạo giao diện CRUD cho các chức năng chính.
+5.4 Giao diện mẫu
+Trang chủ: Hiển thị danh sách sự kiện sắp tới và thông báo mới nhất.
+Danh sách cựu sinh viên: Bảng dữ liệu với các cột MSSV, Họ tên, Ngành học, Năm tốt nghiệp, cùng nút “Chi tiết” và “Sửa”.
+Đăng ký sự kiện: Form nhập thông tin để tham gia sự kiện.
+6. Kết quả và đánh giá
+6.1 Kết quả đạt được
+Hệ thống hoàn thành các chức năng chính: quản lý thông tin cựu sinh viên, việc làm, thành tựu, sự kiện và thông báo.
+Giao diện thân thiện, phản hồi nhanh nhờ sử dụng EF Core và Bootstrap.
+Dữ liệu được chuẩn hóa và ràng buộc chặt chẽ, đảm bảo tính toàn vẹn.
+6.2 Hạn chế
+Chưa hỗ trợ thông báo qua email hoặc SMS realtime.
+Chưa tích hợp tính năng tìm kiếm nâng cao hoặc báo cáo thống kê.
+Hiệu suất có thể giảm khi số lượng cựu sinh viên tăng lớn (cần tối ưu hóa cơ sở dữ liệu).
+6.3 Hướng phát triển
+Thêm tính năng gửi thông báo qua email/SMS.
+Tích hợp báo cáo thống kê (số lượng cựu sinh viên theo ngành, năm tốt nghiệp).
+Nâng cấp cơ sở dữ liệu sang PostgreSQL hoặc Azure SQL để hỗ trợ tải lớn.
+Phát triển ứng dụng di động để tăng trải nghiệm người dùng.
+7. Kết luận
+C4F-Alumni-Management-System là một giải pháp hiệu quả để quản lý thông tin cựu sinh viên, kết nối cộng đồng và hỗ trợ tổ chức sự kiện. Với kiến trúc MVC phân layer rõ ràng, hệ thống dễ dàng bảo trì và mở rộng. Cơ sở dữ liệu được thiết kế chặt chẽ với migrations và annotations, đáp ứng tốt yêu cầu của một đồ án phân tích cơ sở dữ liệu. Dự án không chỉ đạt mục tiêu ban đầu mà còn tạo nền tảng cho các cải tiến trong tương lai.
+
+8. Tài liệu tham khảo
+Microsoft, ASP.NET Core Documentation, truy cập ngày 13/03/2025, https://docs.microsoft.com/aspnet/core.
+Entity Framework Core Team, EF Core Documentation, truy cập ngày 13/03/2025, https://docs.microsoft.com/ef/core.
+Tài liệu nội bộ, Cơ sở dữ liệu nâng cao, Trường Đại học Công nghệ TP.HCM (HUTECH), 2018.
+Bootstrap Team, Bootstrap Documentation, truy cập ngày 13/03/2025, https://getbootstrap.com/docs/5.0.
