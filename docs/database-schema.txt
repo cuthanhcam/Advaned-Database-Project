@@ -136,6 +136,7 @@ CREATE TABLE ThongBao (
     FOREIGN KEY (MSSV) REFERENCES CuuSinhVien(MSSV)
 );
 
+<<<<<<< Updated upstream
 Ràng buộc:
 MaThongBao: Khóa chính, tự tăng.
 MSSV: Khóa ngoại, không null, liên kết với CuuSinhVien.
@@ -156,3 +157,20 @@ DangKySuKien -> SuKien (N-1, qua MaSuKien)
 ThongBao -> CuuSinhVien (N-1, qua MSSV)
 
 Chuẩn hóa: Các bảng đều đạt BCNF vì mỗi bảng có khóa chính xác định đầy đủ các thuộc tính không khóa, không có phụ thuộc hàm dư thừa.
+=======
+-- Bảng AspNetUsers: Kết nối với Identity
+ALTER TABLE AspNetUsers ADD MSSV VARCHAR(10) NULL;
+ALTER TABLE AspNetUsers ADD CONSTRAINT FK_AspNetUsers_Alumni FOREIGN KEY (MSSV) REFERENCES Alumni(MSSV) ON DELETE SET NULL; -- Sửa ON DELETE CASCADE thành SET NULL để tránh xóa user khi xóa Alumni
+
+
+// Thêm bảng Khoa
+CREATE TABLE Departments (
+    MaKhoa VARCHAR(10) PRIMARY KEY,
+    TenKhoa NVARCHAR(100) NOT NULL UNIQUE,
+    TruongKhoa NVARCHAR(100) NULL,
+    Email VARCHAR(100) NULL,
+    SoDienThoai VARCHAR(15) NULL,
+    CONSTRAINT CHK_Email_Format CHECK (Email IS NULL OR Email LIKE '%@%.%'), -- Định dạng email hợp lệ
+    CONSTRAINT CHK_SoDienThoai CHECK (SoDienThoai IS NULL OR SoDienThoai LIKE '[0-9]%') -- SĐT chỉ chứa số
+);
+>>>>>>> Stashed changes
