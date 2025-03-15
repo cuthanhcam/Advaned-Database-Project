@@ -1,0 +1,22 @@
+@model C4FAMS.Models.ChuyenNganh
+
+<div class="container">
+    <h1 class="mt-4 mb-4">Thêm Chuyên ngành</h1>
+
+    <form asp-action="CreateChuyenNganh" method="post">
+        <input type="hidden" asp-for="MaKhoa" />
+        <div class="form-group mb-3">
+            <label asp-for="TenChuyenNganh" class="form-label"></label>
+            <input asp-for="TenChuyenNganh" class="form-control" />
+            <span asp-validation-for="TenChuyenNganh" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary">Thêm</button>
+            <a asp-action="Details" asp-route-id="@Model.MaKhoa" class="btn btn-secondary">Hủy</a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

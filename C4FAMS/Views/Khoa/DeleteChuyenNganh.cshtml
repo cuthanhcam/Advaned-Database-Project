@@ -1,0 +1,21 @@
+@model C4FAMS.Models.ChuyenNganh
+
+<div class="container">
+    <h1 class="mt-4 mb-4">Xóa Chuyên ngành</h1>
+
+    <h3>Bạn có chắc muốn xóa chuyên ngành này?</h3>
+    <div class="card mb-4">
+        <div class="card-body">
+            <dl class="row">
+                <dt class="col-sm-3">Tên Chuyên ngành</dt>
+                <dd class="col-sm-9">@Model.TenChuyenNganh</dd>
+            </dl>
+        </div>
+    </div>
+
+    <form asp-action="DeleteChuyenNganh" method="post">
+        <input type="hidden" asp-for="MaChuyenNganh" />
+        <button type="submit" class="btn btn-danger">Xóa</button>
+        <a asp-action="Details" asp-route-id="@Model.MaKhoa" class="btn btn-secondary">Hủy</a>
+    </form>
+</div>

@@ -9,5 +9,9 @@ namespace C4FAMS.Interfaces
     public interface IChuyenNganhRepository
     {
         Task<IEnumerable<ChuyenNganh>> GetAllByKhoaAsync(int maKhoa);
+        Task<ChuyenNganh?> GetByIdAsync(int maChuyenNganh);
+        Task AddAsync(ChuyenNganh chuyenNganh);
+        Task UpdateAsync(ChuyenNganh chuyenNganh);
+        Task DeleteAsync(int maChuyenNganh);
     }
 }
