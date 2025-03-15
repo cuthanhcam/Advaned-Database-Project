@@ -1,28 +1,31 @@
 @model C4FAMS.Models.Khoa
 
-<h1>Sửa Khoa</h1>
+<div class="container">
+    <h1 class="mt-4 mb-4">Sửa Khoa</h1>
 
-<form asp-action="Edit" method="post">
-    <input type="hidden" asp-for="MaKhoa" />
-    <div class="form-group">
-        <label asp-for="TenKhoa" class="control-label"></label>
-        <input asp-for="TenKhoa" class="form-control" />
-        <span asp-validation-for="TenKhoa" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="Email" class="control-label"></label>
-        <input asp-for="Email" class="form-control" />
-        <span asp-validation-for="Email" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="SoDienThoai" class="control-label"></label>
-        <input asp-for="SoDienThoai" class="form-control" />
-        <span asp-validation-for="SoDienThoai" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <input type="submit" value="Lưu" class="btn btn-primary" />
-    </div>
-</form>
+    <form asp-action="Edit" method="post">
+        <input type="hidden" asp-for="MaKhoa" />
+        <div class="form-group mb-3">
+            <label asp-for="TenKhoa" class="form-label"></label>
+            <input asp-for="TenKhoa" class="form-control" />
+            <span asp-validation-for="TenKhoa" class="text-danger"></span>
+        </div>
+        <div class="form-group mb-3">
+            <label asp-for="Email" class="form-label"></label>
+            <input asp-for="Email" class="form-control" />
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+        <div class="form-group mb-3">
+            <label asp-for="SoDienThoai" class="form-label"></label>
+            <input asp-for="SoDienThoai" class="form-control" />
+            <span asp-validation-for="SoDienThoai" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary">Lưu</button>
+            <a asp-action="Index" class="btn btn-secondary">Hủy</a>
+        </div>
+    </form>
+</div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />

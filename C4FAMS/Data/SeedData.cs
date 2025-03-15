@@ -43,6 +43,7 @@ namespace C4FAMS.Data
                 UserName = "khoa@example.com",
                 Email = "khoa@example.com",
                 VaiTro = "Khoa",
+                
                 TrangThai = true
             };
             if (await userManager.FindByEmailAsync(khoaUser.Email) == null)

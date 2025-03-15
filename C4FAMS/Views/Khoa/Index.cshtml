@@ -1,33 +1,45 @@
 @model IEnumerable<C4FAMS.Models.Khoa>
 
-<h1 class="mb-4">Danh sách Khoa</h1>
+<div class="container">
+    <h1 class="mt-4 mb-4">Danh sách Khoa</h1>
 
-<p>
-    <a asp-action="Create" class="btn btn-primary">Thêm Khoa mới</a>
-</p>
+    @if (User.IsInRole("Admin"))
+    {
+        <p>
+            <a asp-action="Create" class="btn btn-primary">Thêm Khoa mới</a>
+        </p>
+    }
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>Tên Khoa</th>
-            <th>Email</th>
-            <th>Số Điện Thoại</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
+    <table class="table table-bordered table-hover">
+        <thead class="thead-dark">
             <tr>
-                <td>@item.TenKhoa</td>
-                <td>@item.Email</td>
-                <td>@item.SoDienThoai</td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.MaKhoa" class="btn btn-sm btn-primary">Sửa</a>
-                    <a asp-action="Details" asp-route-id="@item.MaKhoa" class="btn btn-sm btn-info">Chi tiết</a>
-                    <a asp-action="Delete" asp-route-id="@item.MaKhoa" class="btn btn-sm btn-danger">Xóa</a>
-                </td>
+                <th>Tên Khoa</th>
+                <th>Email</th>
+                <th>Số Điện Thoại</th>
+                <th>Hành động</th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.TenKhoa</td>
+                    <td>@item.Email</td>
+                    <td>@item.SoDienThoai</td>
+                    <td>
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <a asp-action="Edit" asp-route-id="@item.MaKhoa" class="btn btn-sm btn-primary">Sửa</a>
+                            <a asp-action="Details" asp-route-id="@item.MaKhoa" class="btn btn-sm btn-info">Chi tiết</a>
+                            <a asp-action="Delete" asp-route-id="@item.MaKhoa" class="btn btn-sm btn-danger">Xóa</a>
+                        }
+                        else if (User.IsInRole("Khoa"))
+                        {
+                            <a asp-action="Details" asp-route-id="@item.MaKhoa" class="btn btn-sm btn-info">Chi tiết</a>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

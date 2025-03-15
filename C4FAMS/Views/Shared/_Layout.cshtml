@@ -23,7 +23,6 @@
                             {
                                 <li class="nav-item"><a class="nav-link" asp-controller="Khoa" asp-action="Index">Khoa</a></li>
                                 <li class="nav-item"><a class="nav-link" asp-controller="SinhVien" asp-action="Index">Sinh viên</a></li>
-                                <li class="nav-item"><a class="nav-link" asp-controller="SinhVien" asp-action="GroupByKhoa">Nhóm theo Khoa</a></li>
                                 <li class="nav-item"><a class="nav-link" asp-controller="CuuSinhVien" asp-action="Index">Cựu Sinh viên</a></li>
                                 <li class="nav-item"><a class="nav-link" asp-controller="SuKien" asp-action="Index">Sự kiện</a></li>
                                 <li class="nav-item"><a class="nav-link" asp-controller="DangKySuKien" asp-action="Index">Đăng ký Sự kiện</a></li>
@@ -33,6 +32,7 @@
                             }
                             @if (User.IsInRole("Khoa"))
                             {
+                                <li class="nav-item"><a class="nav-link" asp-controller="Khoa" asp-action="Index">Khoa</a></li>
                                 <li class="nav-item"><a class="nav-link" asp-controller="SinhVien" asp-action="Index">Sinh viên</a></li>
                                 <li class="nav-item"><a class="nav-link" asp-controller="CuuSinhVien" asp-action="Index">Cựu Sinh viên</a></li>
                                 <li class="nav-item"><a class="nav-link" asp-controller="SuKien" asp-action="Index">Sự kiện</a></li>
@@ -59,9 +59,9 @@
             @RenderBody()
         </main>
     </div>
-    <footer class="border-top footer text-muted">
+    <footer class="footer text-muted">
         <div class="container">
-            &copy; 2025 - C4FAMS
+            © 2025 - C4FAMS
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>

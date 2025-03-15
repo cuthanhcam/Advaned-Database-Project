@@ -136,7 +136,6 @@ CREATE TABLE ThongBao (
     FOREIGN KEY (MSSV) REFERENCES CuuSinhVien(MSSV)
 );
 
-<<<<<<< Updated upstream
 Ràng buộc:
 MaThongBao: Khóa chính, tự tăng.
 MSSV: Khóa ngoại, không null, liên kết với CuuSinhVien.
@@ -157,20 +156,45 @@ DangKySuKien -> SuKien (N-1, qua MaSuKien)
 ThongBao -> CuuSinhVien (N-1, qua MSSV)
 
 Chuẩn hóa: Các bảng đều đạt BCNF vì mỗi bảng có khóa chính xác định đầy đủ các thuộc tính không khóa, không có phụ thuộc hàm dư thừa.
-=======
+
 -- Bảng AspNetUsers: Kết nối với Identity
 ALTER TABLE AspNetUsers ADD MSSV VARCHAR(10) NULL;
 ALTER TABLE AspNetUsers ADD CONSTRAINT FK_AspNetUsers_Alumni FOREIGN KEY (MSSV) REFERENCES Alumni(MSSV) ON DELETE SET NULL; -- Sửa ON DELETE CASCADE thành SET NULL để tránh xóa user khi xóa Alumni
 
 
-// Thêm bảng Khoa
-CREATE TABLE Departments (
-    MaKhoa VARCHAR(10) PRIMARY KEY,
-    TenKhoa NVARCHAR(100) NOT NULL UNIQUE,
-    TruongKhoa NVARCHAR(100) NULL,
-    Email VARCHAR(100) NULL,
-    SoDienThoai VARCHAR(15) NULL,
-    CONSTRAINT CHK_Email_Format CHECK (Email IS NULL OR Email LIKE '%@%.%'), -- Định dạng email hợp lệ
-    CONSTRAINT CHK_SoDienThoai CHECK (SoDienThoai IS NULL OR SoDienThoai LIKE '[0-9]%') -- SĐT chỉ chứa số
+Thêm các bảng bổng sung cho SuKien
+CREATE TABLE SuKienChiTiet (
+    MaSuKien INT PRIMARY KEY, 
+    MoTa NVARCHAR(MAX) NULL, 
+    NoiDung NVARCHAR(MAX) NULL, 
+    Thumbnail NVARCHAR(255) NULL, 
+    FOREIGN KEY (MaSuKien) REFERENCES SuKien(MaSuKien) ON DELETE CASCADE
 );
->>>>>>> Stashed changes
+
+CREATE TABLE SuKienHinhAnh (
+    MaHinhAnh INT IDENTITY(1,1) PRIMARY KEY, 
+    MaSuKien INT NOT NULL, 
+    HinhAnh NVARCHAR(255) NOT NULL, 
+    FOREIGN KEY (MaSuKien) REFERENCES SuKien(MaSuKien) ON DELETE CASCADE
+);
+
+Có thể bổ sung
+CREATE TABLE SuKienNguoiThamGia (
+    MaSuKien INT NOT NULL,
+    MaNguoiDung INT NOT NULL,
+    ThoiGianDangKy DATETIME DEFAULT GETDATE(),
+    TrangThai NVARCHAR(50) CHECK (TrangThai IN ('Đã đăng ký', 'Đã tham gia', 'Đã hủy')),
+    PRIMARY KEY (MaSuKien, MaNguoiDung),
+    FOREIGN KEY (MaSuKien) REFERENCES SuKien(MaSuKien) ON DELETE CASCADE,
+    FOREIGN KEY (MaNguoiDung) REFERENCES NguoiDung(MaNguoiDung) ON DELETE CASCADE
+);
+
+Bổ sung chuyên ngành cho bảng Khoa (có thể sắp xếp theo chuyên ngành trong 1 khoa vì khoa có nhiều chuyên ngành)
+CREATE TABLE ChuyenNganh (
+    MaChuyenNganh INT IDENTITY(1,1) PRIMARY KEY,
+    TenChuyenNganh NVARCHAR(255) NOT NULL UNIQUE,
+    MaKhoa INT NOT NULL,
+    FOREIGN KEY (MaKhoa) REFERENCES Khoa(MaKhoa) ON DELETE CASCADE
+);
+
+

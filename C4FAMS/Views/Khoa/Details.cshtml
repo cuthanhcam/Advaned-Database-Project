@@ -1,38 +1,67 @@
 @model C4FAMS.Models.Khoa
 
-<h1>Chi tiết Khoa</h1>
+<div class="container">
+    <h1 class="mt-4 mb-4">Chi tiết Khoa: @Model.TenKhoa</h1>
 
-<div>
-    <h4>@Model.TenKhoa</h4>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-2">Tên Khoa</dt>
-        <dd class="col-sm-10">@Model.TenKhoa</dd>
-        <dt class="col-sm-2">Email</dt>
-        <dd class="col-sm-10">@Model.Email</dd>
-        <dt class="col-sm-2">Số Điện Thoại</dt>
-        <dd class="col-sm-10">@Model.SoDienThoai</dd>
-    </dl>
-</div>
+    <div class="card mb-4">
+        <div class="card-header bg-primary text-white">
+            Thông tin Khoa
+        </div>
+        <div class="card-body">
+            <dl class="row">
+                <dt class="col-sm-3">Tên Khoa</dt>
+                <dd class="col-sm-9">@Model.TenKhoa</dd>
+                <dt class="col-sm-3">Email</dt>
+                <dd class="col-sm-9">@Model.Email</dd>
+                <dt class="col-sm-3">Số Điện Thoại</dt>
+                <dd class="col-sm-9">@Model.SoDienThoai</dd>
+            </dl>
+        </div>
+    </div>
 
-<h3>Danh sách Chuyên ngành</h3>
-<table class="table">
-    <thead>
-        <tr>
-            <th>Tên Chuyên ngành</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in ViewBag.ChuyenNganhList)
+    <div class="card">
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+            <span>Danh sách Chuyên ngành</span>
+            @if (User.IsInRole("Admin"))
+            {
+                <a asp-action="CreateChuyenNganh" asp-route-maKhoa="@Model.MaKhoa" class="btn btn-success btn-sm">Thêm Chuyên ngành</a>
+            }
+        </div>
+        <div class="card-body">
+            <table class="table table-bordered table-hover">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>Tên Chuyên ngành</th>
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <th>Hành động</th>
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in ViewBag.ChuyenNganhList)
+                    {
+                        <tr>
+                            <td>@item.TenChuyenNganh</td>
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <td>
+                                    <a asp-action="EditChuyenNganh" asp-route-id="@item.MaChuyenNganh" class="btn btn-warning btn-sm">Sửa</a>
+                                    <a asp-action="DeleteChuyenNganh" asp-route-id="@item.MaChuyenNganh" class="btn btn-danger btn-sm">Xóa</a>
+                                </td>
+                            }
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="mt-4">
+        @if (User.IsInRole("Admin"))
         {
-            <tr>
-                <td>@item.TenChuyenNganh</td>
-            </tr>
+            <a asp-action="Edit" asp-route-id="@Model.MaKhoa" class="btn btn-primary">Sửa Khoa</a>
         }
-    </tbody>
-</table>
-
-<div>
-    <a asp-action="Edit" asp-route-id="@Model.MaKhoa">Sửa</a> |
-    <a asp-action="Index">Quay lại</a>
+        <a asp-action="Index" class="btn btn-secondary">Quay lại</a>
+    </div>
 </div>

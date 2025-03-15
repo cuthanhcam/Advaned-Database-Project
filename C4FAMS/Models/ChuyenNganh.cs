@@ -12,10 +12,10 @@ namespace C4FAMS.Models
         [StringLength(255)]
         public string TenChuyenNganh { get; set; } = null!;
 
-        [Required]
+        [Required(ErrorMessage = "Mã khoa là bắt buộc")]
         public int MaKhoa { get; set; }
 
         [ForeignKey("MaKhoa")]
-        public Khoa Khoa { get; set; } = null!;
+        public Khoa? Khoa { get; set; }
     }
 }
