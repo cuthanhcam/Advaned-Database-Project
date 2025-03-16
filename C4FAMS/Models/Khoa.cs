@@ -23,5 +23,7 @@ namespace C4FAMS.Models
 
         // Quan hệ 1-n với ChuyenNganh
         public virtual ICollection<ChuyenNganh> ChuyenNganh { get; set; } = new List<ChuyenNganh>();
+        // Quan hệ 1-n với SuKien
+        public virtual ICollection<SuKien> SuKiens { get; set; } = new List<SuKien>();
     }
 }

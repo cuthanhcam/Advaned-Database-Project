@@ -1,0 +1,74 @@
+@model IEnumerable<C4FAMS.Models.SuKien>
+
+<div class="container">
+    <h1 class="mt-4 mb-4">Danh sách Sự kiện</h1>
+
+    <!-- Form lọc -->
+    <form asp-action="Index" method="get" class="mb-4">
+        <div class="row">
+            @if (User.IsInRole("Admin"))
+            {
+                <div class="col-md-6">
+                    <label class="form-label">Khoa</label>
+                    <select name="khoaId" class="form-control" onchange="this.form.submit()" asp-items="@(new SelectList(ViewBag.KhoaList ?? new List<C4FAMS.Models.Khoa>(), "MaKhoa", "TenKhoa", ViewBag.SelectedKhoaId))">
+                        <option value="">-- Chọn Khoa --</option>
+                    </select>
+                </div>
+            }
+
+            <div class="col-md-6">
+                <label class="form-label">Ngày tổ chức</label>
+                <input type="date" name="ngayToChuc" class="form-control" value="@ViewBag.SelectedNgayToChuc" onchange="this.form.submit()" />
+            </div>
+        </div>
+    </form>
+
+    @if (User.IsInRole("Admin") || User.IsInRole("Khoa"))
+    {
+        <p>
+            <a asp-action="Create" class="btn btn-primary">Tạo Sự kiện mới</a>
+        </p>
+    }
+
+    <table class="table table-bordered table-hover">
+        <thead class="thead-dark">
+            <tr>
+                <th>Hình ảnh</th>
+                <th>Tên Sự kiện</th>
+                <th>Ngày tổ chức</th>
+                <th>Địa điểm</th>
+                <th>Khoa</th>
+                <th>Hành động</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @if (item.SuKienHinhAnhs != null && item.SuKienHinhAnhs.Any())
+                        {
+                            <img src="@item.SuKienHinhAnhs.First().HinhAnh" alt="@item.TenSuKien" class="img-fluid rounded" style="max-width: 100px;" />
+                        }
+                        else
+                        {
+                            <span class="text-muted">Không có ảnh</span>
+                        }
+                    </td>
+                    <td>@item.TenSuKien</td>
+                    <td>@item.NgayToChuc.ToString("dd/MM/yyyy HH:mm")</td>
+                    <td>@item.DiaDiem</td>
+                    <td>@(item.Khoa?.TenKhoa ?? "N/A")</td>
+                    <td>
+                        <a asp-action="Details" asp-route-id="@item.MaSuKien" class="btn btn-sm btn-info">Chi tiết</a>
+                        @if (User.IsInRole("Admin") || (User.IsInRole("Khoa") && item.MaKhoa == ViewBag.KhoaId))
+                        {
+                            <a asp-action="Edit" asp-route-id="@item.MaSuKien" class="btn btn-sm btn-primary">Sửa</a>
+                            <a asp-action="Delete" asp-route-id="@item.MaSuKien" class="btn btn-sm btn-danger">Xóa</a>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

@@ -14,10 +14,6 @@ namespace C4FAMS.Models
 
         public string? NoiDung { get; set; } // NVARCHAR(MAX) không giới hạn độ dài
 
-        [StringLength(255, ErrorMessage = "Thumbnail không được vượt quá 255 ký tự")]
-        [RegularExpression(@"^[\w\-\./]+$", ErrorMessage = "Thumbnail phải là đường dẫn hợp lệ")]
-        public string? Thumbnail { get; set; }
-
-        public virtual SuKien SuKien { get; set; } = null!;
+        public virtual SuKien? SuKien { get; set; } // Navigation property cho phép null
     }
 }

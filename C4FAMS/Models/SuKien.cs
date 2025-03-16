@@ -20,10 +20,12 @@ namespace C4FAMS.Models
         [StringLength(200, ErrorMessage = "Địa điểm không được vượt quá 200 ký tự")]
         public string DiaDiem { get; set; } = null!;
 
-        [Required(ErrorMessage = "Mã khoa là bắt buộc")]
-        public int MaKhoa { get; set; }
+        // [Required(ErrorMessage = "Mã khoa là bắt buộc")] // Tạm thời bỏ [Required] để test
+        public int? MaKhoa { get; set; } // cho phép null
 
         [ForeignKey("MaKhoa")]
-        public Khoa Khoa { get; set; } = null!;
+        public Khoa? Khoa { get; set; }
+
+        public virtual ICollection<SuKienHinhAnh> SuKienHinhAnhs { get; set; } = new List<SuKienHinhAnh>(); // 1-n
     }
 }

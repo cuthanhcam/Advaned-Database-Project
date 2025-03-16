@@ -26,6 +26,9 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<IKhoaRepository, KhoaRepository>();
 builder.Services.AddScoped<IChuyenNganhRepository, ChuyenNganhRepository>();
 builder.Services.AddScoped<ISinhVienRepository, SinhVienRepository>();
+builder.Services.AddScoped<ISuKienRepository, SuKienRepository>();
+builder.Services.AddScoped<ISuKienChiTietRepository, SuKienChiTietRepository>();
+builder.Services.AddScoped<ISuKienHinhAnhRepository, SuKienHinhAnhRepository>();
 
 var app = builder.Build();
 
