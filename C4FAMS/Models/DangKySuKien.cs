@@ -9,7 +9,8 @@ namespace C4FAMS.Models
         public int MaDangKy { get; set; }
 
         [Required(ErrorMessage = "MSSV là bắt buộc")]
-        [StringLength(20)]
+        [StringLength(10, MinimumLength = 10, ErrorMessage = "MSSV phải đúng 10 chữ số")]
+        [RegularExpression(@"^\d{10}$", ErrorMessage = "MSSV phải là 10 chữ số")]
         public string MSSV { get; set; } = null!;
 
         [Required(ErrorMessage = "Mã sự kiện là bắt buộc")]
@@ -17,12 +18,16 @@ namespace C4FAMS.Models
 
         [Required(ErrorMessage = "Ngày đăng ký là bắt buộc")]
         [DataType(DataType.DateTime)]
-        public DateTime NgayDangKy { get; set; }
+        public DateTime NgayDangKy { get; set; } = DateTime.Now;
+
+        [Required(ErrorMessage = "Trạng thái là bắt buộc")]
+        [StringLength(50)]
+        public string TrangThai { get; set; } = "Đã đăng ký"; // Mặc định là "Đã đăng ký"
 
         [ForeignKey("MSSV")]
-        public CuuSinhVien CuuSinhVien { get; set; } = null!;
+        public virtual CuuSinhVien CuuSinhVien { get; set; } = null!;
 
         [ForeignKey("MaSuKien")]
-        public SuKien SuKien { get; set; } = null!;
+        public virtual SuKien SuKien { get; set; } = null!;
     }
 }

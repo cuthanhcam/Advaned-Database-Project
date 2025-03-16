@@ -6,8 +6,9 @@ namespace C4FAMS.Models
     public class CuuSinhVien
     {
         [Key]
-        [StringLength(20)]
         [ForeignKey("SinhVien")]
+        [StringLength(10, MinimumLength = 10, ErrorMessage = "MSSV phải đúng 10 chữ số")]
+        [RegularExpression(@"^\d{10}$", ErrorMessage = "MSSV phải là 10 chữ số")]
         public string MSSV { get; set; } = null!;
 
         [Required(ErrorMessage = "Năm tốt nghiệp là bắt buộc")]

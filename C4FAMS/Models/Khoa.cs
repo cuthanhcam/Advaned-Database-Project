@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace C4FAMS.Models
 {
@@ -17,7 +18,10 @@ namespace C4FAMS.Models
         public string Email { get; set; } = null!;
 
         [StringLength(15, ErrorMessage = "Số điện thoại không được vượt quá 15 ký tự")]
-        [RegularExpression(@"^[0-9]*$", ErrorMessage = "Số điện thoại phải là số")]
+        [RegularExpression(@"^[0-9]{10,15}$", ErrorMessage = "Số điện thoại phải là 10-15 chữ số")]
         public string? SoDienThoai { get; set; }
+
+        // Quan hệ 1-n với ChuyenNganh
+        public virtual ICollection<ChuyenNganh> ChuyenNganh { get; set; } = new List<ChuyenNganh>();
     }
 }

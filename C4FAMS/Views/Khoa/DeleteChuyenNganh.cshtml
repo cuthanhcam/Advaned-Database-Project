@@ -15,6 +15,7 @@
 
     <form asp-action="DeleteChuyenNganh" method="post">
         <input type="hidden" asp-for="MaChuyenNganh" />
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         <button type="submit" class="btn btn-danger">Xóa</button>
         <a asp-action="Details" asp-route-id="@Model.MaKhoa" class="btn btn-secondary">Hủy</a>
     </form>

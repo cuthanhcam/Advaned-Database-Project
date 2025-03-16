@@ -1,37 +1,82 @@
 @model IEnumerable<C4FAMS.Models.SinhVien>
 
-<h1>Danh sách Sinh viên</h1>
+<div class="container">
+    <h1 class="mt-4 mb-4">Danh sách Sinh viên</h1>
 
-<p>
-    <a asp-action="Create">Thêm Sinh viên mới</a>
-</p>
+    <!-- Form lọc -->
+    <form asp-action="Index" method="get" class="mb-4">
+        <div class="row">
+            @if (User.IsInRole("Admin"))
+            {
+                <div class="col-md-4">
+                    <label class="form-label">Khoa</label>
+                    <select name="khoaId" class="form-control" onchange="this.form.submit()" asp-items="@(new SelectList(ViewBag.KhoaList ?? new List<C4FAMS.Models.Khoa>(), "MaKhoa", "TenKhoa", ViewBag.SelectedKhoaId))">
+                        <option value="">-- Chọn Khoa --</option>
+                    </select>
+                </div>
+            }
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>MSSV</th>
-            <th>Họ Tên</th>
-            <th>Giới Tính</th>
-            <th>Ngày Sinh</th>
-            <th>Khoa</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
+            <div class="col-md-4">
+                <label class="form-label">Chuyên ngành</label>
+                <select name="chuyenNganhId" class="form-control" onchange="this.form.submit()" asp-items="@(new SelectList(ViewBag.ChuyenNganhList ?? new List<C4FAMS.Models.ChuyenNganh>(), "MaChuyenNganh", "TenChuyenNganh", ViewBag.SelectedChuyenNganhId))">
+                    <option value="">-- Chọn Chuyên ngành --</option>
+                </select>
+            </div>
+
+            <div class="col-md-4">
+                <label class="form-label">Khóa học</label>
+                <select name="khoaHoc" class="form-control" onchange="this.form.submit()" asp-items="@(new SelectList(ViewBag.KhoaHocList ?? new List<string>(), null, null, ViewBag.SelectedKhoaHoc))">
+                    <option value="">-- Chọn Khóa học --</option>
+                </select>
+            </div>
+        </div>
+    </form>
+
+    @if (User.IsInRole("Admin") || User.IsInRole("Khoa"))
+    {
+        <p>
+            <a asp-action="Create" class="btn btn-primary">Thêm Sinh viên mới</a>
+        </p>
+    }
+
+    <table class="table table-bordered table-hover">
+        <thead class="thead-dark">
             <tr>
-                <td>@item.MSSV</td>
-                <td>@item.HoTen</td>
-                <td>@(item.GioiTinh ? "Nam" : "Nữ")</td>
-                <td>@item.NgaySinh.ToShortDateString()</td>
-                <td>@item.Khoa.TenKhoa</td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.MSSV">Sửa</a> |
-                    <a asp-action="Display" asp-route-id="@item.MSSV">Chi tiết</a> |
-                    <a asp-action="Delete" asp-route-id="@item.MSSV">Xóa</a>
-                </td>
+                <th>MSSV</th>
+                <th>Họ tên</th>
+                <th>Giới tính</th>
+                <th>Ngày sinh</th>
+                <th>Chuyên ngành</th>
+                <th>Mã chuyên ngành</th>
+                <th>Khóa học</th>
+                <th>Lớp</th>
+                <th>Trạng thái</th>
+                <th>Hành động</th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.MSSV</td>
+                    <td>@item.HoTen</td>
+                    <td>@(item.GioiTinh ? "Nam" : "Nữ")</td>
+                    <td>@item.NgaySinh.ToString("dd/MM/yyyy")</td>
+                    <td>@item.ChuyenNganh?.TenChuyenNganh</td>
+                    <td>@item.MaChuyenNganh</td>
+                    <td>@item.KhoaHoc</td>
+                    <td>@item.Lop</td>
+                    <td>@item.TrangThai</td>
+                    <td>
+                        <a asp-action="Details" asp-route-id="@item.MSSV" class="btn btn-sm btn-info">Chi tiết</a>
+                        @if (User.IsInRole("Admin") || User.IsInRole("Khoa"))
+                        {
+                            <a asp-action="Edit" asp-route-id="@item.MSSV" class="btn btn-sm btn-primary">Sửa</a>
+                            <a asp-action="Delete" asp-route-id="@item.MSSV" class="btn btn-sm btn-danger">Xóa</a>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

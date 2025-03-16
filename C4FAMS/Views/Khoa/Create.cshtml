@@ -4,6 +4,7 @@
     <h1 class="mt-4 mb-4">Thêm Khoa</h1>
 
     <form asp-action="Create" method="post">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         <div class="form-group mb-3">
             <label asp-for="TenKhoa" class="form-label"></label>
             <input asp-for="TenKhoa" class="form-control" />
