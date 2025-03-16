@@ -27,11 +27,13 @@
                             {
                                 <li class="nav-item"><a class="nav-link" asp-controller="Khoa" asp-action="Index">Khoa</a></li>
                                 <li class="nav-item"><a class="nav-link" asp-controller="SinhVien" asp-action="Index">Sinh viên</a></li>
+                                <li class="nav-item"><a class="nav-link" asp-controller="SuKien" asp-action="Index">Sự Kiện</a></li>
                             }
                             @if (User.IsInRole("Khoa"))
                             {
                                 <li class="nav-item"><a class="nav-link" asp-controller="Khoa" asp-action="Index">Khoa</a></li>
                                 <li class="nav-item"><a class="nav-link" asp-controller="SinhVien" asp-action="Index">Sinh viên</a></li>
+                                <li class="nav-item"><a class="nav-link" asp-controller="SuKien" asp-action="Index">Sự Kiện</a></li>
                             }
                             @if (User.IsInRole("CuuSinhVien"))
                             {

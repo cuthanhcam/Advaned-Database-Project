@@ -1,0 +1,46 @@
+@model C4FAMS.Models.SuKien
+
+<div class="container">
+    <h1 class="mt-4 mb-4">Xóa Sự kiện</h1>
+
+    <div class="alert alert-danger">
+        Bạn có chắc chắn muốn xóa sự kiện <strong>@Model.TenSuKien</strong> không? Hành động này không thể hoàn tác.
+    </div>
+
+    <dl class="row">
+        <dt class="col-sm-3">Tên sự kiện</dt>
+        <dd class="col-sm-9">@Model.TenSuKien</dd>
+
+        <dt class="col-sm-3">Ngày tổ chức</dt>
+        <dd class="col-sm-9">@Model.NgayToChuc.ToString("dd/MM/yyyy HH:mm")</dd>
+
+        <dt class="col-sm-3">Địa điểm</dt>
+        <dd class="col-sm-9">@Model.DiaDiem</dd>
+
+        <dt class="col-sm-3">Khoa</dt>
+        <dd class="col-sm-9">@Model.Khoa?.TenKhoa ?? "N/A"</dd>
+    </dl>
+
+    <div class="form-group mb-3">
+        <label class="form-label">Hình ảnh</label>
+        @if (Model.SuKienHinhAnhs != null && Model.SuKienHinhAnhs.Any())
+        {
+            <div class="d-flex flex-wrap gap-2 justify-content-center mb-3">
+                @foreach (var hinhAnh in Model.SuKienHinhAnhs)
+                {
+                    <img src="@hinhAnh.HinhAnh" alt="@Model.TenSuKien" class="img-fluid rounded" style="max-width: 200px;" />
+                }
+            </div>
+        }
+        else
+        {
+            <p class="text-muted">Không có hình ảnh nào.</p>
+        }
+    </div>
+
+    <form asp-action="Delete" method="post">
+        <input type="hidden" asp-for="MaSuKien" />
+        <button type="submit" class="btn btn-danger">Xóa</button>
+        <a asp-action="Index" class="btn btn-secondary">Quay lại</a>
+    </form>
+</div>
