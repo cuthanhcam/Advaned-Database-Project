@@ -1,31 +1,30 @@
-using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using C4FAMS.Models;
 
-namespace C4FAMS.Controllers;
-
-public class HomeController : Controller
+namespace C4FAMS.Controllers
 {
-    private readonly ILogger<HomeController> _logger;
-
-    public HomeController(ILogger<HomeController> logger)
+    public class HomeController : Controller
     {
-        _logger = logger;
-    }
+        public IActionResult Index()
+        {
+            return View();
+        }
 
-    public IActionResult Index()
-    {
-        return View();
-    }
+        public IActionResult StatusCode(int code)
+        {
+            switch (code)
+            {
+                case 404:
+                    return View("~/Views/Shared/NotFound.cshtml", "Trang không tồn tại.");
+                case 403:
+                    return View("~/Views/Shared/AccessDenied.cshtml", "Bạn không có quyền truy cập.");
+                default:
+                    return View("~/Views/Shared/Error.cshtml", $"Lỗi {code}: Đã xảy ra lỗi không xác định.");
+            }
+        }
 
-    public IActionResult Privacy()
-    {
-        return View();
-    }
-
-    [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-    public IActionResult Error()
-    {
-        return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        public IActionResult Error()
+        {
+            return View("~/Views/Shared/Error.cshtml", "Đã xảy ra lỗi trong hệ thống.");
+        }
     }
 }

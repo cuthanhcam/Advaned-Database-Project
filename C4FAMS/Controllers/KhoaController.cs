@@ -11,12 +11,21 @@ namespace C4FAMS.Controllers
     {
         private readonly IKhoaRepository _khoaRepository;
         private readonly IChuyenNganhRepository _chuyenNganhRepository;
+        private readonly ISuKienRepository _suKienRepository;
+        private readonly ISinhVienRepository _sinhVienRepository;
         private readonly UserManager<NguoiDung> _userManager;
 
-        public KhoaController(IKhoaRepository khoaRepository, IChuyenNganhRepository chuyenNganhRepository, UserManager<NguoiDung> userManager)
+        public KhoaController(
+            IKhoaRepository khoaRepository,
+            IChuyenNganhRepository chuyenNganhRepository,
+            ISuKienRepository suKienRepository,
+            ISinhVienRepository sinhVienRepository,
+            UserManager<NguoiDung> userManager)
         {
             _khoaRepository = khoaRepository;
             _chuyenNganhRepository = chuyenNganhRepository;
+            _suKienRepository = suKienRepository;
+            _sinhVienRepository = sinhVienRepository;
             _userManager = userManager;
         }
 
@@ -35,7 +44,7 @@ namespace C4FAMS.Controllers
                 if (khoa == null) return NotFound("Khoa không tồn tại.");
                 return View(new List<Khoa> { khoa });
             }
-            return Forbid();
+            return StatusCode(403, "Bạn không có quyền truy cập.");
         }
 
         [Authorize(Roles = "Admin")]
@@ -94,6 +103,20 @@ namespace C4FAMS.Controllers
         {
             try
             {
+                var khoa = await _khoaRepository.GetByIdAsync(id);
+                if (khoa == null)
+                {
+                    return NotFound();
+                }
+
+                // Kiểm tra xem khoa có được sử dụng trong SuKien không
+                var suKienList = await _suKienRepository.GetByKhoaAsync(id);
+                if (suKienList.Any())
+                {
+                    ModelState.AddModelError("", "Không thể xóa khoa này vì có sự kiện đang sử dụng.");
+                    return View("Delete", khoa);
+                }
+
                 await _khoaRepository.DeleteAsync(id);
                 return RedirectToAction(nameof(Index));
             }
@@ -102,6 +125,10 @@ namespace C4FAMS.Controllers
                 ModelState.AddModelError("", ex.Message);
                 var khoa = await _khoaRepository.GetByIdAsync(id);
                 return View("Delete", khoa);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Đã xảy ra lỗi khi xóa khoa.");
             }
         }
 
@@ -115,7 +142,7 @@ namespace C4FAMS.Controllers
                 var user = await _userManager.GetUserAsync(User);
                 if (!user.MaKhoa.HasValue || user.MaKhoa != id)
                 {
-                    return Forbid("Bạn chỉ có thể xem thông tin khoa của mình.");
+                    return StatusCode(403, "Bạn chỉ có thể xem thông tin khoa của mình.");
                 }
             }
 
@@ -144,6 +171,66 @@ namespace C4FAMS.Controllers
                 return RedirectToAction(nameof(Details), new { id = chuyenNganh.MaKhoa });
             }
             return View(chuyenNganh);
+        }
+
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> EditChuyenNganh(int id)
+        {
+            var chuyenNganh = await _chuyenNganhRepository.GetByIdAsync(id);
+            if (chuyenNganh == null) return NotFound();
+            return View(chuyenNganh);
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditChuyenNganh(int id, ChuyenNganh chuyenNganh)
+        {
+            if (id != chuyenNganh.MaChuyenNganh) return NotFound("Chuyên ngành không tồn tại.");
+            if (ModelState.IsValid)
+            {
+                await _chuyenNganhRepository.UpdateAsync(chuyenNganh);
+                return RedirectToAction(nameof(Details), new { id = chuyenNganh.MaKhoa });
+            }
+            return View(chuyenNganh);
+        }
+
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> DeleteChuyenNganh(int id)
+        {
+            var chuyenNganh = await _chuyenNganhRepository.GetByIdAsync(id);
+            if (chuyenNganh == null) return NotFound("Chuyên ngành không tồn tại.");
+            return View(chuyenNganh);
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPost, ActionName("DeleteChuyenNganh")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteChuyenNganhConfirmed(int id)
+        {
+            try
+            {
+                var chuyenNganh = await _chuyenNganhRepository.GetByIdAsync(id);
+                if (chuyenNganh == null)
+                {
+                    return NotFound("Chuyên ngành không tồn tại.");
+                }
+
+                // Kiểm tra xem chuyên ngành có được sử dụng trong SinhVien không
+                var sinhVienList = await _sinhVienRepository.GetByChuyenNganhAsync(id);
+                if (sinhVienList.Any())
+                {
+                    ModelState.AddModelError("", "Không thể xóa chuyên ngành này vì có sinh viên đang sử dụng.");
+                    return View("DeleteChuyenNganh", chuyenNganh);
+                }
+
+                await _chuyenNganhRepository.DeleteAsync(id);
+                return RedirectToAction(nameof(Details), new { id = chuyenNganh.MaKhoa });
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Đã xảy ra lỗi khi xóa chuyên ngành.");
+            }
         }
     }
 }

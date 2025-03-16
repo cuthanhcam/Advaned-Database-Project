@@ -31,6 +31,13 @@ namespace C4FAMS.Repositories
                 .ToListAsync();
         }
 
+        public async Task<IEnumerable<SinhVien>> GetByChuyenNganhAsync(int maChuyenNganh)
+        {
+            return await _context.SinhVien
+                .Where(s => s.MaChuyenNganh == maChuyenNganh)
+                .ToListAsync();
+        }
+
         public async Task<SinhVien?> GetByIdAsync(string mssv)
         {
             return await _context.SinhVien
