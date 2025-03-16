@@ -1,0 +1,57 @@
+@model C4FAMS.Models.NguoiDung
+
+<div class="container">
+    <h1 class="mt-4 mb-4">Chỉnh sửa Tài khoản</h1>
+
+    <form asp-action="EditUser" method="post">
+        <div asp-validation-summary="All" class="text-danger"></div>
+        <input type="hidden" asp-for="Id" />
+
+        <div class="form-group mb-3">
+            <label asp-for="UserName" class="form-label"></label>
+            <input asp-for="UserName" class="form-control" required />
+            <span asp-validation-for="UserName" class="text-danger"></span>
+        </div>
+
+        <div class="form-group mb-3">
+            <label asp-for="Email" class="form-label"></label>
+            <input asp-for="Email" class="form-control" required />
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+
+        <div class="form-group mb-3">
+            <label asp-for="VaiTro" class="form-label">Vai trò</label>
+            <select asp-for="VaiTro" class="form-control" required>
+                <option value="Khoa">Khoa</option>
+                <option value="Admin">Admin</option>
+            </select>
+            <span asp-validation-for="VaiTro" class="text-danger"></span>
+        </div>
+
+        <div class="form-group mb-3">
+            <label asp-for="MaKhoa" class="form-label">Khoa</label>
+            <select asp-for="MaKhoa" class="form-control" asp-items="@(new SelectList(ViewBag.KhoaList ?? new List<C4FAMS.Models.Khoa>(), "MaKhoa", "TenKhoa"))" required>
+                <option value="">-- Chọn Khoa --</option>
+            </select>
+            <span asp-validation-for="MaKhoa" class="text-danger"></span>
+        </div>
+
+        <div class="form-group mb-3">
+            <label asp-for="TrangThai" class="form-label">Trạng thái</label>
+            <select asp-for="TrangThai" class="form-control">
+                <option value="true">Hoạt động</option>
+                <option value="false">Ngưng hoạt động</option>
+            </select>
+            <span asp-validation-for="TrangThai" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary">Lưu</button>
+            <a asp-action="ManageUsers" class="btn btn-secondary">Quay lại</a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
