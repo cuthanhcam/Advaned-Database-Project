@@ -362,5 +362,71 @@ namespace C4FAMS.Controllers
             }
             return View(sinhVien);
         }
+
+        // Action TrangThai (GET) - Hiển thị trang trạng thái
+        [Authorize(Roles = "Admin, Khoa")]
+        public async Task<IActionResult> TrangThai(string id)
+        {
+            if (string.IsNullOrEmpty(id))
+            {
+                return NotFound("MSSV không hợp lệ.");
+            }
+
+            var sinhVien = await _sinhVienRepository.GetByIdAsync(id);
+            if (sinhVien == null)
+            {
+                return NotFound("Không tìm thấy sinh viên.");
+            }
+
+            if (User.IsInRole("Khoa"))
+            {
+                var user = await _userManager.GetUserAsync(User);
+                if (!user.MaKhoa.HasValue || sinhVien.ChuyenNganh?.MaKhoa != user.MaKhoa.Value)
+                {
+                    return Forbid("Bạn chỉ có thể xem sinh viên thuộc khoa của mình.");
+                }
+            }
+
+            return View(sinhVien);
+        }
+
+        // Action TrangThai (POST) - Cập nhật trạng thái
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin, Khoa")]
+        public async Task<IActionResult> TrangThai(string id, TrangThaiSinhVien trangThai)
+        {
+            if (string.IsNullOrEmpty(id))
+            {
+                return NotFound("MSSV không hợp lệ.");
+            }
+
+            var sinhVien = await _sinhVienRepository.GetByIdAsync(id);
+            if (sinhVien == null)
+            {
+                return NotFound("Không tìm thấy sinh viên.");
+            }
+
+            if (User.IsInRole("Khoa"))
+            {
+                var user = await _userManager.GetUserAsync(User);
+                if (!user.MaKhoa.HasValue || sinhVien.ChuyenNganh?.MaKhoa != user.MaKhoa.Value)
+                {
+                    return Forbid("Bạn chỉ có thể cập nhật sinh viên thuộc khoa của mình.");
+                }
+            }
+
+            try
+            {
+                sinhVien.TrangThai = trangThai;
+                await _sinhVienRepository.UpdateAsync(sinhVien);
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", $"Lỗi khi cập nhật trạng thái: {ex.Message}");
+                return View(sinhVien);
+            }
+        }
     }
 }
