@@ -11,19 +11,24 @@ namespace C4FAMS.Repositories
 
         public ChuyenNganhRepository(ApplicationDbContext context)
         {
-            _context = context ?? throw new ArgumentNullException(nameof(context));
+            _context = context;
         }
 
-        public async Task<IEnumerable<ChuyenNganh>> GetAllByKhoaAsync(int maKhoa)
+        public async Task<IEnumerable<ChuyenNganh>> GetAllAsync()
+        {
+            return await _context.ChuyenNganh.Include(c => c.Khoa).ToListAsync();
+        }
+
+        public async Task<IEnumerable<ChuyenNganh>> GetByKhoaAsync(int maKhoa)
         {
             return await _context.ChuyenNganh
                 .Where(c => c.MaKhoa == maKhoa)
                 .ToListAsync();
         }
-
         public async Task<ChuyenNganh?> GetByIdAsync(int maChuyenNganh)
         {
-            return await _context.ChuyenNganh.FindAsync(maChuyenNganh);
+            return await _context.ChuyenNganh
+                .FirstOrDefaultAsync(c => c.MaChuyenNganh == maChuyenNganh);
         }
 
         public async Task AddAsync(ChuyenNganh chuyenNganh)
@@ -32,7 +37,6 @@ namespace C4FAMS.Repositories
             await _context.SaveChangesAsync();
         }
 
-        
         public async Task UpdateAsync(ChuyenNganh chuyenNganh)
         {
             _context.ChuyenNganh.Update(chuyenNganh);

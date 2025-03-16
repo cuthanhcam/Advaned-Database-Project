@@ -1,46 +1,102 @@
 @model C4FAMS.Models.SinhVien
 
-<h1>Thêm Sinh viên</h1>
+<div class="container">
+    <h1 class="mt-4 mb-4">Thêm Sinh viên</h1>
 
-<form asp-action="Create" method="post">
-    <div class="form-group">
-        <label asp-for="MSSV" class="control-label"></label>
-        <input asp-for="MSSV" class="form-control" />
-        <span asp-validation-for="MSSV" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="HoTen" class="control-label"></label>
-        <input asp-for="HoTen" class="form-control" />
-        <span asp-validation-for="HoTen" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="GioiTinh" class="control-label"></label>
-        <select asp-for="GioiTinh" class="form-control">
-            <option value="true">Nam</option>
-            <option value="false">Nữ</option>
-        </select>
-        <span asp-validation-for="GioiTinh" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="NgaySinh" class="control-label"></label>
-        <input asp-for="NgaySinh" class="form-control" type="date" />
-        <span asp-validation-for="NgaySinh" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="QueQuan" class="control-label"></label>
-        <input asp-for="QueQuan" class="form-control" />
-        <span asp-validation-for="QueQuan" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="MaKhoa" class="control-label"></label>
-        <select asp-for="MaKhoa" class="form-control"
-            asp-items="@(new SelectList(ViewBag.KhoaList, "MaKhoa", "TenKhoa"))"></select>
-        <span asp-validation-for="MaKhoa" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <input type="submit" value="Thêm" class="btn btn-primary" />
-    </div>
-</form>
+    <form asp-action="Create" method="post">
+        <div asp-validation-summary="All" class="text-danger"></div>
+        <div class="form-group mb-3">
+            <label asp-for="MSSV" class="form-label"></label>
+            <input asp-for="MSSV" class="form-control" required />
+            <span asp-validation-for="MSSV" class="text-danger"></span>
+        </div>
+        <div class="form-group mb-3">
+            <label asp-for="HoTen" class="form-label"></label>
+            <input asp-for="HoTen" class="form-control" required />
+            <span asp-validation-for="HoTen" class="text-danger"></span>
+        </div>
+        <div class="form-group mb-3">
+            <label asp-for="GioiTinh" class="form-label"></label>
+            <select asp-for="GioiTinh" class="form-control" required>
+                <option value="">-- Chọn giới tính --</option>
+                <option value="true">Nam</option>
+                <option value="false">Nữ</option>
+            </select>
+            <span asp-validation-for="GioiTinh" class="text-danger"></span>
+        </div>
+        <div class="form-group mb-3">
+            <label asp-for="NgaySinh" class="form-label"></label>
+            <input asp-for="NgaySinh" type="date" class="form-control" value="@(Model?.NgaySinh.ToString("yyyy-MM-dd") ?? "")" required />
+            <span asp-validation-for="NgaySinh" class="text-danger"></span>
+        </div>
+        <div class="form-group mb-3">
+            <label asp-for="QueQuan" class="form-label"></label>
+            <input asp-for="QueQuan" class="form-control" required />
+            <span asp-validation-for="QueQuan" class="text-danger"></span>
+        </div>
+        @if (User.IsInRole("Admin"))
+        {
+            <div class="form-group mb-3">
+                <label class="form-label">Khoa</label>
+                @if (ViewBag.KhoaList != null)
+                {
+                    <select name="khoaId" class="form-control" asp-items="@(new SelectList(ViewBag.KhoaList, "MaKhoa", "TenKhoa"))" onchange="this.form.submit()" required>
+                        <option value="">-- Chọn Khoa --</option>
+                    </select>
+                }
+                else
+                {
+                    <p class="text-danger">Không có khoa nào để chọn.</p>
+                }
+            </div>
+        }
+        <div class="form-group mb-3">
+            <label asp-for="MaChuyenNganh" class="form-label">Chuyên ngành</label>
+            @if (ViewBag.ChuyenNganhList != null && ((IEnumerable<object>)ViewBag.ChuyenNganhList).Any()) // Ép kiểu để kiểm tra Any()
+            {
+                <select asp-for="MaChuyenNganh" class="form-control" asp-items="@(new SelectList(ViewBag.ChuyenNganhList, "MaChuyenNganh", "TenChuyenNganh"))" required>
+                    <option value="">-- Chọn Chuyên ngành --</option>
+                </select>
+            }
+            else
+            {
+                <p class="text-danger">Không có chuyên ngành nào để chọn. Vui lòng thêm chuyên ngành.</p>
+            }
+            <span asp-validation-for="MaChuyenNganh" class="text-danger"></span>
+        </div>
+        <div class="form-group mb-3">
+            <label asp-for="KhoaHoc" class="form-label"></label>
+            <input asp-for="KhoaHoc" class="form-control" required />
+            <span asp-validation-for="KhoaHoc" class="text-danger"></span>
+        </div>
+        <div class="form-group mb-3">
+            <label asp-for="Lop" class="form-label"></label>
+            <input asp-for="Lop" class="form-control" required />
+            <span asp-validation-for="Lop" class="text-danger"></span>
+        </div>
+        <div class="form-group mb-3">
+            <label asp-for="TrangThai" class="form-label"></label>
+            <select asp-for="TrangThai" class="form-control" asp-items="Html.GetEnumSelectList<TrangThaiSinhVien>()" required>
+                <option value="">-- Chọn Trạng thái --</option>
+            </select>
+            <span asp-validation-for="TrangThai" class="text-danger"></span>
+        </div>
+        <div class="form-group mb-3">
+            <label asp-for="Email" class="form-label"></label>
+            <input asp-for="Email" class="form-control" type="email" required />
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+        <div class="form-group mb-3">
+            <label asp-for="SoDienThoai" class="form-label"></label>
+            <input asp-for="SoDienThoai" class="form-control" required />
+            <span asp-validation-for="SoDienThoai" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary">Thêm</button>
+            <a asp-action="Index" class="btn btn-secondary">Hủy</a>
+        </div>
+    </form>
+</div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />

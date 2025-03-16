@@ -1,8 +1,6 @@
 /* Reset mặc định và cấu hình font */
 html {
   font-size: 14px;
-  position: relative;
-  min-height: 100%;
 }
 
 @media (min-width: 768px) {
@@ -12,7 +10,6 @@ html {
 }
 
 body {
-  margin-bottom: 60px;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background-color: #f8f9fa;
   color: #333;
@@ -23,10 +20,6 @@ body {
   padding: 8px 16px;
   border-radius: 4px;
   transition: background-color 0.3s ease;
-}
-
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
 
 .btn-primary {
@@ -66,7 +59,6 @@ body {
 .table thead th {
   background-color: #007bff;
   color: white;
-  border-bottom: 2px solid #0056b3;
 }
 
 .table tbody tr:hover {
@@ -82,7 +74,6 @@ body {
   border-radius: 4px;
   border: 1px solid #ced4da;
   padding: 8px 12px;
-  transition: border-color 0.3s ease;
 }
 
 .form-control:focus {
@@ -96,20 +87,18 @@ label {
 }
 
 /* Định dạng tiêu đề */
-h1, h3 {
+h1 {
   color: #007bff;
   margin-bottom: 1.5rem;
 }
 
 /* Footer */
 .footer {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
   background-color: #343a40;
   color: #fff;
   padding: 10px 0;
   text-align: center;
+  width: 100%;
 }
 
 /* Navbar */
@@ -130,7 +119,7 @@ h1, h3 {
 /* Container */
 .container {
   padding-top: 20px;
-  padding-bottom: 20px;
+  padding-bottom: 60px;
 }
 
 /* Validation messages */

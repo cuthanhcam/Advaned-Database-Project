@@ -1,0 +1,17 @@
+@model C4FAMS.Models.ManageViewModel
+
+<div class="container">
+    <h1 class="mt-4 mb-4">Quản lý tài khoản</h1>
+
+    <div class="card mb-4">
+        <div class="card-body">
+            <dl class="row">
+                <dt class="col-sm-3">Email</dt>
+                <dd class="col-sm-9">@Model.Email</dd>
+                <dt class="col-sm-3">Vai trò</dt>
+                <dd class="col-sm-9">@Model.VaiTro</dd>
+            </dl>
+        </div>
+    </div>
+    <a asp-action="Index" asp-controller="Home" class="btn btn-secondary">Quay lại</a>
+</div>

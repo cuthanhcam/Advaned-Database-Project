@@ -9,7 +9,7 @@ namespace C4FAMS.Models
         public int MaChuyenNganh { get; set; }
 
         [Required(ErrorMessage = "Tên chuyên ngành là bắt buộc")]
-        [StringLength(255)]
+        [StringLength(100, ErrorMessage = "Tên chuyên ngành không được vượt quá 100 ký tự")]
         public string TenChuyenNganh { get; set; } = null!;
 
         [Required(ErrorMessage = "Mã khoa là bắt buộc")]

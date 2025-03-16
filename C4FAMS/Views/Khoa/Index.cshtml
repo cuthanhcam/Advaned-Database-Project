@@ -27,15 +27,11 @@
                     <td>@item.Email</td>
                     <td>@item.SoDienThoai</td>
                     <td>
+                        <a asp-action="Details" asp-route-id="@item.MaKhoa" class="btn btn-sm btn-info">Chi tiết</a>
                         @if (User.IsInRole("Admin"))
                         {
                             <a asp-action="Edit" asp-route-id="@item.MaKhoa" class="btn btn-sm btn-primary">Sửa</a>
-                            <a asp-action="Details" asp-route-id="@item.MaKhoa" class="btn btn-sm btn-info">Chi tiết</a>
                             <a asp-action="Delete" asp-route-id="@item.MaKhoa" class="btn btn-sm btn-danger">Xóa</a>
-                        }
-                        else if (User.IsInRole("Khoa"))
-                        {
-                            <a asp-action="Details" asp-route-id="@item.MaKhoa" class="btn btn-sm btn-info">Chi tiết</a>
                         }
                     </td>
                 </tr>

@@ -30,13 +30,14 @@ namespace C4FAMS.Controllers
             else if (User.IsInRole("Khoa"))
             {
                 var user = await _userManager.GetUserAsync(User);
-                var khoa = await _khoaRepository.GetByIdAsync(user.MaKhoa  ?? 0);
-                if (khoa == null) return NotFound("Bạn không thuộc khoa nào.");
-                return View(new List<Khoa> { khoa }); // Chỉ hiển thị khoa của họ
+                if (!user.MaKhoa.HasValue) return NotFound("Bạn không thuộc khoa nào.");
+                var khoa = await _khoaRepository.GetByIdAsync(user.MaKhoa.Value);
+                if (khoa == null) return NotFound("Khoa không tồn tại.");
+                return View(new List<Khoa> { khoa });
             }
             return Forbid();
         }
-        
+
         [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
@@ -77,7 +78,7 @@ namespace C4FAMS.Controllers
             }
             return View(khoa);
         }
-    
+
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int id)
         {
@@ -91,10 +92,18 @@ namespace C4FAMS.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            await _khoaRepository.DeleteAsync(id);
-            return RedirectToAction(nameof(Index));
+            try
+            {
+                await _khoaRepository.DeleteAsync(id);
+                return RedirectToAction(nameof(Index));
+            }
+            catch (InvalidOperationException ex)
+            {
+                ModelState.AddModelError("", ex.Message);
+                var khoa = await _khoaRepository.GetByIdAsync(id);
+                return View("Delete", khoa);
+            }
         }
-
 
         public async Task<IActionResult> Details(int id)
         {
@@ -104,18 +113,21 @@ namespace C4FAMS.Controllers
             if (User.IsInRole("Khoa"))
             {
                 var user = await _userManager.GetUserAsync(User);
-                if (user.MaKhoa != id) return Forbid("Bạn chỉ có thể xem thông tin khoa của mình.");
+                if (!user.MaKhoa.HasValue || user.MaKhoa != id)
+                {
+                    return Forbid("Bạn chỉ có thể xem thông tin khoa của mình.");
+                }
             }
 
-            var chuyenNganhList = await _chuyenNganhRepository.GetAllByKhoaAsync(id);
+            var chuyenNganhList = await _chuyenNganhRepository.GetByKhoaAsync(id);
             ViewBag.ChuyenNganhList = chuyenNganhList;
             return View(khoa);
         }
 
         [Authorize(Roles = "Admin")]
-        public IActionResult CreateChuyenNganh(int maKhoa)
+        public async Task<IActionResult> CreateChuyenNganh(int maKhoa)
         {
-            var khoa = _khoaRepository.GetByIdAsync(maKhoa).Result;
+            var khoa = await _khoaRepository.GetByIdAsync(maKhoa);
             if (khoa == null) return NotFound();
             var chuyenNganh = new ChuyenNganh { MaKhoa = maKhoa };
             return View(chuyenNganh);
@@ -131,53 +143,7 @@ namespace C4FAMS.Controllers
                 await _chuyenNganhRepository.AddAsync(chuyenNganh);
                 return RedirectToAction(nameof(Details), new { id = chuyenNganh.MaKhoa });
             }
-
-            await _chuyenNganhRepository.AddAsync(chuyenNganh);
-            return RedirectToAction(nameof(Details), new { id = chuyenNganh.MaKhoa });
-        }
-
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> EditChuyenNganh(int id)
-        {
-            var chuyenNganh = await _chuyenNganhRepository.GetByIdAsync(id);
-            if (chuyenNganh == null) return NotFound();
             return View(chuyenNganh);
-        }
-
-        [Authorize(Roles = "Admin")]
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditChuyenNganh(int id, ChuyenNganh chuyenNganh)
-        {
-            if (id != chuyenNganh.MaChuyenNganh) return NotFound();
-
-            if (ModelState.IsValid)
-            {
-                await _chuyenNganhRepository.UpdateAsync(chuyenNganh);
-                return RedirectToAction(nameof(Details), new { id = chuyenNganh.MaKhoa });
-            }
-
-            await _chuyenNganhRepository.UpdateAsync(chuyenNganh);
-            return RedirectToAction(nameof(Details), new { id = chuyenNganh.MaKhoa });
-        }
-
-        [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> DeleteChuyenNganh(int id)
-        {
-            var chuyenNganh = await _chuyenNganhRepository.GetByIdAsync(id);
-            if (chuyenNganh == null) return NotFound();
-            return View(chuyenNganh);
-        }
-
-        [Authorize(Roles = "Admin")]
-        [HttpPost, ActionName("DeleteChuyenNganh")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteChuyenNganhConfirmed(int id)
-        {
-            var chuyenNganh = await _chuyenNganhRepository.GetByIdAsync(id);
-            if (chuyenNganh == null) return NotFound();
-            await _chuyenNganhRepository.DeleteAsync(id);
-            return RedirectToAction(nameof(Details), new { id = chuyenNganh.MaKhoa });
         }
     }
 }

@@ -1,51 +1,42 @@
-using C4FAMS.Models;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using C4FAMS.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace C4FAMS.Data
 {
     public class ApplicationDbContext : IdentityDbContext<NguoiDung, IdentityRole<int>, int>
     {
-        public DbSet<Khoa> Khoa { get; set; }
-        public DbSet<SinhVien> SinhVien { get; set; }
-        public DbSet<CuuSinhVien> CuuSinhVien { get; set; }
-        public DbSet<SuKien> SuKien { get; set; }
-        public DbSet<DangKySuKien> DangKySuKien { get; set; }
-        public DbSet<CongViec> CongViec { get; set; }
-        public DbSet<ThanhTuu> ThanhTuu { get; set; }
-        public DbSet<ThongBao> ThongBao { get; set; }
-        public DbSet<ChuyenNganh> ChuyenNganh { get; set; }
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
         }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        public DbSet<Khoa> Khoa { get; set; }
+        public DbSet<ChuyenNganh> ChuyenNganh { get; set; }
+        public DbSet<SinhVien> SinhVien { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder builder)
         {
-            base.OnModelCreating(modelBuilder);
+            base.OnModelCreating(builder);
 
-            // Unique constraint for DangKySuKien
-            modelBuilder.Entity<DangKySuKien>()
-                .HasIndex(d => new { d.MSSV, d.MaSuKien })
-                .IsUnique();
+            builder.Entity<Khoa>().HasKey(k => k.MaKhoa);
+            builder.Entity<ChuyenNganh>().HasKey(c => c.MaChuyenNganh);
+            builder.Entity<SinhVien>().HasKey(s => s.MSSV);
 
-            // Configure relationships for DangKySuKien
-            modelBuilder.Entity<DangKySuKien>()
-                .HasOne(d => d.CuuSinhVien)
+            builder.Entity<ChuyenNganh>()
+                .HasOne(c => c.Khoa)
+                .WithMany(k => k.ChuyenNganh)
+                .HasForeignKey(c => c.MaKhoa)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<SinhVien>()
+                .HasOne(s => s.ChuyenNganh)
                 .WithMany()
-                .HasForeignKey(d => d.MSSV)
-                .OnDelete(DeleteBehavior.Cascade); // Giữ CASCADE cho MSSV
+                .HasForeignKey(s => s.MaChuyenNganh)
+                .OnDelete(DeleteBehavior.Restrict);
 
-            modelBuilder.Entity<DangKySuKien>()
-                .HasOne(d => d.SuKien)
-                .WithMany()
-                .HasForeignKey(d => d.MaSuKien)
-                .OnDelete(DeleteBehavior.NoAction); // Chuyển sang NO ACTION cho MaSuKien
-
-            modelBuilder.Entity<ChuyenNganh>()
-                .HasIndex(c => c.TenChuyenNganh)
-                .IsUnique();
+            SeedData.Seed(builder);
         }
     }
 }

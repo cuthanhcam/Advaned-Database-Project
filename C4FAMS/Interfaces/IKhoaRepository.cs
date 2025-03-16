@@ -10,4 +10,4 @@ namespace C4FAMS.Interfaces
         Task UpdateAsync(Khoa khoa);
         Task DeleteAsync(int id);
     }
-}   
+}

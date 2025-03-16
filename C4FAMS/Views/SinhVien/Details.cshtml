@@ -1,9 +1,8 @@
 @model C4FAMS.Models.SinhVien
 
 <div class="container">
-    <h1 class="mt-4 mb-4">Xóa Sinh viên</h1>
+    <h1 class="mt-4 mb-4">Chi tiết Sinh viên</h1>
 
-    <h3>Bạn có chắc muốn xóa sinh viên này?</h3>
     <div class="card mb-4">
         <div class="card-body">
             <dl class="row">
@@ -19,6 +18,8 @@
                 <dd class="col-sm-9">@Model.QueQuan</dd>
                 <dt class="col-sm-3">Chuyên ngành</dt>
                 <dd class="col-sm-9">@Model.ChuyenNganh?.TenChuyenNganh</dd>
+                <dt class="col-sm-3">Khoa</dt>
+                <dd class="col-sm-9">@Model.ChuyenNganh?.Khoa?.TenKhoa</dd>
                 <dt class="col-sm-3">Khóa học</dt>
                 <dd class="col-sm-9">@Model.KhoaHoc</dd>
                 <dt class="col-sm-3">Lớp</dt>
@@ -32,10 +33,5 @@
             </dl>
         </div>
     </div>
-
-    <form asp-action="DeleteConfirmed" method="post">
-        <input type="hidden" asp-for="MSSV" />
-        <button type="submit" class="btn btn-danger">Xóa</button>
-        <a asp-action="Index" class="btn btn-secondary">Hủy</a>
-    </form>
+    <a asp-action="Index" class="btn btn-secondary">Quay lại</a>
 </div>
