@@ -1,0 +1,27 @@
+@model C4FAMS.Models.NguoiDung
+
+<div class="container">
+    <h1 class="mt-4 mb-4">Xóa Tài khoản</h1>
+
+    <h3>Bạn có chắc chắn muốn xóa tài khoản này?</h3>
+    <div>
+        <dl class="row">
+            <dt class="col-sm-2">Tên đăng nhập</dt>
+            <dd class="col-sm-10">@Model.UserName</dd>
+            <dt class="col-sm-2">Email</dt>
+            <dd class="col-sm-10">@Model.Email</dd>
+            <dt class="col-sm-2">Vai trò</dt>
+            <dd class="col-sm-10">@Model.VaiTro</dd>
+            <dt class="col-sm-2">Khoa</dt>
+            <dd class="col-sm-10">@(Model.Khoa != null ? Model.Khoa.TenKhoa : "Chưa gán")</dd>
+            <dt class="col-sm-2">Trạng thái</dt>
+            <dd class="col-sm-10">@(Model.TrangThai ? "Hoạt động" : "Ngưng hoạt động")</dd>
+        </dl>
+
+        <form asp-action="DeleteUserConfirmed" method="post">
+            <input type="hidden" asp-for="Id" />
+            <button type="submit" class="btn btn-danger">Xóa</button>
+            <a asp-action="ManageUsers" class="btn btn-secondary">Quay lại</a>
+        </form>
+    </div>
+</div>

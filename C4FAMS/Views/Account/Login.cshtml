@@ -3,28 +3,64 @@
 <div class="container">
     <h1 class="mt-4 mb-4">Đăng nhập</h1>
 
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger" role="alert">
+            @TempData["ErrorMessage"]
+        </div>
+    }
+
     <form method="post" asp-action="Login">
+        <input type="hidden" name="returnUrl" value="@ViewData["ReturnUrl"]" />
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
         <div class="form-group mb-3">
-            <label asp-for="Email" class="form-label"></label>
-            <input asp-for="Email" class="form-control" />
+            <label asp-for="Email" class="form-label">Email</label>
+            <input asp-for="Email" class="form-control" type="email" required />
             <span asp-validation-for="Email" class="text-danger"></span>
         </div>
+
         <div class="form-group mb-3">
-            <label asp-for="Password" class="form-label"></label>
-            <input asp-for="Password" class="form-control" />
+            <label asp-for="Password" class="form-label">Mật khẩu</label>
+            <input asp-for="Password" class="form-control" type="password" required minlength="6" />
             <span asp-validation-for="Password" class="text-danger"></span>
         </div>
-        <div class="form-group mb-3">
-            <label asp-for="RememberMe" class="form-label"></label>
-            <input asp-for="RememberMe" />
+
+
+        <div class="form-group mb-3 form-check">
+            <input asp-for="RememberMe" class="form-check-input" />
+            <label asp-for="RememberMe" class="form-check-label">Ghi nhớ đăng nhập</label>
         </div>
-        <div class="form-group">
+
+        <div class="form-group mb-3">
             <button type="submit" class="btn btn-primary">Đăng nhập</button>
+            <a asp-action="Register" asp-controller="Account" class="btn btn-secondary">Đăng ký Cựu Sinh Viên</a>
         </div>
     </form>
 </div>
 
-@section Scripts {
+@* @section Scripts {
     <partial name="_ValidationScriptsPartial" />
-}
+    <script>
+        $(document).ready(function () {
+            $("form").submit(function (e) {
+                var email = $("#Email").val();
+                var password = $("#Password").val();
+
+                var emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+                if (!emailPattern.test(email)) {
+                    alert("Vui lòng nhập email hợp lệ (ví dụ: user@domain.com)!");
+                    e.preventDefault();
+                    return;
+                }
+
+                if (password.length < 6) {
+                    alert("Mật khẩu phải có ít nhất 6 ký tự!");
+                    e.preventDefault();
+                    return;
+                }
+            });
+        });
+    </script>
+} *@

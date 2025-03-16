@@ -1,0 +1,38 @@
+@model IEnumerable<C4FAMS.Models.NguoiDung>
+
+<div class="container">
+    <h1 class="mt-4 mb-4">Quản lý Tài khoản Khoa và Admin</h1>
+
+    <p>
+        <a asp-action="CreateUser" class="btn btn-primary">Tạo Tài khoản mới</a>
+    </p>
+
+    <table class="table table-bordered table-hover">
+        <thead class="thead-dark">
+            <tr>
+                <th>Tên đăng nhập</th>
+                <th>Email</th>
+                <th>Vai trò</th>
+                <th>Khoa</th>
+                <th>Trạng thái</th>
+                <th>Hành động</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.UserName</td>
+                    <td>@item.Email</td>
+                    <td>@item.VaiTro</td>
+                    <td>@(item.Khoa != null ? item.Khoa.TenKhoa : "Chưa gán")</td>
+                    <td>@(item.TrangThai ? "Hoạt động" : "Ngưng hoạt động")</td>
+                    <td>
+                        <a asp-action="EditUser" asp-route-id="@item.Id" class="btn btn-sm btn-primary">Sửa</a>
+                        <a asp-action="DeleteUser" asp-route-id="@item.Id" class="btn btn-sm btn-danger">Xóa</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

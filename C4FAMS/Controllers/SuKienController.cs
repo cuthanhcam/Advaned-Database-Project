@@ -121,11 +121,12 @@ namespace C4FAMS.Controllers
             ModelState.Remove("Khoa");
             ModelState.Remove("suKien.Khoa");
 
-            // Kiểm tra ràng buộc thời gian: NgayToChuc phải từ ngày hôm nay trở đi
-            DateTime ngayHienTai = DateTime.Today; // Lấy ngày hiện tại (không tính giờ), ngày hiện tại là 16/03/2025
-            if (suKien.NgayToChuc < ngayHienTai)
+            // Kiểm tra ràng buộc thời gian: NgayToChuc phải từ ngày mai trở đi
+            DateTime ngayHienTai = DateTime.Today;
+            DateTime ngayToiThieu = ngayHienTai.AddDays(1);
+            if (suKien.NgayToChuc < ngayToiThieu)
             {
-                ModelState.AddModelError("NgayToChuc", $"Thời gian tổ chức phải từ ngày {ngayHienTai:dd/MM/yyyy} trở đi.");
+                ModelState.AddModelError("NgayToChuc", $"Thời gian tổ chức phải từ ngày {ngayToiThieu:dd/MM/yyyy} trở đi.");
             }
 
             // Kiểm tra dữ liệu gửi lên từ form trước khi validation

@@ -4,6 +4,7 @@
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -11,12 +12,14 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 </head>
+
 <body>
     <header>
         <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
             <div class="container">
                 <a class="navbar-brand" asp-controller="Home" asp-action="Index">C4FAMS</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNav">
@@ -26,19 +29,34 @@
                             @if (User.IsInRole("Admin"))
                             {
                                 <li class="nav-item"><a class="nav-link" asp-controller="Khoa" asp-action="Index">Khoa</a></li>
-                                <li class="nav-item"><a class="nav-link" asp-controller="SinhVien" asp-action="Index">Sinh viên</a></li>
-                                <li class="nav-item"><a class="nav-link" asp-controller="SuKien" asp-action="Index">Sự Kiện</a></li>
+                                <li class="nav-item"><a class="nav-link" asp-controller="SinhVien" asp-action="Index">Sinh
+                                        Viên</a></li>
+                                <li class="nav-item"><a class="nav-link" asp-controller="SuKien" asp-action="Index">Sự Kiện</a>
+                                </li>
+                                <li class="nav-item"><a class="nav-link" asp-controller="Account" asp-action="ManageUsers">Quản
+                                        Lý Tài Khoản</a></li>
+                                <li class="nav-item"><a class="nav-link" asp-controller="Account" asp-action="Manage">Tài Khoản
+                                        cá nhân</a></li>
                             }
                             @if (User.IsInRole("Khoa"))
                             {
-                                <li class="nav-item"><a class="nav-link" asp-controller="Khoa" asp-action="Index">Khoa</a></li>
-                                <li class="nav-item"><a class="nav-link" asp-controller="SinhVien" asp-action="Index">Sinh viên</a></li>
-                                <li class="nav-item"><a class="nav-link" asp-controller="SuKien" asp-action="Index">Sự Kiện</a></li>
+                                <li class="nav-item"><a class="nav-link" asp-controller="Khoa" asp-action="Index">Khoa</a>
+                                </li>
+                                <li class="nav-item"><a class="nav-link" asp-controller="SinhVien" asp-action="Index">Sinh
+                                        viên</a></li>
+                                <li class="nav-item"><a class="nav-link" asp-controller="SuKien" asp-action="Index">Sự
+                                        Kiện</a></li>
+                                <li class="nav-item"><a class="nav-link" asp-controller="Account" asp-action="Manage">Tài Khoản
+                                        cá nhân</a></li>
                             }
                             @if (User.IsInRole("CuuSinhVien"))
                             {
-                                <li class="nav-item"><a class="nav-link" asp-controller="SuKien" asp-action="Index">Sự kiện</a></li>
-                                <li class="nav-item"><a class="nav-link" asp-controller="CuuSinhVien" asp-action="Index">Thông tin cá nhân</a></li>
+                                <li class="nav-item"><a class="nav-link" asp-controller="SuKien" asp-action="Index">Sự
+                                        kiện</a></li>
+                                <li class="nav-item"><a class="nav-link" asp-controller="CuuSinhVien" asp-action="Index">Thông
+                                        tin cá nhân</a></li>
+                                <li class="nav-item"><a class="nav-link" asp-controller="Account" asp-action="Manage">Tài Khoản
+                                        cá nhân</a></li>
                             }
                         }
                     </ul>
@@ -60,6 +78,8 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
+
 </html>
