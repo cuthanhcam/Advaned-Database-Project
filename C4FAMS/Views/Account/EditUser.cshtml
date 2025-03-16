@@ -8,29 +8,29 @@
         <input type="hidden" asp-for="Id" />
 
         <div class="form-group mb-3">
-            <label asp-for="UserName" class="form-label"></label>
+            <label asp-for="UserName" class="form-label">Tên đăng nhập</label>
             <input asp-for="UserName" class="form-control" required />
             <span asp-validation-for="UserName" class="text-danger"></span>
         </div>
 
         <div class="form-group mb-3">
-            <label asp-for="Email" class="form-label"></label>
+            <label asp-for="Email" class="form-label">Email</label>
             <input asp-for="Email" class="form-control" required />
             <span asp-validation-for="Email" class="text-danger"></span>
         </div>
 
         <div class="form-group mb-3">
             <label asp-for="VaiTro" class="form-label">Vai trò</label>
-            <select asp-for="VaiTro" class="form-control" required>
-                <option value="Khoa">Khoa</option>
+            <select asp-for="VaiTro" class="form-control" required onchange="toggleMaKhoa(this)">
                 <option value="Admin">Admin</option>
+                <option value="Khoa">Khoa</option>
             </select>
             <span asp-validation-for="VaiTro" class="text-danger"></span>
         </div>
 
-        <div class="form-group mb-3">
+        <div class="form-group mb-3" id="maKhoaGroup" style="@(Model.VaiTro == "Khoa" ? "" : "display:none;")">
             <label asp-for="MaKhoa" class="form-label">Khoa</label>
-            <select asp-for="MaKhoa" class="form-control" asp-items="@(new SelectList(ViewBag.KhoaList ?? new List<C4FAMS.Models.Khoa>(), "MaKhoa", "TenKhoa"))" required>
+            <select asp-for="MaKhoa" class="form-control" asp-items="@(new SelectList(ViewBag.KhoaList ?? new List<C4FAMS.Models.Khoa>(), "MaKhoa", "TenKhoa"))">
                 <option value="">-- Chọn Khoa --</option>
             </select>
             <span asp-validation-for="MaKhoa" class="text-danger"></span>
@@ -54,4 +54,29 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <script>
+        $(document).ready(function () {
+            $("form").submit(function (e) {
+                var vaiTro = $("#VaiTro").val();
+                var maKhoa = $("#MaKhoa").val();
+                if (vaiTro === "Khoa" && !maKhoa) {
+                    alert("Vui lòng chọn khoa khi vai trò là Khoa!");
+                    e.preventDefault();
+                }
+            });
+
+            // Khởi tạo trạng thái ban đầu
+            toggleMaKhoa(document.getElementById("VaiTro"));
+        });
+
+        function toggleMaKhoa(select) {
+            var maKhoaGroup = document.getElementById("maKhoaGroup");
+            if (select.value === "Khoa") {
+                maKhoaGroup.style.display = "block";
+            } else {
+                maKhoaGroup.style.display = "none";
+                $("#MaKhoa").val(""); // Reset giá trị khi không chọn Khoa
+            }
+        }
+    </script>
 }

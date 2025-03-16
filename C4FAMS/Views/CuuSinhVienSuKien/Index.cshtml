@@ -6,22 +6,18 @@
     <!-- Form lọc -->
     <form asp-action="Index" method="get" class="mb-4">
         <div class="row">
-            @if (User.IsInRole("Admin"))
-            {
-                <div class="col-md-6">
-                    <label class="form-label">Khoa</label>
-                    <select name="khoaId" class="form-control" onchange="this.form.submit()"
-                        asp-items="@(new SelectList(ViewBag.KhoaList ?? new List<C4FAMS.Models.Khoa>(), "MaKhoa", "TenKhoa", ViewBag.SelectedKhoaId))">
-                        <option value="">-- Chọn Khoa --</option>
-                    </select>
-                </div>
-            }
-
+            <div class="col-md-6">
+                <label class="form-label">Khoa</label>
+                <select name="khoaId" class="form-control" onchange="this.form.submit()"
+                    asp-items="@(new SelectList(ViewBag.KhoaList ?? new List<C4FAMS.Models.Khoa>(), "MaKhoa", "TenKhoa", ViewBag.SelectedKhoaId))">
+                    <option value="">-- Chọn Khoa --</option>
+                </select>
+            </div>
             <div class="col-md-6">
                 <label class="form-label">Sắp xếp</label>
                 <select name="sortOrder" class="form-control" onchange="this.form.submit()">
                     @{
-                        var sortOrder = ViewBag.SortOrder as string ?? "nearest"; // Ép kiểu và gán giá trị mặc định
+                        var sortOrder = ViewBag.SortOrder as string ?? "nearest";
                     }
                     <option value="nearest" selected="@(sortOrder == "nearest")">Gần nhất</option>
                     <option value="farthest" selected="@(sortOrder == "farthest")">Xa nhất</option>
@@ -30,11 +26,13 @@
         </div>
     </form>
 
-    @if (User.IsInRole("Admin") || User.IsInRole("Khoa"))
+    @if (TempData["Success"] != null)
     {
-        <p>
-            <a asp-action="Create" class="btn btn-primary">Tạo Sự kiện mới</a>
-        </p>
+        <div class="alert alert-success">@TempData["Success"]</div>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger">@TempData["Error"]</div>
     }
 
     <table class="table table-bordered table-hover">
@@ -69,13 +67,10 @@
                     <td>@(item.Khoa?.TenKhoa ?? "N/A")</td>
                     <td>
                         <a asp-action="Details" asp-route-id="@item.MaSuKien" class="btn btn-sm btn-info">Chi tiết</a>
-                        @if (User.IsInRole("Admin") || (User.IsInRole("Khoa") && item.MaKhoa == ViewBag.KhoaId))
-                        {
-                            <a asp-action="Edit" asp-route-id="@item.MaSuKien" class="btn btn-sm btn-primary">Sửa</a>
-                            <a asp-action="Delete" asp-route-id="@item.MaSuKien" class="btn btn-sm btn-danger">Xóa</a>
-                            <a asp-action="RegisteredCuuSinhVien" asp-route-id="@item.MaSuKien"
-                                class="btn btn-sm btn-success">Danh sách đăng ký</a>
-                        }
+                        <form asp-action="DangKy" method="post" class="d-inline">
+                            <input type="hidden" name="maSuKien" value="@item.MaSuKien" />
+                            <button type="submit" class="btn btn-sm btn-success">Đăng ký</button>
+                        </form>
                     </td>
                 </tr>
             }

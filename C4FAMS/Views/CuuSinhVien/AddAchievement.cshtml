@@ -1,0 +1,36 @@
+@model C4FAMS.Models.ThanhTuuViewModel
+
+<div class="container">
+    <h1 class="mt-4 mb-4">Thêm Thành tựu</h1>
+
+    <form asp-action="AddAchievement" method="post">
+        <div asp-validation-summary="All" class="text-danger"></div>
+
+        <div class="form-group mb-3">
+            <label asp-for="TenThanhTuu" class="form-label">Tên thành tựu</label>
+            <input asp-for="TenThanhTuu" class="form-control" required />
+            <span asp-validation-for="TenThanhTuu" class="text-danger"></span>
+        </div>
+
+        <div class="form-group mb-3">
+            <label asp-for="MoTa" class="form-label">Mô tả</label>
+            <textarea asp-for="MoTa" class="form-control"></textarea>
+            <span asp-validation-for="MoTa" class="text-danger"></span>
+        </div>
+
+        <div class="form-group mb-3">
+            <label asp-for="NamDatDuoc" class="form-label">Năm đạt được</label>
+            <input asp-for="NamDatDuoc" class="form-control" type="number" required />
+            <span asp-validation-for="NamDatDuoc" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary">Thêm</button>
+            <a asp-action="ManageProfile" class="btn btn-secondary">Quay lại</a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

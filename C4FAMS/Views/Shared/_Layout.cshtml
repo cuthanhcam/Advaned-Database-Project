@@ -28,35 +28,51 @@
                         {
                             @if (User.IsInRole("Admin"))
                             {
-                                <li class="nav-item"><a class="nav-link" asp-controller="Khoa" asp-action="Index">Khoa</a></li>
-                                <li class="nav-item"><a class="nav-link" asp-controller="SinhVien" asp-action="Index">Sinh
-                                        Viên</a></li>
-                                <li class="nav-item"><a class="nav-link" asp-controller="SuKien" asp-action="Index">Sự Kiện</a>
+                                <!-- Menu cho Admin -->
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="Khoa" asp-action="Index">Quản lý Khoa</a>
                                 </li>
-                                <li class="nav-item"><a class="nav-link" asp-controller="Account" asp-action="ManageUsers">Quản
-                                        Lý Tài Khoản</a></li>
-                                <li class="nav-item"><a class="nav-link" asp-controller="Account" asp-action="Manage">Tài Khoản
-                                        cá nhân</a></li>
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="SinhVien" asp-action="Index">Quản lý Sinh Viên</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="SuKien" asp-action="Index">Quản lý Sự Kiện</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="CuuSinhVien" asp-action="Index">Quản lý Cựu Sinh Viên</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="Account" asp-action="ManageUsers">Quản lý Tài Khoản</a>
+                                </li>
                             }
                             @if (User.IsInRole("Khoa"))
                             {
-                                <li class="nav-item"><a class="nav-link" asp-controller="Khoa" asp-action="Index">Khoa</a>
+                                <!-- Menu cho Khoa -->
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="Khoa" asp-action="Index">Thông tin Khoa</a>
                                 </li>
-                                <li class="nav-item"><a class="nav-link" asp-controller="SinhVien" asp-action="Index">Sinh
-                                        viên</a></li>
-                                <li class="nav-item"><a class="nav-link" asp-controller="SuKien" asp-action="Index">Sự
-                                        Kiện</a></li>
-                                <li class="nav-item"><a class="nav-link" asp-controller="Account" asp-action="Manage">Tài Khoản
-                                        cá nhân</a></li>
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="SinhVien" asp-action="Index">Quản lý Sinh Viên</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="SuKien" asp-action="Index">Quản lý Sự Kiện</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="CuuSinhVien" asp-action="Index">Quản lý Cựu Sinh Viên</a>
+                                </li>
                             }
                             @if (User.IsInRole("CuuSinhVien"))
                             {
-                                <li class="nav-item"><a class="nav-link" asp-controller="SuKien" asp-action="Index">Sự
-                                        kiện</a></li>
-                                <li class="nav-item"><a class="nav-link" asp-controller="CuuSinhVien" asp-action="Index">Thông
-                                        tin cá nhân</a></li>
-                                <li class="nav-item"><a class="nav-link" asp-controller="Account" asp-action="Manage">Tài Khoản
-                                        cá nhân</a></li>
+                                <!-- Menu cho Cựu Sinh Viên -->
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="CuuSinhVienSuKien" asp-action="Index">Sự Kiện</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="CuuSinhVienSuKien" asp-action="MyEvents">Sự kiện của tôi</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" asp-controller="CuuSinhVien" asp-action="ManageProfile">Hồ Sơ Cá Nhân</a>
+                                </li>
                             }
                         }
                     </ul>

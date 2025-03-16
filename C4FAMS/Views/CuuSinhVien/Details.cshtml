@@ -1,0 +1,80 @@
+@model C4FAMS.Models.CuuSinhVien
+
+<div class="container">
+    <h1 class="mt-4 mb-4">Chi tiết Cựu Sinh Viên</h1>
+
+    <dl class="row">
+        <dt class="col-sm-3">MSSV</dt>
+        <dd class="col-sm-9">@Model.MSSV</dd>
+        <dt class="col-sm-3">Họ tên</dt>
+        <dd class="col-sm-9">@Model.SinhVien?.HoTen</dd>
+        <dt class="col-sm-3">Năm tốt nghiệp</dt>
+        <dd class="col-sm-9">@Model.NamTotNghiep</dd>
+        <dt class="col-sm-3">Xếp loại tốt nghiệp</dt>
+        <dd class="col-sm-9">@Model.XepLoaiTotNghiep</dd>
+        <dt class="col-sm-3">Địa chỉ hiện tại</dt>
+        <dd class="col-sm-9">@Model.DiaChiHienTai</dd>
+        <dt class="col-sm-3">Hình thức liên lạc</dt>
+        <dd class="col-sm-9">@Model.HinhThucLienLac</dd>
+    </dl>
+
+    <h4>Công việc</h4>
+    @if (Model.CongViec != null && Model.CongViec.Any())
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Vị trí</th>
+                    <th>Công ty</th>
+                    <th>Lĩnh vực</th>
+                    <th>Thu nhập</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var job in Model.CongViec)
+                {
+                    <tr>
+                        <td>@job.ViTri</td>
+                        <td>@job.CongTy</td>
+                        <td>@job.LinhVuc</td>
+                        <td>@(job.ThuNhap.HasValue ? job.ThuNhap.Value.ToString("N0") : "Chưa cung cấp")</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p>Chưa có công việc nào.</p>
+    }
+
+    <h4>Thành tựu</h4>
+    @if (Model.ThanhTuu != null && Model.ThanhTuu.Any())
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Tên thành tựu</th>
+                    <th>Mô tả</th>
+                    <th>Năm đạt được</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var achievement in Model.ThanhTuu)
+                {
+                    <tr>
+                        <td>@achievement.TenThanhTuu</td>
+                        <td>@achievement.MoTa</td>
+                        <td>@achievement.NamDatDuoc</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p>Chưa có thành tựu nào.</p>
+    }
+
+    <a asp-action="Index" class="btn btn-secondary">Quay lại</a>
+</div>

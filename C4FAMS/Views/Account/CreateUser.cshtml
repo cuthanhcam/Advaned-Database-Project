@@ -1,4 +1,4 @@
-@model C4FAMS.Models.RegisterViewModel
+@model C4FAMS.Models.AdminUserViewModel
 
 <div class="container">
     <h1 class="mt-4 mb-4">Tạo Tài khoản Khoa hoặc Admin</h1>
@@ -14,28 +14,29 @@
 
         <div class="form-group mb-3">
             <label asp-for="Password" class="form-label">Mật khẩu</label>
-            <input asp-for="Password" class="form-control" required />
+            <input asp-for="Password" class="form-control" type="password" required />
             <span asp-validation-for="Password" class="text-danger"></span>
         </div>
 
         <div class="form-group mb-3">
             <label asp-for="ConfirmPassword" class="form-label">Xác nhận mật khẩu</label>
-            <input asp-for="ConfirmPassword" class="form-control" required />
+            <input asp-for="ConfirmPassword" class="form-control" type="password" required />
             <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
         </div>
 
         <div class="form-group mb-3">
             <label for="vaiTro" class="form-label">Vai trò</label>
-            <select id="vaiTro" name="vaiTro" class="form-control" required>
+            <select id="vaiTro" name="vaiTro" class="form-control" asp-for="VaiTro" required onchange="toggleMaKhoa(this)">
                 <option value="">-- Chọn Vai trò --</option>
-                <option value="Khoa">Khoa</option>
                 <option value="Admin">Admin</option>
+                <option value="Khoa">Khoa</option>
             </select>
+            <span asp-validation-for="VaiTro" class="text-danger"></span>
         </div>
 
-        <div class="form-group mb-3">
+        <div class="form-group mb-3" id="maKhoaGroup" style="display:none;">
             <label for="maKhoa" class="form-label">Khoa</label>
-            <select id="maKhoa" name="maKhoa" class="form-control" asp-items="@(new SelectList(ViewBag.KhoaList ?? new List<C4FAMS.Models.Khoa>(), "MaKhoa", "TenKhoa"))" required>
+            <select id="maKhoa" name="maKhoa" class="form-control" asp-items="@(new SelectList(ViewBag.KhoaList ?? new List<C4FAMS.Models.Khoa>(), "MaKhoa", "TenKhoa"))">
                 <option value="">-- Chọn Khoa --</option>
             </select>
         </div>
@@ -62,7 +63,23 @@
                     alert("Mật khẩu phải có ít nhất 6 ký tự!");
                     e.preventDefault();
                 }
+                var vaiTro = $("#vaiTro").val();
+                var maKhoa = $("#maKhoa").val();
+                if (vaiTro === "Khoa" && !maKhoa) {
+                    alert("Vui lòng chọn khoa khi tạo tài khoản Khoa!");
+                    e.preventDefault();
+                }
             });
         });
+
+        function toggleMaKhoa(select) {
+            var maKhoaGroup = document.getElementById("maKhoaGroup");
+            if (select.value === "Khoa") {
+                maKhoaGroup.style.display = "block";
+            } else {
+                maKhoaGroup.style.display = "none";
+                $("#maKhoa").val(""); // Reset giá trị khi không chọn Khoa
+            }
+        }
     </script>
 }

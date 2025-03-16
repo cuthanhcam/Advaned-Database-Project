@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace C4FAMS.Models
 {
     public class ThanhTuu
-    {
+    { 
         [Key]
         public int MaThanhTuu { get; set; }
 

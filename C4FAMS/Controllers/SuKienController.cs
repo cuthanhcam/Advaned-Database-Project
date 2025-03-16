@@ -9,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Globalization;
+using Microsoft.EntityFrameworkCore;
 
 namespace C4FAMS.Controllers
 {
@@ -20,19 +21,22 @@ namespace C4FAMS.Controllers
         private readonly ISuKienHinhAnhRepository _suKienHinhAnhRepository;
         private readonly IKhoaRepository _khoaRepository;
         private readonly UserManager<NguoiDung> _userManager;
+        private readonly IDangKySuKienRepository _dangKySuKienRepository;
 
         public SuKienController(
             ISuKienRepository suKienRepository,
             ISuKienChiTietRepository suKienChiTietRepository,
             ISuKienHinhAnhRepository suKienHinhAnhRepository,
             IKhoaRepository khoaRepository,
-            UserManager<NguoiDung> userManager)
+            UserManager<NguoiDung> userManager,
+            IDangKySuKienRepository dangKySuKienRepository)
         {
             _suKienRepository = suKienRepository;
             _suKienChiTietRepository = suKienChiTietRepository;
             _suKienHinhAnhRepository = suKienHinhAnhRepository;
             _khoaRepository = khoaRepository;
             _userManager = userManager;
+            _dangKySuKienRepository = dangKySuKienRepository;
         }
 
         // GET: SuKien/Index
@@ -390,6 +394,50 @@ namespace C4FAMS.Controllers
                 await image.CopyToAsync(fileStream);
             }
             return "/images/" + fileName;
+        }
+
+        public async Task<IActionResult> RegisteredCuuSinhVien(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var suKien = await _suKienRepository.GetByIdAsync(id.Value);
+            if (suKien == null)
+            {
+                return NotFound();
+            }
+
+            var dangKyList = await _dangKySuKienRepository.GetBySuKienAsync(id.Value);
+            if (User.IsInRole("Khoa"))
+            {
+                var user = await _userManager.GetUserAsync(User);
+                if (!user.MaKhoa.HasValue || suKien.MaKhoa != user.MaKhoa.Value)
+                {
+                    return Forbid("Bạn chỉ có thể xem danh sách đăng ký của sự kiện thuộc khoa mình.");
+                }
+            }
+
+            // Lấy thông tin từ SinhVien thông qua CuuSinhVien
+            var registeredUsers = new List<object>();
+            foreach (var dangKy in dangKyList.Where(d => d.TrangThai))
+            {
+                // CuuSinhVien đã được include trong GetBySuKienAsync
+                var hoTen = dangKy.CuuSinhVien?.SinhVien?.HoTen ?? "Không xác định"; // Lấy HoTen từ SinhVien
+                var nguoiDung = await _userManager.Users.FirstOrDefaultAsync(u => u.MSSV == dangKy.MSSV);
+                registeredUsers.Add(new
+                {
+                    MSSV = dangKy.MSSV,
+                    HoTen = hoTen, // Dùng HoTen từ SinhVien
+                    Email = nguoiDung?.Email ?? "Không có email", // Email từ NguoiDung
+                    NgayDangKy = dangKy.NgayDangKy
+                });
+            }
+
+            ViewBag.SuKien = suKien;
+            ViewBag.RegisteredUsers = registeredUsers;
+            return View();
         }
     }
 }

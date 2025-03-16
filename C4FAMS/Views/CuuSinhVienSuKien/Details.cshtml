@@ -47,17 +47,9 @@
 
     <div class="mt-3">
         <a asp-action="Index" class="btn btn-secondary">Quay lại</a>
-        @if (User.IsInRole("Admin") || (User.IsInRole("Khoa") && Model.MaKhoa == ViewBag.KhoaId))
-        {
-            <a asp-action="Edit" asp-route-id="@Model.MaSuKien" class="btn btn-primary">Sửa</a>
-            <a asp-action="Delete" asp-route-id="@Model.MaSuKien" class="btn btn-danger">Xóa</a>
-        }
-        @if (User.IsInRole("CuuSinhVien"))
-        {
-            <form asp-controller="CuuSinhVienSuKien" asp-action="DangKy" method="post" class="d-inline">
-                <input type="hidden" name="maSuKien" value="@Model.MaSuKien" />
-                <button type="submit" class="btn btn-success">Đăng ký</button>
-            </form>
-        }
+        <form asp-action="DangKy" method="post" class="d-inline">
+            <input type="hidden" name="maSuKien" value="@Model.MaSuKien" />
+            <button type="submit" class="btn btn-success">Đăng ký</button>
+        </form>
     </div>
 </div>

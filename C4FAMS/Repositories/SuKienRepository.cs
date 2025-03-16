@@ -40,6 +40,11 @@ namespace C4FAMS.Repositories
                 .FirstOrDefaultAsync(s => s.MaSuKien == maSuKien);
         }
 
+        public async Task<SuKienChiTiet> GetChiTietByIdAsync(int maSuKien)
+        {
+            return await _context.SuKienChiTiets.FirstOrDefaultAsync(c => c.MaSuKien == maSuKien);
+        }
+
         public async Task AddAsync(SuKien suKien)
         {
             if (suKien == null) throw new ArgumentNullException(nameof(suKien));

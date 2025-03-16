@@ -14,17 +14,20 @@ namespace C4FAMS.Controllers
         private readonly UserManager<NguoiDung> _userManager;
         private readonly SignInManager<NguoiDung> _signInManager;
         private readonly ISinhVienRepository _sinhVienRepository;
+        private readonly ICuuSinhVienRepository _cuuSinhVienRepository;
         private readonly IKhoaRepository _khoaRepository;
 
         public AccountController(
             UserManager<NguoiDung> userManager,
             SignInManager<NguoiDung> signInManager,
             ISinhVienRepository sinhVienRepository,
+            ICuuSinhVienRepository cuuSinhVienRepository,
             IKhoaRepository khoaRepository)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _sinhVienRepository = sinhVienRepository;
+            _cuuSinhVienRepository = cuuSinhVienRepository;
             _khoaRepository = khoaRepository;
         }
 
@@ -36,19 +39,26 @@ namespace C4FAMS.Controllers
             return View(new RegisterViewModel());
         }
 
-        // POST: Account/Register (Đăng ký Cựu Sinh Viên)
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Register(RegisterViewModel model, string mssv)
+        public async Task<IActionResult> Register(RegisterViewModel model)
         {
             if (ModelState.IsValid)
             {
-                // Kiểm tra MSSV
-                var sinhVien = await _sinhVienRepository.GetByIdAsync(mssv);
+                // Kiểm tra MSSV trong bảng SinhVien
+                var sinhVien = await _sinhVienRepository.GetByIdAsync(model.MSSV);
                 if (sinhVien == null || sinhVien.TrangThai != TrangThaiSinhVien.DaTotNghiep)
                 {
                     ModelState.AddModelError("MSSV", "MSSV không hợp lệ hoặc sinh viên chưa tốt nghiệp.");
+                    return View(model);
+                }
+
+                // Kiểm tra MSSV đã tồn tại trong AspNetUsers chưa
+                var existingUserByMssv = await _userManager.Users.FirstOrDefaultAsync(u => u.MSSV == model.MSSV);
+                if (existingUserByMssv != null)
+                {
+                    ModelState.AddModelError("MSSV", "MSSV đã được sử dụng bởi một tài khoản khác.");
                     return View(model);
                 }
 
@@ -60,16 +70,30 @@ namespace C4FAMS.Controllers
                     return View(model);
                 }
 
-                // Tạo tài khoản Cựu Sinh Viên
+                // Kiểm tra và tạo bản ghi CuuSinhVien nếu chưa tồn tại
+                var cuuSinhVien = await _cuuSinhVienRepository.GetByMssvAsync(model.MSSV);
+                if (cuuSinhVien == null)
+                {
+                    cuuSinhVien = new CuuSinhVien
+                    {
+                        MSSV = model.MSSV,
+                        NamTotNghiep = model.NamTotNghiep,
+                        XepLoaiTotNghiep = model.XepLoaiTotNghiep,
+                        DiaChiHienTai = model.DiaChiHienTai ?? string.Empty,
+                        HinhThucLienLac = model.HinhThucLienLac ?? "Email"
+                    };
+                    await _cuuSinhVienRepository.AddAsync(cuuSinhVien);
+                }
+
+                // Tạo tài khoản NguoiDung
                 var user = new NguoiDung
                 {
-                    UserName = model.Email, // Sử dụng Email làm UserName
+                    UserName = model.Email,
                     Email = model.Email,
                     VaiTro = "CuuSinhVien",
                     TrangThai = true,
-                    MaKhoa = sinhVien.ChuyenNganh?.Khoa?.MaKhoa, // Lấy MaKhoa từ ChuyenNganh.Khoa
-                    MSSV = mssv,
-                    SinhVien = sinhVien
+                    MSSV = model.MSSV,
+                    MaKhoa = sinhVien.ChuyenNganh?.MaKhoa // Gán MaKhoa nếu có, null nếu không
                 };
 
                 var result = await _userManager.CreateAsync(user, model.Password);
@@ -82,7 +106,7 @@ namespace C4FAMS.Controllers
 
                 foreach (var error in result.Errors)
                 {
-                    ModelState.AddModelError("", error.Description);
+                    ModelState.AddModelError("", $"Lỗi đăng ký: {error.Description}");
                 }
             }
 
@@ -214,19 +238,19 @@ namespace C4FAMS.Controllers
             return View(users);
         }
 
-        // GET: Account/CreateUser (Tạo tài khoản Khoa hoặc Admin - Admin)
+        // GET: Account/CreateUser
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> CreateUser()
         {
             ViewBag.KhoaList = await _khoaRepository.GetAllAsync();
-            return View(new RegisterViewModel());
+            return View(new AdminUserViewModel());
         }
 
-        // POST: Account/CreateUser (Tạo tài khoản Khoa hoặc Admin - Admin)
+        // POST: Account/CreateUser
         [HttpPost]
         [Authorize(Roles = "Admin")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateUser(RegisterViewModel model, string vaiTro, int maKhoa)
+        public async Task<IActionResult> CreateUser(AdminUserViewModel model, string vaiTro, int? maKhoa)
         {
             if (ModelState.IsValid)
             {
@@ -239,16 +263,7 @@ namespace C4FAMS.Controllers
                     return View(model);
                 }
 
-                // Kiểm tra MaKhoa hợp lệ
-                var khoa = await _khoaRepository.GetByIdAsync(maKhoa);
-                if (khoa == null)
-                {
-                    ModelState.AddModelError("MaKhoa", "Mã khoa không tồn tại.");
-                    ViewBag.KhoaList = await _khoaRepository.GetAllAsync();
-                    return View(model);
-                }
-
-                // Vai trò phải là Khoa hoặc Admin
+                // Kiểm tra VaiTro hợp lệ
                 if (vaiTro != "Khoa" && vaiTro != "Admin")
                 {
                     ModelState.AddModelError("VaiTro", "Vai trò phải là Khoa hoặc Admin.");
@@ -256,14 +271,25 @@ namespace C4FAMS.Controllers
                     return View(model);
                 }
 
+                // Kiểm tra MaKhoa nếu VaiTro là Khoa
+                if (vaiTro == "Khoa")
+                {
+                    if (!maKhoa.HasValue || await _khoaRepository.GetByIdAsync(maKhoa.Value) == null)
+                    {
+                        ModelState.AddModelError("MaKhoa", "Mã khoa không hợp lệ.");
+                        ViewBag.KhoaList = await _khoaRepository.GetAllAsync();
+                        return View(model);
+                    }
+                }
+
                 // Tạo tài khoản
                 var user = new NguoiDung
                 {
                     UserName = model.Email,
                     Email = model.Email,
-                    VaiTro = vaiTro, // Vai trò được chọn từ form (Khoa hoặc Admin)
+                    VaiTro = vaiTro,
                     TrangThai = true,
-                    MaKhoa = maKhoa
+                    MaKhoa = vaiTro == "Khoa" ? maKhoa : null
                 };
 
                 var result = await _userManager.CreateAsync(user, model.Password);
@@ -314,18 +340,22 @@ namespace C4FAMS.Controllers
 
                 existingUser.UserName = nguoiDung.UserName;
                 existingUser.Email = nguoiDung.Email;
-                existingUser.MaKhoa = nguoiDung.MaKhoa;
                 existingUser.TrangThai = nguoiDung.TrangThai;
 
-                if (existingUser.MaKhoa.HasValue)
+                // Chỉ kiểm tra và gán MaKhoa nếu VaiTro là Khoa
+                if (existingUser.VaiTro == "Khoa")
                 {
-                    var khoa = await _khoaRepository.GetByIdAsync(existingUser.MaKhoa.Value);
-                    if (khoa == null)
+                    if (nguoiDung.MaKhoa.HasValue && await _khoaRepository.GetByIdAsync(nguoiDung.MaKhoa.Value) == null)
                     {
                         ModelState.AddModelError("MaKhoa", "Mã khoa không tồn tại.");
                         ViewBag.KhoaList = await _khoaRepository.GetAllAsync();
                         return View(nguoiDung);
                     }
+                    existingUser.MaKhoa = nguoiDung.MaKhoa;
+                }
+                else
+                {
+                    existingUser.MaKhoa = null; // Admin không cần MaKhoa
                 }
 
                 var result = await _userManager.UpdateAsync(existingUser);

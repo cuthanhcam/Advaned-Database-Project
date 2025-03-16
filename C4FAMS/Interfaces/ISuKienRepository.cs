@@ -8,6 +8,7 @@ namespace C4FAMS.Interfaces
         Task<IEnumerable<SuKien>> GetBySinhVienAsync(string mssv);
         Task<IEnumerable<SuKien>> GetByKhoaAsync(int maKhoa);
         Task<SuKien?> GetByIdAsync(int maSuKien);
+        Task<SuKienChiTiet> GetChiTietByIdAsync(int maSuKien);
         Task AddAsync(SuKien suKien);
         Task UpdateAsync(SuKien suKien);
         Task DeleteAsync(int maSuKien);

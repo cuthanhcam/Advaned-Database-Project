@@ -1,0 +1,21 @@
+@model C4FAMS.Models.CongViec
+
+<div class="container">
+    <h1 class="mt-4 mb-4">Xóa Công việc</h1>
+
+    <h3>Bạn có chắc chắn muốn xóa công việc này?</h3>
+    <div>
+        <dl class="row">
+            <dt class="col-sm-3">Vị trí</dt>
+            <dd class="col-sm-9">@Model.ViTri</dd>
+            <dt class="col-sm-3">Công ty</dt>
+            <dd class="col-sm-9">@Model.CongTy</dd>
+        </dl>
+
+        <form asp-action="DeleteJobConfirmed" method="post">
+            <input type="hidden" asp-for="MaCongViec" />
+            <button type="submit" class="btn btn-danger">Xóa</button>
+            <a asp-action="ManageProfile" class="btn btn-secondary">Quay lại</a>
+        </form>
+    </div>
+</div>

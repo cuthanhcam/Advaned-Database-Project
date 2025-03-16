@@ -37,6 +37,10 @@ builder.Services.AddScoped<ISinhVienRepository, SinhVienRepository>();
 builder.Services.AddScoped<ISuKienRepository, SuKienRepository>();
 builder.Services.AddScoped<ISuKienChiTietRepository, SuKienChiTietRepository>();
 builder.Services.AddScoped<ISuKienHinhAnhRepository, SuKienHinhAnhRepository>();
+builder.Services.AddScoped<ICuuSinhVienRepository, CuuSinhVienRepository>();
+builder.Services.AddScoped<ICongViecRepository, CongViecRepository>();
+builder.Services.AddScoped<IThanhTuuRepository, ThanhTuuRepository>();
+builder.Services.AddScoped<IDangKySuKienRepository, DangKySuKienRepository>();
 
 var app = builder.Build();
 

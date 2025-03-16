@@ -10,7 +10,8 @@ namespace C4FAMS.Models
         [StringLength(20)]
         public string VaiTro { get; set; } = null!;
 
-        [Required(ErrorMessage = "Mã khoa là bắt buộc", AllowEmptyStrings = false)]
+        // // MaKhoa chỉ bắt buộc với Role "Khoa", không cần thiết với "Admin" hoặc "CuuSinhVien"
+        // [Required(ErrorMessage = "Mã khoa là bắt buộc", AllowEmptyStrings = false)] 
         public int? MaKhoa { get; set; }
 
         [ForeignKey("MaKhoa")]
@@ -22,5 +23,8 @@ namespace C4FAMS.Models
         public string? MSSV { get; set; }
         [ForeignKey("MSSV")]
         public SinhVien? SinhVien { get; set; }
+        
+        [ForeignKey("MSSV")]
+        public virtual CuuSinhVien? CuuSinhVien { get; set; }
     }
 }

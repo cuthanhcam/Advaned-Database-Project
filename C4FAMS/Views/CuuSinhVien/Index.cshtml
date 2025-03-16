@@ -1,0 +1,39 @@
+@model IEnumerable<C4FAMS.Models.CuuSinhVien>
+
+<div class="container">
+    <h1 class="mt-4 mb-4">Danh sách Cựu Sinh Viên</h1>
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <table class="table table-bordered table-hover">
+        <thead class="thead-dark">
+            <tr>
+                <th>MSSV</th>
+                <th>Họ tên</th>
+                <th>Năm tốt nghiệp</th>
+                <th>Hành động</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.MSSV</td>
+                    <td>@item.SinhVien?.HoTen</td>
+                    <td>@item.NamTotNghiep</td>
+                    <td>
+                        <a asp-action="Details" asp-route-mssv="@item.MSSV" class="btn btn-sm btn-info">Chi tiết</a>
+                        <a asp-action="Edit" asp-route-mssv="@item.MSSV" class="btn btn-sm btn-primary">Sửa</a>
+                        <a asp-action="Delete" asp-route-mssv="@item.MSSV" class="btn btn-sm btn-danger">Xóa</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

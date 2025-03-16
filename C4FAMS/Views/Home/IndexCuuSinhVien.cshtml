@@ -1,0 +1,76 @@
+@model IEnumerable<C4FAMS.Models.SuKien>
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<NguoiDung> SignInManager
+
+<div class="container">
+    <h1 class="mt-4 mb-4">Danh sách Sự kiện</h1>
+
+    <!-- Form lọc -->
+    <form asp-action="Index" method="get" class="mb-4">
+        <div class="row">
+            <div class="col-md-6">
+                <label class="form-label">Khoa</label>
+                <select name="khoaId" class="form-control" onchange="this.form.submit()" asp-items="@(new SelectList(ViewBag.KhoaList ?? new List<C4FAMS.Models.Khoa>(), "MaKhoa", "TenKhoa", ViewBag.SelectedKhoaId))">
+                    <option value="">-- Chọn Khoa --</option>
+                </select>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">Sắp xếp</label>
+                <select name="sortOrder" class="form-control" onchange="this.form.submit()">
+                    @{
+                        var sortOrder = ViewBag.SortOrder as string ?? "nearest";
+                    }
+                    <option value="nearest" selected="@(sortOrder == "nearest")">Gần nhất</option>
+                    <option value="farthest" selected="@(sortOrder == "farthest")">Xa nhất</option>
+                </select>
+            </div>
+        </div>
+    </form>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success">@TempData["Success"]</div>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger">@TempData["Error"]</div>
+    }
+
+    <div class="row">
+        @foreach (var item in Model)
+        {
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    @if (item.SuKienHinhAnhs != null && item.SuKienHinhAnhs.Any())
+                    {
+                        <img src="@item.SuKienHinhAnhs.First().HinhAnh" class="card-img-top" alt="@item.TenSuKien" style="height: 200px; object-fit: cover;" />
+                    }
+                    else
+                    {
+                        <img src="/images/default-event.jpg" class="card-img-top" alt="No Image" style="height: 200px; object-fit: cover;" />
+                    }
+                    <div class="card-body">
+                        <h5 class="card-title">@item.TenSuKien</h5>
+                        <p class="card-text"><strong>Ngày:</strong> @item.NgayToChuc.ToString("dd/MM/yyyy HH:mm")</p>
+                        <p class="card-text"><strong>Địa điểm:</strong> @item.DiaDiem</p>
+                        <p class="card-text"><strong>Khoa:</strong> @(item.Khoa?.TenKhoa ?? "N/A")</p>
+                    </div>
+                    <div class="card-footer">
+                        @if (SignInManager.IsSignedIn(User) && User.IsInRole("CuuSinhVien"))
+                        {
+                            <a asp-controller="CuuSinhVienSuKien" asp-action="Details" asp-route-id="@item.MaSuKien" class="btn btn-info">Xem chi tiết</a>
+                            <form asp-controller="CuuSinhVienSuKien" asp-action="DangKy" method="post" class="d-inline">
+                                <input type="hidden" name="maSuKien" value="@item.MaSuKien" />
+                                <button type="submit" class="btn btn-success">Đăng ký</button>
+                            </form>
+                        }
+                        else
+                        {
+                            <a asp-controller="Home" asp-action="Details" asp-route-id="@item.MaSuKien" class="btn btn-info">Xem chi tiết</a>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

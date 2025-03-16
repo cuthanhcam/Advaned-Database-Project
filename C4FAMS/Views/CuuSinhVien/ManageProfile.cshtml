@@ -1,0 +1,139 @@
+@model C4FAMS.Models.ManageCuuSinhVienViewModel
+
+<div class="container">
+    <h1 class="mt-4 mb-4">Hồ Sơ Cá Nhân</h1>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <form asp-action="ManageProfile" method="post">
+        <div asp-validation-summary="All" class="text-danger"></div>
+
+        <div class="form-group mb-3">
+            <label asp-for="NamTotNghiep" class="form-label">Năm tốt nghiệp</label>
+            <input asp-for="NamTotNghiep" class="form-control" type="number" required />
+            <span asp-validation-for="NamTotNghiep" class="text-danger"></span>
+        </div>
+
+        <div class="form-group mb-3">
+            <label asp-for="XepLoaiTotNghiep" class="form-label">Xếp loại tốt nghiệp</label>
+            <select asp-for="XepLoaiTotNghiep" class="form-control" required>
+                <option value="">Chọn xếp loại</option>
+                <option value="Xuất Sắc">Xuất Sắc</option>
+                <option value="Giỏi">Giỏi</option>
+                <option value="Khá">Khá</option>
+                <option value="Trung Bình">Trung Bình</option>
+            </select>
+            <span asp-validation-for="XepLoaiTotNghiep" class="text-danger"></span>
+        </div>
+
+        <div class="form-group mb-3">
+            <label asp-for="DiaChiHienTai" class="form-label">Địa chỉ hiện tại</label>
+            <input asp-for="DiaChiHienTai" class="form-control" />
+            <span asp-validation-for="DiaChiHienTai" class="text-danger"></span>
+        </div>
+
+        <div class="form-group mb-3">
+            <label asp-for="HinhThucLienLac" class="form-label">Hình thức liên lạc cụ thể (Email hoặc SĐT)</label>
+            <input asp-for="HinhThucLienLac" class="form-control" required
+                placeholder="Ghi rõ Email hoặc Số Điện Thoại" />
+            <span asp-validation-for="HinhThucLienLac" class="text-danger"></span>
+        </div>
+
+        <div class="form-group mb-3">
+            <button type="submit" class="btn btn-primary">Cập nhật</button>
+        </div>
+    </form>
+
+    <h2 class="mt-4">Công việc</h2>
+    <a asp-action="AddJob" class="btn btn-success mb-3">Thêm Công việc</a>
+
+    @if (Model.CongViecs != null && Model.CongViecs.Any())
+    {
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Vị trí</th>
+                    <th>Công ty</th>
+                    <th>Lĩnh vực</th>
+                    <th>Thu nhập</th>
+                    <th>Hành động</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var congViec in Model.CongViecs)
+                {
+                    <tr>
+                        <td>@congViec.ViTri</td>
+                        <td>@congViec.CongTy</td>
+                        <td>@congViec.LinhVuc</td>
+                        <td>@(congViec.ThuNhap.HasValue ? congViec.ThuNhap.Value.ToString("N0") : "Chưa cập nhật")</td>
+                        <td>
+                            <a asp-action="EditJob" asp-route-id="@congViec.MaCongViec" class="btn btn-warning btn-sm">Sửa</a>
+                            <form asp-action="DeleteJob" method="post" style="display:inline;">
+                                <input type="hidden" name="id" value="@congViec.MaCongViec" />
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="btn btn-danger btn-sm"
+                                    onclick="return confirm('Bạn có chắc chắn muốn xóa không?')">Xóa</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p>Chưa có công việc nào.</p>
+    }
+
+    <h2 class="mt-4">Thành tựu</h2>
+    <a asp-action="AddAchievement" class="btn btn-success mb-3">Thêm Thành tựu</a>
+
+    @if (Model.ThanhTuus != null && Model.ThanhTuus.Any())
+    {
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Tên thành tựu</th>
+                    <th>Năm đạt được</th>
+                    <th>Mô tả</th>
+                    <th>Hành động</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var thanhTuu in Model.ThanhTuus)
+                {
+                    <tr>
+                        <td>@thanhTuu.TenThanhTuu</td>
+                        <td>@thanhTuu.NamDatDuoc</td>
+                        <td>@thanhTuu.MoTa</td>
+                        <td>
+                            <a asp-action="EditAchievement" asp-route-id="@thanhTuu.MaThanhTuu"
+                                class="btn btn-warning btn-sm">Sửa</a>
+                            <form asp-action="DeleteAchievement" method="post" style="display:inline;">
+                                <input type="hidden" name="id" value="@thanhTuu.MaThanhTuu" />
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="btn btn-danger btn-sm"
+                                    onclick="return confirm('Bạn có chắc chắn muốn xóa không?')">Xóa</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p>Chưa có thành tựu nào.</p>
+    }
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

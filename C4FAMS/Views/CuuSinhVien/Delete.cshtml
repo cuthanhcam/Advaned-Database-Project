@@ -1,0 +1,23 @@
+@model C4FAMS.Models.CuuSinhVien
+
+<div class="container">
+    <h1 class="mt-4 mb-4">Xóa Cựu Sinh Viên</h1>
+
+    <h3>Bạn có chắc chắn muốn xóa cựu sinh viên này?</h3>
+    <div>
+        <dl class="row">
+            <dt class="col-sm-3">MSSV</dt>
+            <dd class="col-sm-9">@Model.MSSV</dd>
+            <dt class="col-sm-3">Họ tên</dt>
+            <dd class="col-sm-9">@Model.SinhVien?.HoTen</dd>
+            <dt class="col-sm-3">Năm tốt nghiệp</dt>
+            <dd class="col-sm-9">@Model.NamTotNghiep</dd>
+        </dl>
+
+        <form asp-action="DeleteConfirmed" method="post">
+            <input type="hidden" asp-for="MSSV" />
+            <button type="submit" class="btn btn-danger">Xóa</button>
+            <a asp-action="Index" class="btn btn-secondary">Quay lại</a>
+        </form>
+    </div>
+</div>

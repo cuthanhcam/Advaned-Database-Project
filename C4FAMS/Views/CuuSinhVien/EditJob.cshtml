@@ -1,0 +1,43 @@
+@model C4FAMS.Models.CongViecViewModel
+
+<div class="container">
+    <h1 class="mt-4 mb-4">Chỉnh sửa Công việc</h1>
+
+    <form asp-action="EditJob" method="post">
+        <div asp-validation-summary="All" class="text-danger"></div>
+        <input type="hidden" asp-for="MaCongViec" />
+
+        <div class="form-group mb-3">
+            <label asp-for="ViTri" class="form-label">Vị trí</label>
+            <input asp-for="ViTri" class="form-control" />
+            <span asp-validation-for="ViTri" class="text-danger"></span>
+        </div>
+
+        <div class="form-group mb-3">
+            <label asp-for="CongTy" class="form-label">Công ty</label>
+            <input asp-for="CongTy" class="form-control" />
+            <span asp-validation-for="CongTy" class="text-danger"></span>
+        </div>
+
+        <div class="form-group mb-3">
+            <label asp-for="LinhVuc" class="form-label">Lĩnh vực</label>
+            <input asp-for="LinhVuc" class="form-control" />
+            <span asp-validation-for="LinhVuc" class="text-danger"></span>
+        </div>
+
+        <div class="form-group mb-3">
+            <label asp-for="ThuNhap" class="form-label">Thu nhập</label>
+            <input asp-for="ThuNhap" class="form-control" type="number" step="0.01" />
+            <span asp-validation-for="ThuNhap" class="text-danger"></span>
+        </div>
+
+        <div class="form-group mb-3">
+            <button type="submit" class="btn btn-primary">Lưu</button>
+            <a asp-action="ManageProfile" class="btn btn-secondary">Quay lại</a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

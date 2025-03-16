@@ -1,0 +1,50 @@
+@model C4FAMS.Models.ManageCuuSinhVienViewModel
+
+<div class="container">
+    <h1 class="mt-4 mb-4">Chỉnh sửa Cựu Sinh Viên</h1>
+
+    <form asp-action="Edit" method="post">
+        <div asp-validation-summary="All" class="text-danger"></div>
+        <input type="hidden" name="mssv" value="@ViewBag.MSSV" />
+
+        <div class="form-group mb-3">
+            <label asp-for="NamTotNghiep" class="form-label">Năm tốt nghiệp</label>
+            <input asp-for="NamTotNghiep" class="form-control" type="number" required />
+            <span asp-validation-for="NamTotNghiep" class="text-danger"></span>
+        </div>
+
+        <div class="form-group mb-3">
+            <label asp-for="XepLoaiTotNghiep" class="form-label">Xếp loại tốt nghiệp</label>
+            <select asp-for="XepLoaiTotNghiep" class="form-control" required>
+                <option value="">Chọn xếp loại</option>
+                <option value="Xuất Sắc">Xuất Sắc</option>
+                <option value="Giỏi">Giỏi</option>
+                <option value="Khá">Khá</option>
+                <option value="Trung Bình">Trung Bình</option>
+            </select>
+            <span asp-validation-for="XepLoaiTotNghiep" class="text-danger"></span>
+        </div>
+
+        <div class="form-group mb-3">
+            <label asp-for="DiaChiHienTai" class="form-label">Địa chỉ hiện tại</label>
+            <input asp-for="DiaChiHienTai" class="form-control" />
+            <span asp-validation-for="DiaChiHienTai" class="text-danger"></span>
+        </div>
+
+        <div class="form-group mb-3">
+            <label asp-for="HinhThucLienLac" class="form-label">Hình thức liên lạc cụ thể (Email hoặc SĐT)</label>
+            <input asp-for="HinhThucLienLac" class="form-control" required
+                placeholder="Ghi rõ Email hoặc Số Điện Thoại" />
+            <span asp-validation-for="HinhThucLienLac" class="text-danger"></span>
+        </div>
+
+        <div class="form-group mb-3">
+            <button type="submit" class="btn btn-primary">Lưu</button>
+            <a asp-action="Index" class="btn btn-secondary">Quay lại</a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
