@@ -1,7 +1,7 @@
 @model C4FAMS.Models.NguoiDung
 
 <div class="container">
-    <h1 class="mt-4 mb-4">Xóa Tài khoản</h1>
+    <h1 class="mt-4 mb-4 text-cyan">Xóa Tài khoản</h1>
 
     <h3>Bạn có chắc chắn muốn xóa tài khoản này?</h3>
     <div>
@@ -18,10 +18,14 @@
             <dd class="col-sm-10">@(Model.TrangThai ? "Hoạt động" : "Ngưng hoạt động")</dd>
         </dl>
 
-        <form asp-action="DeleteUserConfirmed" method="post">
+        <form asp-action="DeleteUserConfirmed" method="post" class="mt-3">
             <input type="hidden" asp-for="Id" />
-            <button type="submit" class="btn btn-danger">Xóa</button>
+            <button type="submit" class="btn btn-danger me-2">Xóa</button>
             <a asp-action="ManageUsers" class="btn btn-secondary">Quay lại</a>
         </form>
     </div>
 </div>
+
+<style>
+    .text-cyan { color: #00BCD4; }
+</style>

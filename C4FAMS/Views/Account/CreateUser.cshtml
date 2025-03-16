@@ -1,31 +1,31 @@
 @model C4FAMS.Models.AdminUserViewModel
 
 <div class="container">
-    <h1 class="mt-4 mb-4">Tạo Tài khoản Khoa hoặc Admin</h1>
+    <h1 class="mt-4 mb-4 text-cyan">Tạo Tài khoản Khoa hoặc Admin</h1>
 
-    <form asp-action="CreateUser" method="post">
-        <div asp-validation-summary="All" class="text-danger"></div>
+    <form asp-action="CreateUser" method="post" class="card p-4 shadow-sm">
+        <div asp-validation-summary="All" class="text-danger mb-3"></div>
 
         <div class="form-group mb-3">
-            <label asp-for="Email" class="form-label">Email (Tên đăng nhập)</label>
+            <label asp-for="Email" class="form-label fw-bold">Email (Tên đăng nhập)</label>
             <input asp-for="Email" class="form-control" required />
             <span asp-validation-for="Email" class="text-danger"></span>
         </div>
 
         <div class="form-group mb-3">
-            <label asp-for="Password" class="form-label">Mật khẩu</label>
+            <label asp-for="Password" class="form-label fw-bold">Mật khẩu</label>
             <input asp-for="Password" class="form-control" type="password" required />
             <span asp-validation-for="Password" class="text-danger"></span>
         </div>
 
         <div class="form-group mb-3">
-            <label asp-for="ConfirmPassword" class="form-label">Xác nhận mật khẩu</label>
+            <label asp-for="ConfirmPassword" class="form-label fw-bold">Xác nhận mật khẩu</label>
             <input asp-for="ConfirmPassword" class="form-control" type="password" required />
             <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
         </div>
 
         <div class="form-group mb-3">
-            <label for="vaiTro" class="form-label">Vai trò</label>
+            <label for="vaiTro" class="form-label fw-bold">Vai trò</label>
             <select id="vaiTro" name="vaiTro" class="form-control" asp-for="VaiTro" required onchange="toggleMaKhoa(this)">
                 <option value="">-- Chọn Vai trò --</option>
                 <option value="Admin">Admin</option>
@@ -35,13 +35,13 @@
         </div>
 
         <div class="form-group mb-3" id="maKhoaGroup" style="display:none;">
-            <label for="maKhoa" class="form-label">Khoa</label>
+            <label for="maKhoa" class="form-label fw-bold">Khoa</label>
             <select id="maKhoa" name="maKhoa" class="form-control" asp-items="@(new SelectList(ViewBag.KhoaList ?? new List<C4FAMS.Models.Khoa>(), "MaKhoa", "TenKhoa"))">
                 <option value="">-- Chọn Khoa --</option>
             </select>
         </div>
 
-        <div class="form-group">
+        <div class="form-group d-flex gap-2">
             <button type="submit" class="btn btn-primary">Tạo</button>
             <a asp-action="ManageUsers" class="btn btn-secondary">Quay lại</a>
         </div>
@@ -78,8 +78,14 @@
                 maKhoaGroup.style.display = "block";
             } else {
                 maKhoaGroup.style.display = "none";
-                $("#maKhoa").val(""); // Reset giá trị khi không chọn Khoa
+                $("#maKhoa").val("");
             }
         }
     </script>
 }
+
+<style>
+    .text-cyan { color: #00BCD4; }
+    .card { border: 1px solid #E0F7FA; }
+    .shadow-sm { box-shadow: 0 .125rem .25rem rgba(0,0,0,.075); }
+</style>

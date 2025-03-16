@@ -1,31 +1,31 @@
 @model IEnumerable<C4FAMS.Models.SinhVien>
 
 <div class="container">
-    <h1 class="mt-4 mb-4">Danh sách Sinh viên</h1>
+    <h1 class="mt-4 mb-4 text-cyan">Danh sách Sinh viên</h1>
 
     <!-- Form lọc -->
     <form asp-action="Index" method="get" class="mb-4">
-        <div class="row">
+        <div class="row g-3">
             @if (User.IsInRole("Admin"))
             {
                 <div class="col-md-4">
-                    <label class="form-label">Khoa</label>
-                    <select name="khoaId" class="form-control" onchange="this.form.submit()" asp-items="@(new SelectList(ViewBag.KhoaList ?? new List<C4FAMS.Models.Khoa>(), "MaKhoa", "TenKhoa", ViewBag.SelectedKhoaId))">
+                    <label class="form-label fw-bold fs-6">Khoa</label>
+                    <select name="khoaId" class="form-control fs-6" onchange="this.form.submit()" asp-items="@(new SelectList(ViewBag.KhoaList ?? new List<C4FAMS.Models.Khoa>(), "MaKhoa", "TenKhoa", ViewBag.SelectedKhoaId))">
                         <option value="">-- Chọn Khoa --</option>
                     </select>
                 </div>
             }
 
             <div class="col-md-4">
-                <label class="form-label">Chuyên ngành</label>
-                <select name="chuyenNganhId" class="form-control" onchange="this.form.submit()" asp-items="@(new SelectList(ViewBag.ChuyenNganhList ?? new List<C4FAMS.Models.ChuyenNganh>(), "MaChuyenNganh", "TenChuyenNganh", ViewBag.SelectedChuyenNganhId))">
+                <label class="form-label fw-bold fs-6">Chuyên ngành</label>
+                <select name="chuyenNganhId" class="form-control fs-6" onchange="this.form.submit()" asp-items="@(new SelectList(ViewBag.ChuyenNganhList ?? new List<C4FAMS.Models.ChuyenNganh>(), "MaChuyenNganh", "TenChuyenNganh", ViewBag.SelectedChuyenNganhId))">
                     <option value="">-- Chọn Chuyên ngành --</option>
                 </select>
             </div>
 
             <div class="col-md-4">
-                <label class="form-label">Khóa học</label>
-                <select name="khoaHoc" class="form-control" onchange="this.form.submit()" asp-items="@(new SelectList(ViewBag.KhoaHocList ?? new List<string>(), null, null, ViewBag.SelectedKhoaHoc))">
+                <label class="form-label fw-bold fs-6">Khóa học</label>
+                <select name="khoaHoc" class="form-control fs-6" onchange="this.form.submit()" asp-items="@(new SelectList(ViewBag.KhoaHocList ?? new List<string>(), null, null, ViewBag.SelectedKhoaHoc))">
                     <option value="">-- Chọn Khóa học --</option>
                 </select>
             </div>
@@ -34,50 +34,119 @@
 
     @if (User.IsInRole("Admin") || User.IsInRole("Khoa"))
     {
-        <p>
+        <p class="mb-3">
             <a asp-action="Create" class="btn btn-primary">Thêm Sinh viên mới</a>
         </p>
     }
 
-    <table class="table table-bordered table-hover">
-        <thead class="thead-dark">
-            <tr>
-                <th>MSSV</th>
-                <th>Họ tên</th>
-                <th>Giới tính</th>
-                <th>Ngày sinh</th>
-                <th>Chuyên ngành</th>
-                <th>Mã chuyên ngành</th>
-                <th>Khóa học</th>
-                <th>Lớp</th>
-                <th>Trạng thái</th>
-                <th>Hành động</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model)
-            {
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover shadow-sm rounded">
+            <thead style="background: linear-gradient(90deg, #00BCD4, #0288D1); color: white;" class="fs-6">
                 <tr>
-                    <td>@item.MSSV</td>
-                    <td>@item.HoTen</td>
-                    <td>@(item.GioiTinh ? "Nam" : "Nữ")</td>
-                    <td>@item.NgaySinh.ToString("dd/MM/yyyy")</td>
-                    <td>@item.ChuyenNganh?.TenChuyenNganh</td>
-                    <td>@item.MaChuyenNganh</td>
-                    <td>@item.KhoaHoc</td>
-                    <td>@item.Lop</td>
-                    <td>@item.TrangThai</td>
-                    <td>
-                        <a asp-action="Details" asp-route-id="@item.MSSV" class="btn btn-sm btn-info">Chi tiết</a>
-                        @if (User.IsInRole("Admin") || User.IsInRole("Khoa"))
-                        {
-                            <a asp-action="Edit" asp-route-id="@item.MSSV" class="btn btn-sm btn-primary">Sửa</a>
-                            <a asp-action="Delete" asp-route-id="@item.MSSV" class="btn btn-sm btn-danger">Xóa</a>
-                            <a asp-action="TrangThai" asp-route-id="@item.MSSV" class="btn btn-sm btn-warning">Trạng thái</a>
-                        }
-                    </td>
+                    <th class="text-center" style="width: 10%;">MSSV</th>
+                    <th style="width: 15%;">Họ tên</th>
+                    <th class="text-center" style="width: 8%;">Giới tính</th>
+                    <th class="text-center" style="width: 10%;">Ngày sinh</th>
+                    <th style="width: 15%;">Chuyên ngành</th>
+                    <th class="text-center" style="width: 10%;">Mã chuyên ngành</th>
+                    <th class="text-center" style="width: 8%;">Khóa học</th>
+                    <th class="text-center" style="width: 8%;">Lớp</th>
+                    <th class="text-center" style="width: 10%;">Trạng thái</th>
+                    <th class="text-center" style="width: 26%;">Hành động</th>
                 </tr>
-            }
-        </tbody>
-    </table>
+            </thead>
+            <tbody class="fs-6">
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td class="text-center">@item.MSSV</td>
+                        <td>@item.HoTen</td>
+                        <td class="text-center">@(item.GioiTinh ? "Nam" : "Nữ")</td>
+                        <td class="text-center">@item.NgaySinh.ToString("dd/MM/yyyy")</td>
+                        <td>@item.ChuyenNganh?.TenChuyenNganh</td>
+                        <td class="text-center">@item.MaChuyenNganh</td>
+                        <td class="text-center">@item.KhoaHoc</td>
+                        <td class="text-center">@item.Lop</td>
+                        <td class="text-center">
+                            @switch (item.TrangThai)
+                            {
+                                case TrangThaiSinhVien.ConHoc:
+                                    <span class="badge bg-success">Còn học</span>
+                                    break;
+                                case TrangThaiSinhVien.BaoLuu:
+                                    <span class="badge bg-warning">Bảo lưu</span>
+                                    break;
+                                case TrangThaiSinhVien.ThoiHoc:
+                                    <span class="badge bg-danger">Thôi học</span>
+                                    break;
+                                case TrangThaiSinhVien.DaTotNghiep:
+                                    <span class="badge bg-info">Đã tốt nghiệp</span>
+                                    break;
+                                default:
+                                    <span class="badge bg-secondary">Chưa xác định</span>
+                                    break;
+                            }
+                        </td>
+                        <td class="text-center">
+                            <div class="d-flex justify-content-center gap-1">
+                                <a asp-action="Details" asp-route-id="@item.MSSV" class="btn btn-sm btn-info flex-fill">Chi tiết</a>
+                                @if (User.IsInRole("Admin") || User.IsInRole("Khoa"))
+                                {
+                                    <a asp-action="Edit" asp-route-id="@item.MSSV" class="btn btn-sm btn-primary flex-fill">Sửa</a>
+                                    <a asp-action="Delete" asp-route-id="@item.MSSV" class="btn btn-sm btn-danger flex-fill">Xóa</a>
+                                    <a asp-action="TrangThai" asp-route-id="@item.MSSV" class="btn btn-sm btn-warning flex-fill">Trạng thái</a>
+                                }
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
 </div>
+
+<style>
+    .text-cyan { color: #00BCD4; }
+    .shadow-sm { box-shadow: 0 .125rem .25rem rgba(0,0,0,.075); }
+    .rounded { border-radius: 8px; }
+    .table th, .table td { 
+        vertical-align: middle; 
+        padding: 0.5rem; /* Giảm padding để tiết kiệm không gian */
+    }
+    .table th {
+        white-space: normal; /* Cho phép tiêu đề xuống dòng */
+        line-height: 1.2; /* Điều chỉnh khoảng cách dòng */
+    }
+    .table td {
+        white-space: nowrap; /* Ngăn nội dung trong ô xuống dòng */
+        overflow: hidden; /* Ẩn nội dung thừa */
+        text-overflow: ellipsis; /* Thêm dấu ba chấm khi nội dung bị cắt */
+    }
+    .badge {
+        font-size: 0.85rem;
+        padding: 0.35em 0.65em;
+    }
+    .btn-warning {
+        background-color: #FFC107;
+        border-color: #FFC107;
+        color: #fff;
+    }
+    .btn-warning:hover {
+        background-color: #FFCA2C;
+        border-color: #FFCA2C;
+        color: #fff;
+    }
+    .fs-6 { font-size: 0.875rem; } /* Kích thước chữ tiêu đề và nội dung */
+    .form-label { color: #0288D1; }
+    .table-responsive { overflow-x: hidden; } /* Loại bỏ thanh cuộn ngang */
+    .btn-sm { 
+        padding: 0.25rem 0.5rem; /* Đảm bảo nút nhỏ gọn */
+        font-size: 0.75rem; /* Giảm kích thước chữ trong nút */
+    }
+    .d-flex { 
+        flex-wrap: nowrap; /* Đảm bảo các nút không xuống dòng */
+    }
+    .flex-fill { 
+        flex: 1; /* Các nút chia đều không gian trong cột hành động */
+    }
+</style>

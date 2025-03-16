@@ -1,7 +1,7 @@
 @model C4FAMS.Models.ManageViewModel
 
 <div class="container">
-    <h1 class="mt-4 mb-4">Quản lý tài khoản</h1>
+    <h1 class="mt-4 mb-4 text-cyan">Quản lý tài khoản</h1>
 
     @if (TempData["SuccessMessage"] != null)
     {
@@ -10,8 +10,8 @@
         </div>
     }
 
-    <div class="card mb-4">
-        <div class="card-header">Thông tin tài khoản</div>
+    <div class="card mb-4 shadow-sm">
+        <div class="card-header" style="background-color: #E0F7FA; color: #0288D1;">Thông tin tài khoản</div>
         <div class="card-body">
             <dl class="row">
                 <dt class="col-sm-3">Email</dt>
@@ -29,43 +29,50 @@
         </div>
     </div>
 
-    <div class="card mb-4">
-        <div class="card-header">Đổi mật khẩu</div>
+    <div class="card mb-4 shadow-sm">
+        <div class="card-header" style="background-color: #E0F7FA; color: #0288D1;">Đổi mật khẩu</div>
         <div class="card-body">
             <form asp-action="Manage" method="post">
-                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
                 <div class="form-group mb-3">
-                    <label asp-for="OldPassword" class="form-label">Mật khẩu cũ</label>
+                    <label asp-for="OldPassword" class="form-label fw-bold">Mật khẩu cũ</label>
                     <input asp-for="OldPassword" class="form-control" />
                     <span asp-validation-for="OldPassword" class="text-danger"></span>
                 </div>
 
                 <div class="form-group mb-3">
-                    <label asp-for="NewPassword" class="form-label">Mật khẩu mới</label>
+                    <label asp-for="NewPassword" class="form-label fw-bold">Mật khẩu mới</label>
                     <input asp-for="NewPassword" class="form-control" />
                     <span asp-validation-for="NewPassword" class="text-danger"></span>
                 </div>
 
                 <div class="form-group mb-3">
-                    <label asp-for="ConfirmNewPassword" class="form-label">Xác nhận mật khẩu mới</label>
+                    <label asp-for="ConfirmNewPassword" class="form-label fw-bold">Xác nhận mật khẩu mới</label>
                     <input asp-for="ConfirmNewPassword" class="form-control" />
                     <span asp-validation-for="ConfirmNewPassword" class="text-danger"></span>
                 </div>
 
-                <div class="form-group">
+                <div class="form-group d-flex gap-2">
                     <button type="submit" class="btn btn-primary">Đổi mật khẩu</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <a asp-action="Index" asp-controller="Home" class="btn btn-secondary">Quay lại</a>
-    <form asp-action="Logout" method="post" class="d-inline">
-        <button type="submit" class="btn btn-danger">Đăng xuất</button>
-    </form>
+    <div class="d-flex gap-2">
+        <a asp-action="Index" asp-controller="Home" class="btn btn-secondary">Quay lại</a>
+        <form asp-action="Logout" method="post" class="d-inline">
+            <button type="submit" class="btn btn-danger">Đăng xuất</button>
+        </form>
+    </div>
 </div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
 }
+
+<style>
+    .text-cyan { color: #00BCD4; }
+    .shadow-sm { box-shadow: 0 .125rem .25rem rgba(0,0,0,.075); }
+</style>

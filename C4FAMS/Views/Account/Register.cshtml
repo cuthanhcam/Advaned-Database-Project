@@ -1,7 +1,7 @@
 @model C4FAMS.Models.RegisterViewModel
 
 <div class="container">
-    <h1 class="mt-4 mb-4">Đăng ký</h1>
+    <h1 class="mt-4 mb-4 text-cyan">Đăng ký</h1>
 
     @if (TempData["ErrorMessage"] != null)
     {
@@ -11,41 +11,41 @@
         </div>
     }
 
-    <form asp-action="Register" method="post">
-        <div asp-validation-summary="All" class="text-danger"></div>
+    <form asp-action="Register" method="post" class="card p-4 shadow-sm">
+        <div asp-validation-summary="All" class="text-danger mb-3"></div>
 
         <div class="form-group mb-3">
-            <label asp-for="Email" class="form-label">Email</label>
+            <label asp-for="Email" class="form-label fw-bold">Email</label>
             <input asp-for="Email" class="form-control" required />
             <span asp-validation-for="Email" class="text-danger"></span>
         </div>
 
         <div class="form-group mb-3">
-            <label asp-for="Password" class="form-label">Mật khẩu</label>
+            <label asp-for="Password" class="form-label fw-bold">Mật khẩu</label>
             <input asp-for="Password" class="form-control" type="password" required />
             <span asp-validation-for="Password" class="text-danger"></span>
         </div>
 
         <div class="form-group mb-3">
-            <label asp-for="ConfirmPassword" class="form-label">Xác nhận mật khẩu</label>
+            <label asp-for="ConfirmPassword" class="form-label fw-bold">Xác nhận mật khẩu</label>
             <input asp-for="ConfirmPassword" class="form-control" type="password" required />
             <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
         </div>
 
         <div class="form-group mb-3">
-            <label asp-for="MSSV" class="form-label">MSSV</label>
+            <label asp-for="MSSV" class="form-label fw-bold">MSSV</label>
             <input asp-for="MSSV" class="form-control" required />
             <span asp-validation-for="MSSV" class="text-danger"></span>
         </div>
 
         <div class="form-group mb-3">
-            <label asp-for="NamTotNghiep" class="form-label">Năm tốt nghiệp</label>
+            <label asp-for="NamTotNghiep" class="form-label fw-bold">Năm tốt nghiệp</label>
             <input asp-for="NamTotNghiep" class="form-control" type="number" required />
             <span asp-validation-for="NamTotNghiep" class="text-danger"></span>
         </div>
 
         <div class="form-group mb-3">
-            <label asp-for="XepLoaiTotNghiep" class="form-label">Xếp loại tốt nghiệp</label>
+            <label asp-for="XepLoaiTotNghiep" class="form-label fw-bold">Xếp loại tốt nghiệp</label>
             <select asp-for="XepLoaiTotNghiep" class="form-control" required>
                 <option value="">Chọn xếp loại</option>
                 <option value="Xuất Sắc">Xuất Sắc</option>
@@ -57,18 +57,18 @@
         </div>
 
         <div class="form-group mb-3">
-            <label asp-for="DiaChiHienTai" class="form-label">Địa chỉ hiện tại</label>
+            <label asp-for="DiaChiHienTai" class="form-label fw-bold">Địa chỉ hiện tại</label>
             <input asp-for="DiaChiHienTai" class="form-control" />
             <span asp-validation-for="DiaChiHienTai" class="text-danger"></span>
         </div>
 
         <div class="form-group mb-3">
-            <label asp-for="HinhThucLienLac" class="form-label">Hình thức liên lạc cụ thể (Email hoặc SĐT)</label>
-            <input asp-for="HinhThucLienLac" class="form-control" placeholder="Ví dụ: example@email.com hoặc 0901234567" required />
+            <label asp-for="HinhThucLienLac" class="form-label fw-bold">Hình thức liên lạc cụ thể</label>
+            <input asp-for="HinhThucLienLac" class="form-control" placeholder="Hình thức liên lạc cụ thể (Email hoặc SĐT)" required />
             <span asp-validation-for="HinhThucLienLac" class="text-danger"></span>
         </div>
 
-        <div class="form-group">
+        <div class="form-group d-flex gap-2">
             <button type="submit" class="btn btn-primary">Đăng ký</button>
         </div>
     </form>
@@ -100,3 +100,9 @@
         });
     </script>
 }
+
+<style>
+    .text-cyan { color: #00BCD4; }
+    .card { border: 1px solid #E0F7FA; }
+    .shadow-sm { box-shadow: 0 .125rem .25rem rgba(0,0,0,.075); }
+</style>

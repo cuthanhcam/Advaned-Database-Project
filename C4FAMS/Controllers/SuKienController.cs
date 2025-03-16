@@ -227,6 +227,20 @@ namespace C4FAMS.Controllers
                 }
             }
 
+            // Xóa lỗi validation liên quan đến MaKhoa và Khoa (cho cả Admin và Khoa)
+            ModelState.Remove("MaKhoa");
+            ModelState.Remove("suKien.MaKhoa");
+            ModelState.Remove("Khoa");
+            ModelState.Remove("suKien.Khoa");
+
+            // Kiểm tra ràng buộc thời gian: NgayToChuc phải từ ngày mai trở đi
+            DateTime ngayHienTai = DateTime.Today;
+            DateTime ngayToiThieu = ngayHienTai.AddDays(1);
+            if (suKien.NgayToChuc < ngayToiThieu)
+            {
+                ModelState.AddModelError("NgayToChuc", $"Thời gian tổ chức phải từ ngày {ngayToiThieu:dd/MM/yyyy} trở đi.");
+            }
+
             if (ModelState.IsValid)
             {
                 try
@@ -283,6 +297,7 @@ namespace C4FAMS.Controllers
                 }
             }
 
+            // Nếu ModelState không hợp lệ, trả lại view với dữ liệu hiện tại
             var khoaList = await _khoaRepository.GetAllAsync();
             ViewBag.KhoaList = khoaList;
             ViewBag.SuKienChiTiet = suKienChiTiet;

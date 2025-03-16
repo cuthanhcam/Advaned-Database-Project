@@ -1,14 +1,14 @@
 @model IEnumerable<C4FAMS.Models.NguoiDung>
 
 <div class="container">
-    <h1 class="mt-4 mb-4">Quản lý Tài khoản Khoa và Admin</h1>
+    <h1 class="mt-4 mb-4 text-cyan">Quản lý Tài khoản Khoa và Admin</h1>
 
     <p>
-        <a asp-action="CreateUser" class="btn btn-primary">Tạo Tài khoản mới</a>
+        <a asp-action="CreateUser" class="btn btn-primary mb-3">Tạo Tài khoản mới</a>
     </p>
 
-    <table class="table table-bordered table-hover">
-        <thead class="thead-dark">
+    <table class="table table-bordered table-hover shadow-sm">
+        <thead class="table-dark" style="background-color: #00BCD4;">
             <tr>
                 <th>Tên đăng nhập</th>
                 <th>Email</th>
@@ -28,7 +28,7 @@
                     <td>@(item.Khoa != null ? item.Khoa.TenKhoa : "Chưa gán")</td>
                     <td>@(item.TrangThai ? "Hoạt động" : "Ngưng hoạt động")</td>
                     <td>
-                        <a asp-action="EditUser" asp-route-id="@item.Id" class="btn btn-sm btn-primary">Sửa</a>
+                        <a asp-action="EditUser" asp-route-id="@item.Id" class="btn btn-sm btn-primary me-1">Sửa</a>
                         <a asp-action="DeleteUser" asp-route-id="@item.Id" class="btn btn-sm btn-danger">Xóa</a>
                     </td>
                 </tr>
@@ -36,3 +36,8 @@
         </tbody>
     </table>
 </div>
+
+<style>
+    .text-cyan { color: #00BCD4; }
+    .shadow-sm { box-shadow: 0 .125rem .25rem rgba(0,0,0,.075); }
+</style>

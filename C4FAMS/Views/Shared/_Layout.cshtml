@@ -4,22 +4,127 @@
 
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - C4FAMS</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-</head>
+    <style>
+        /* Tùy chỉnh tổng thể */
+        body {
+            font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+            background-color: #f0f8ff; /* Cyan nhạt cho nền */
+            color: #333;
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
 
+        /* Navbar với gradient */
+        .navbar-custom {
+            background: linear-gradient(90deg, #00BCD4, #0288D1); /* Gradient từ cyan đến xanh dương */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .navbar-custom .navbar-brand {
+            font-weight: 700;
+            font-size: 1.8rem;
+            background: linear-gradient(45deg, #E0F7FA, #B0E0E6); /* Gradient nhạt cho chữ */
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            transition: transform 0.3s ease;
+        }
+        .navbar-custom .navbar-brand:hover {
+            transform: scale(1.05); /* Hiệu ứng phóng to khi hover */
+        }
+        .navbar-custom .nav-link {
+            color: #fff !important;
+            font-weight: 500;
+            transition: color 0.3s ease-in-out;
+        }
+        .navbar-custom .nav-link:hover {
+            color: #E0F7FA !important; /* Cyan nhạt khi hover */
+        }
+
+        /* Nút tùy chỉnh */
+        .btn-primary {
+            background-color: #00BCD4;
+            border-color: #00BCD4;
+        }
+        .btn-primary:hover {
+            background-color: #0288D1;
+            border-color: #0288D1;
+        }
+        .btn-danger {
+            background-color: #F44336;
+            border-color: #F44336;
+        }
+        .btn-danger:hover {
+            background-color: #D32F2F;
+            border-color: #D32F2F;
+        }
+        .btn-success {
+            background-color: #4CAF50;
+            border-color: #4CAF50;
+        }
+        .btn-success:hover {
+            background-color: #388E3C;
+            border-color: #388E3C;
+        }
+        .btn-secondary {
+            background-color: #757575;
+            border-color: #757575;
+        }
+        .btn-secondary:hover {
+            background-color: #616161;
+            border-color: #616161;
+        }
+        .btn-info {
+            background-color: #0288D1;
+            border-color: #0288D1;
+        }
+        .btn-info:hover {
+            background-color: #0277BD;
+            border-color: #0277BD;
+        }
+
+        /* Đảm bảo footer luôn ở dưới cùng */
+        main {
+            flex: 1 0 auto; /* Nội dung chính mở rộng */
+        }
+        .footer {
+            flex-shrink: 0; /* Footer không co lại */
+            background: linear-gradient(90deg, #00BCD4, #0288D1); /* Gradient giống navbar */
+            color: #fff;
+            font-size: 0.9rem;
+            padding: 20px 0;
+            box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        .footer a {
+            color: #E0F7FA; /* Cyan nhạt cho link */
+            text-decoration: none;
+        }
+        .footer a:hover {
+            color: #B0E0E6; /* Cyan nhạt hơn khi hover */
+            text-decoration: underline;
+        }
+        .footer .heart {
+            color: #F44336; /* Màu đỏ cho trái tim */
+        }
+    </style>
+</head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
+        <nav class="navbar navbar-expand-sm navbar-dark navbar-custom shadow-sm">
             <div class="container">
                 <a class="navbar-brand" asp-controller="Home" asp-action="Index">C4FAMS</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNav">
@@ -28,7 +133,6 @@
                         {
                             @if (User.IsInRole("Admin"))
                             {
-                                <!-- Menu cho Admin -->
                                 <li class="nav-item">
                                     <a class="nav-link" asp-controller="Khoa" asp-action="Index">Quản lý Khoa</a>
                                 </li>
@@ -47,7 +151,6 @@
                             }
                             @if (User.IsInRole("Khoa"))
                             {
-                                <!-- Menu cho Khoa -->
                                 <li class="nav-item">
                                     <a class="nav-link" asp-controller="Khoa" asp-action="Index">Thông tin Khoa</a>
                                 </li>
@@ -63,7 +166,6 @@
                             }
                             @if (User.IsInRole("CuuSinhVien"))
                             {
-                                <!-- Menu cho Cựu Sinh Viên -->
                                 <li class="nav-item">
                                     <a class="nav-link" asp-controller="CuuSinhVienSuKien" asp-action="Index">Sự Kiện</a>
                                 </li>
@@ -81,21 +183,26 @@
             </div>
         </nav>
     </header>
-    <div class="container">
-        <main role="main" class="pb-3">
+
+    <div class="container py-4">
+        <main role="main">
             @RenderBody()
         </main>
     </div>
-    <footer class="footer text-muted">
+
+    <footer class="footer">
         <div class="container">
-            © 2025 - C4FAMS
+            <p>© 2025 - C4FAMS | 
+                <a href="https://github.com/cuthanhcam/Advaned-Database-Project" target="_blank">GitHub</a>
+            </p>
+            <p class="small">From Code For Food with <span class="heart"><i class="bi bi-heart-fill"></i></span></p>
         </div>
     </footer>
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
-
 </html>

@@ -1,26 +1,26 @@
 @model C4FAMS.Models.NguoiDung
 
 <div class="container">
-    <h1 class="mt-4 mb-4">Chỉnh sửa Tài khoản</h1>
+    <h1 class="mt-4 mb-4 text-cyan">Chỉnh sửa Tài khoản</h1>
 
-    <form asp-action="EditUser" method="post">
-        <div asp-validation-summary="All" class="text-danger"></div>
+    <form asp-action="EditUser" method="post" class="card p-4 shadow-sm">
+        <div asp-validation-summary="All" class="text-danger mb-3"></div>
         <input type="hidden" asp-for="Id" />
 
         <div class="form-group mb-3">
-            <label asp-for="UserName" class="form-label">Tên đăng nhập</label>
+            <label asp-for="UserName" class="form-label fw-bold">Tên đăng nhập</label>
             <input asp-for="UserName" class="form-control" required />
             <span asp-validation-for="UserName" class="text-danger"></span>
         </div>
 
         <div class="form-group mb-3">
-            <label asp-for="Email" class="form-label">Email</label>
+            <label asp-for="Email" class="form-label fw-bold">Email</label>
             <input asp-for="Email" class="form-control" required />
             <span asp-validation-for="Email" class="text-danger"></span>
         </div>
 
         <div class="form-group mb-3">
-            <label asp-for="VaiTro" class="form-label">Vai trò</label>
+            <label asp-for="VaiTro" class="form-label fw-bold">Vai trò</label>
             <select asp-for="VaiTro" class="form-control" required onchange="toggleMaKhoa(this)">
                 <option value="Admin">Admin</option>
                 <option value="Khoa">Khoa</option>
@@ -29,7 +29,7 @@
         </div>
 
         <div class="form-group mb-3" id="maKhoaGroup" style="@(Model.VaiTro == "Khoa" ? "" : "display:none;")">
-            <label asp-for="MaKhoa" class="form-label">Khoa</label>
+            <label asp-for="MaKhoa" class="form-label fw-bold">Khoa</label>
             <select asp-for="MaKhoa" class="form-control" asp-items="@(new SelectList(ViewBag.KhoaList ?? new List<C4FAMS.Models.Khoa>(), "MaKhoa", "TenKhoa"))">
                 <option value="">-- Chọn Khoa --</option>
             </select>
@@ -37,7 +37,7 @@
         </div>
 
         <div class="form-group mb-3">
-            <label asp-for="TrangThai" class="form-label">Trạng thái</label>
+            <label asp-for="TrangThai" class="form-label fw-bold">Trạng thái</label>
             <select asp-for="TrangThai" class="form-control">
                 <option value="true">Hoạt động</option>
                 <option value="false">Ngưng hoạt động</option>
@@ -45,7 +45,7 @@
             <span asp-validation-for="TrangThai" class="text-danger"></span>
         </div>
 
-        <div class="form-group">
+        <div class="form-group d-flex gap-2">
             <button type="submit" class="btn btn-primary">Lưu</button>
             <a asp-action="ManageUsers" class="btn btn-secondary">Quay lại</a>
         </div>
@@ -64,8 +64,6 @@
                     e.preventDefault();
                 }
             });
-
-            // Khởi tạo trạng thái ban đầu
             toggleMaKhoa(document.getElementById("VaiTro"));
         });
 
@@ -75,8 +73,14 @@
                 maKhoaGroup.style.display = "block";
             } else {
                 maKhoaGroup.style.display = "none";
-                $("#MaKhoa").val(""); // Reset giá trị khi không chọn Khoa
+                $("#MaKhoa").val("");
             }
         }
     </script>
 }
+
+<style>
+    .text-cyan { color: #00BCD4; }
+    .card { border: 1px solid #E0F7FA; }
+    .shadow-sm { box-shadow: 0 .125rem .25rem rgba(0,0,0,.075); }
+</style>
