@@ -6,6 +6,7 @@ namespace C4FAMS.Interfaces
     {
         Task<IEnumerable<SinhVien>> GetAllAsync();
         Task<IEnumerable<SinhVien>> GetByKhoaAsync(int maKhoa);
+        Task<IEnumerable<SinhVien>> GetByChuyenNganhAsync(int maChuyenNganh);
         Task<SinhVien?> GetByIdAsync(string mssv);
         Task AddAsync(SinhVien sinhVien);
         Task UpdateAsync(SinhVien sinhVien);

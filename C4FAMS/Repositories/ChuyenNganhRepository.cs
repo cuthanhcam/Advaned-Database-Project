@@ -25,6 +25,7 @@ namespace C4FAMS.Repositories
                 .Where(c => c.MaKhoa == maKhoa)
                 .ToListAsync();
         }
+        
         public async Task<ChuyenNganh?> GetByIdAsync(int maChuyenNganh)
         {
             return await _context.ChuyenNganh

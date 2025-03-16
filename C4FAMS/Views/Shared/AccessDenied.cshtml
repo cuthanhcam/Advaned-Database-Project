@@ -1,11 +1,11 @@
-﻿@model string
+@model string
 @{
-    ViewData["Title"] = "Có lỗi xảy ra";
+    ViewData["Title"] = "Truy cập bị từ chối";
 }
 
 <div class="container text-center mt-5">
-    <h1 class="display-4">500 - Có lỗi xảy ra</h1>
-    <p class="lead">Đã có lỗi xảy ra trong hệ thống. Vui lòng thử lại sau.</p>
+    <h1 class="display-4">403 - Truy cập bị từ chối</h1>
+    <p class="lead">Bạn không có quyền truy cập trang này.</p>
     @if (!string.IsNullOrEmpty(Model))
     {
         <p class="text-muted">@Model</p>
