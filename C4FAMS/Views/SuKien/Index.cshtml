@@ -17,8 +17,14 @@
             }
 
             <div class="col-md-6">
-                <label class="form-label">Ngày tổ chức</label>
-                <input type="date" name="ngayToChuc" class="form-control" value="@ViewBag.SelectedNgayToChuc" onchange="this.form.submit()" />
+                <label class="form-label">Sắp xếp</label>
+                <select name="sortOrder" class="form-control" onchange="this.form.submit()">
+                    @{
+                        var sortOrder = ViewBag.SortOrder as string ?? "nearest"; // Ép kiểu và gán giá trị mặc định
+                    }
+                    <option value="nearest" selected="@(sortOrder == "nearest")">Gần nhất</option>
+                    <option value="farthest" selected="@(sortOrder == "farthest")">Xa nhất</option>
+                </select>
             </div>
         </div>
     </form>
