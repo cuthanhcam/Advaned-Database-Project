@@ -3,7 +3,7 @@
 <div class="container">
     <h1 class="mt-4 mb-4">Thêm Sinh viên</h1>
 
-    <form asp-action="Create" method="post">
+    <form asp-action="Create" method="post" id="createForm">
         <div asp-validation-summary="All" class="text-danger"></div>
         <div class="form-group mb-3">
             <label asp-for="MSSV" class="form-label"></label>
@@ -40,7 +40,7 @@
                 <label class="form-label">Khoa</label>
                 @if (ViewBag.KhoaList != null)
                 {
-                    <select name="khoaId" class="form-control" asp-items="@(new SelectList(ViewBag.KhoaList, "MaKhoa", "TenKhoa"))" onchange="this.form.submit()" required>
+                    <select name="khoaId" id="khoaId" class="form-control" asp-items="@(new SelectList(ViewBag.KhoaList, "MaKhoa", "TenKhoa"))" required>
                         <option value="">-- Chọn Khoa --</option>
                     </select>
                 }
@@ -52,14 +52,17 @@
         }
         <div class="form-group mb-3">
             <label asp-for="MaChuyenNganh" class="form-label">Chuyên ngành</label>
-            @if (ViewBag.ChuyenNganhList != null && ((IEnumerable<object>)ViewBag.ChuyenNganhList).Any()) // Ép kiểu để kiểm tra Any()
+            @if (ViewBag.ChuyenNganhList != null && ((IEnumerable<object>)ViewBag.ChuyenNganhList).Any())
             {
-                <select asp-for="MaChuyenNganh" class="form-control" asp-items="@(new SelectList(ViewBag.ChuyenNganhList, "MaChuyenNganh", "TenChuyenNganh"))" required>
+                <select asp-for="MaChuyenNganh" id="maChuyenNganh" class="form-control" asp-items="@(new SelectList(ViewBag.ChuyenNganhList, "MaChuyenNganh", "TenChuyenNganh"))" required>
                     <option value="">-- Chọn Chuyên ngành --</option>
                 </select>
             }
             else
             {
+                <select asp-for="MaChuyenNganh" id="maChuyenNganh" class="form-control" required>
+                    <option value="">-- Chọn Chuyên ngành --</option>
+                </select>
                 <p class="text-danger">Không có chuyên ngành nào để chọn. Vui lòng thêm chuyên ngành.</p>
             }
             <span asp-validation-for="MaChuyenNganh" class="text-danger"></span>
@@ -100,4 +103,31 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <script>
+        $(document).ready(function () {
+            $("#khoaId").change(function () {
+                var khoaId = $(this).val();
+                if (khoaId) {
+                    $.ajax({
+                        url: '/SinhVien/GetChuyenNganhByKhoa',
+                        type: 'GET',
+                        data: { khoaId: khoaId },
+                        success: function (data) {
+                            var chuyenNganhSelect = $("#maChuyenNganh");
+                            chuyenNganhSelect.empty();
+                            chuyenNganhSelect.append('<option value="">-- Chọn Chuyên ngành --</option>');
+                            $.each(data, function (index, item) {
+                                chuyenNganhSelect.append('<option value="' + item.maChuyenNganh + '">' + item.tenChuyenNganh + '</option>');
+                            });
+                        },
+                        error: function () {
+                            alert("Không thể tải danh sách chuyên ngành.");
+                        }
+                    });
+                } else {
+                    $("#maChuyenNganh").empty().append('<option value="">-- Chọn Chuyên ngành --</option>');
+                }
+            });
+        });
+    </script>
 }
