@@ -1,61 +1,14 @@
-Role Admin
-- Sinh viên lỗi chức năng:
-	+ thêm: Add không được,Cần thông báo khi nhập không đủ MSSV , nhập sai Ngày tháng năm phải hiện thông báo . Ngày sinh nhập bắt buộc là (Năm hiện tại - Năm sinh >= 18)			  
-	+ sửa: Update không được, Cần thông báo khi nhập không đủ MSSV , nhập sai Ngày tháng năm phải hiện thông báo . Ngày sinh sửa bắt buộc là (Năm hiện tại - Năm sinh >= 18)
+Trong sinh viên thêm ràng buộc năm sinh phải lớn hơn 17 tuổi (dùng năm hiện tại trừ đi 17), ví dụ năm 2008 là hợp lệ
 
+Hiện tại trong SinhVien/Create, tôi nhập MSSV, HoTen, GioiTinh, NgaySinh, QueQuan,
 
-- Cựu Sinh viên lỗi chức năng:
-	+ thêm : Add không được, Nhập mssv chứ phải lựa chọn tên , Năm tốt nghiệp không được nhập trước : (Năm tốt nghiệp - năm sinh )
-			      
-	+ Sửa : Update không được, Năm tốt nghiệp không được nhập trước :  (Năm tốt nghiệp - năm sinh )
+Khi vừa chọn Khoa(droplist) một khoa bất kì thì hiện thông báo
+The value '' is invalid.
+Vui lòng chọn chuyên ngành.
+Khóa học là bắt buộc
+Lớp là bắt buộc
+Email là bắt buộc
+Số điện thoại là bắt buộc
 
-- Sự kiện lỗi chức năng:
-	+ thêm: Add không được, Ngày tổ chức sự kiện > Ngày tháng năm của hiện tại
-	+ sửa: Update không được, Ngày tổ chức sự kiện > Ngày tháng năm của hiện tại
-
-- Đăng ký sự kiện lỗi chức năng:
-	+ thêm: Add không được, Nhập mssv chứ phải lựa chọn tên 
-	+ Sửa form MaSuKien thành form nhập tên 
-
-- Công việc: Admin chỉ có quyền xem Danh sách các công việc của cựu sinh viên . Không được quyền thêm xóa sửa
-
-- Thành tựu: Admin chỉ có quyền xem Danh sách thành tựu của cựu sinh viên . Không được quyền thêm xóa sửa
-
-- Thông báo:
-
-<!-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------!>
-
-Role Khoa: Khi chạy , trên thanh header sẽ bao gồm: Trang chủ; Sinh Viên; Cựu sinh viên; Sự kiện; Công việc; Thành tựu; Thông báo
-
-- Sinh viên, Cựu sinh viên, Sự kiện: lỗi như Role Admin
-
-- Sự kiện: Add, update bị lỗi như Role Admin và chỉ thêm xóa sửa được của riêng Khoa đó
-
-- Chỉ xem được danh sách Công việc và Thành tựu của Cựu Sinh Viên
-
-- Thông báo:
-
-<!-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------!>
-
-Role Cựu sinh viên: Khi chạy , trên thanh header sẽ bao gồm : Trang chủ;  Sự kiện; Đăng ký sự kiện; Công việc; Thành tựu; Thông báo
-
-- Sự kiện : Có quyền được xem tất cả danh sách sự kiện 
-
-- Đăng ký sự kiện: Lỗi như role Admin
-
-- Công việc & Thành tựu: Add, update không được
-
-- Thông báo: xem không được 
-
-<!-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------!>
-
-VỀ TRANG CHỦ: Hiển thị các sự kiện còn hiệu lực
-
-<!-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------!>
-
-Lỗi FORM ĐĂNG KÝ (Cần phải ss MSSV với MSSV của database)
-
-
-
-
-
+Hoặc khi tôi đã điền chuyên ngành (ở đây xử lý chọn khoa rồi mới chọn chuyên ngành) vào rồi sau đó chọn khoa thì tự động thêm tạo sinh viên mới mặc dù tôi chưa nhấn thêm, Tương tự với sửa
+Hiện tại nhấn xóa sinh viên thì sẽ hiện lỗi 500
