@@ -8,6 +8,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Globalization;
 
 namespace C4FAMS.Controllers
 {
@@ -35,7 +36,7 @@ namespace C4FAMS.Controllers
         }
 
         // GET: SuKien/Index
-        public async Task<IActionResult> Index(int? khoaId, DateTime? ngayToChuc)
+        public async Task<IActionResult> Index(int? khoaId, string sortOrder)
         {
             IEnumerable<SuKien> suKienList;
 
@@ -58,19 +59,30 @@ namespace C4FAMS.Controllers
                 return Forbid();
             }
 
-            // Áp dụng bộ lọc
+            // Áp dụng bộ lọc theo khoa
             if (khoaId.HasValue)
             {
                 suKienList = suKienList.Where(s => s.MaKhoa == khoaId.Value);
             }
 
-            if (ngayToChuc.HasValue)
+            // Xử lý sắp xếp
+            sortOrder = string.IsNullOrEmpty(sortOrder) ? "nearest" : sortOrder; // Mặc định là "nearest"
+            ViewBag.SortOrder = sortOrder; // Gán giá trị cho ViewBag.SortOrder
+
+            switch (sortOrder)
             {
-                suKienList = suKienList.Where(s => s.NgayToChuc.Date == ngayToChuc.Value.Date);
+                case "nearest":
+                    suKienList = suKienList.OrderBy(s => s.NgayToChuc);
+                    break;
+                case "farthest":
+                    suKienList = suKienList.OrderByDescending(s => s.NgayToChuc);
+                    break;
+                default:
+                    suKienList = suKienList.OrderBy(s => s.NgayToChuc); // Mặc định sắp xếp gần nhất
+                    break;
             }
 
             ViewBag.SelectedKhoaId = khoaId;
-            ViewBag.SelectedNgayToChuc = ngayToChuc?.ToString("yyyy-MM-dd");
 
             return View(suKienList);
         }
@@ -86,7 +98,6 @@ namespace C4FAMS.Controllers
             return View();
         }
 
-        // POST: SuKien/Create
         // POST: SuKien/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -111,10 +122,10 @@ namespace C4FAMS.Controllers
             ModelState.Remove("suKien.Khoa");
 
             // Kiểm tra ràng buộc thời gian: NgayToChuc phải từ ngày hôm nay trở đi
-            DateTime ngayHienTai = DateTime.Today; // Lấy ngày hiện tại (không tính giờ)
+            DateTime ngayHienTai = DateTime.Today; // Lấy ngày hiện tại (không tính giờ), ngày hiện tại là 16/03/2025
             if (suKien.NgayToChuc < ngayHienTai)
             {
-                ModelState.AddModelError("NgayToChuc", "Thời gian tổ chức phải từ ngày hôm nay trở đi.");
+                ModelState.AddModelError("NgayToChuc", $"Thời gian tổ chức phải từ ngày {ngayHienTai:dd/MM/yyyy} trở đi.");
             }
 
             // Kiểm tra dữ liệu gửi lên từ form trước khi validation

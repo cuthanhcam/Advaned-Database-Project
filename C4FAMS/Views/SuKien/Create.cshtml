@@ -14,7 +14,8 @@
 
         <div class="form-group mb-3">
             <label asp-for="NgayToChuc" class="form-label"></label>
-            <input asp-for="NgayToChuc" type="datetime-local" class="form-control" required />
+            <input asp-for="NgayToChuc" type="datetime-local" class="form-control" required 
+                   min="@DateTime.Today.ToString("yyyy-MM-ddTHH:mm")" />
             <span asp-validation-for="NgayToChuc" class="text-danger"></span>
         </div>
 
@@ -60,4 +61,16 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <script>
+        $(document).ready(function () {
+            $("#NgayToChuc").change(function () {
+                var ngayToChuc = new Date($(this).val());
+                var ngayHienTai = new Date("@DateTime.Today.ToString("yyyy-MM-dd")");
+                if (ngayToChuc < ngayHienTai) {
+                    alert("Thời gian tổ chức phải từ ngày @DateTime.Today.ToString("dd/MM/yyyy") trở đi.");
+                    $(this).val("");
+                }
+            });
+        });
+    </script>
 }
