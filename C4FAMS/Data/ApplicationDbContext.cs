@@ -12,13 +12,13 @@ namespace C4FAMS.Data
         {
         }
 
-        // Các DbSet hiện có
         public DbSet<Khoa> Khoa { get; set; }
         public DbSet<ChuyenNganh> ChuyenNganh { get; set; }
         public DbSet<SinhVien> SinhVien { get; set; }
         public DbSet<SuKien> SuKiens { get; set; }
         public DbSet<SuKienChiTiet> SuKienChiTiets { get; set; }
         public DbSet<SuKienHinhAnh> SuKienHinhAnhs { get; set; }
+        public DbSet<SuKienSinhVien> SuKienSinhViens { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -51,7 +51,7 @@ namespace C4FAMS.Data
             // Quan hệ giữa SuKien và Khoa (1-nhiều)
             builder.Entity<SuKien>()
                 .HasOne(s => s.Khoa)
-                .WithMany(k => k.SuKiens) // Bây giờ không lỗi vì SuKiens đã được khai báo
+                .WithMany(k => k.SuKiens)
                 .HasForeignKey(s => s.MaKhoa)
                 .OnDelete(DeleteBehavior.Restrict);
 
@@ -68,6 +68,20 @@ namespace C4FAMS.Data
                 .WithMany(s => s.SuKienHinhAnhs)
                 .HasForeignKey(sh => sh.MaSuKien)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            // Quan hệ nhiều-nhiều giữa SuKien và SinhVien qua SuKienSinhVien
+            builder.Entity<SuKienSinhVien>()
+                .HasKey(ss => new { ss.MaSuKien, ss.MSSV });
+
+            builder.Entity<SuKienSinhVien>()
+                .HasOne(ss => ss.SuKien)
+                .WithMany(s => s.SuKienSinhViens)
+                .HasForeignKey(ss => ss.MaSuKien);
+
+            builder.Entity<SuKienSinhVien>()
+                .HasOne(ss => ss.SinhVien)
+                .WithMany(s => s.SuKienSinhViens)
+                .HasForeignKey(ss => ss.MSSV);
 
             // Gọi SeedData (nếu có)
             SeedData.Seed(builder);

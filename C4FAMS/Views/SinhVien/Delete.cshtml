@@ -33,8 +33,10 @@
         </div>
     </div>
 
-    <form asp-action="DeleteConfirmed" method="post">
+    <form asp-action="Delete" method="post">
+        @Html.AntiForgeryToken()
         <input type="hidden" asp-for="MSSV" />
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         <button type="submit" class="btn btn-danger">Xóa</button>
         <a asp-action="Index" class="btn btn-secondary">Hủy</a>
     </form>

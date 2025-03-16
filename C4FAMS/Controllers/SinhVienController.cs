@@ -13,13 +13,20 @@ namespace C4FAMS.Controllers
         private readonly ISinhVienRepository _sinhVienRepository;
         private readonly IChuyenNganhRepository _chuyenNganhRepository;
         private readonly IKhoaRepository _khoaRepository;
+        private readonly ISuKienRepository _suKienRepository;
         private readonly UserManager<NguoiDung> _userManager;
 
-        public SinhVienController(ISinhVienRepository sinhVienRepository, IChuyenNganhRepository chuyenNganhRepository, IKhoaRepository khoaRepository, UserManager<NguoiDung> userManager)
+        public SinhVienController(
+            ISinhVienRepository sinhVienRepository,
+            IChuyenNganhRepository chuyenNganhRepository,
+            IKhoaRepository khoaRepository,
+            ISuKienRepository suKienRepository,
+            UserManager<NguoiDung> userManager)
         {
             _sinhVienRepository = sinhVienRepository;
             _chuyenNganhRepository = chuyenNganhRepository;
             _khoaRepository = khoaRepository;
+            _suKienRepository = suKienRepository;
             _userManager = userManager;
         }
 
@@ -118,11 +125,12 @@ namespace C4FAMS.Controllers
             return View(new SinhVien());
         }
 
+        // POST: SinhVien/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(SinhVien sinhVien, int? khoaId)
         {
-            // Xử lý ngày sinh
+            // Kiểm tra ngày sinh
             if (Request.Form["NgaySinh"].Count > 0)
             {
                 var ngaySinhStr = Request.Form["NgaySinh"].ToString();
@@ -134,7 +142,18 @@ namespace C4FAMS.Controllers
                     }
                     else
                     {
-                        sinhVien.NgaySinh = ngaySinh;
+                        // Kiểm tra năm sinh phải lớn hơn 17 tuổi (năm hiện tại - 17)
+                        int namHienTai = DateTime.Now.Year;
+                        int tuoiToiThieu = 17;
+                        int namToiThieu = namHienTai - tuoiToiThieu;
+                        if (ngaySinh.Year > namToiThieu)
+                        {
+                            ModelState.AddModelError("NgaySinh", $"Năm sinh phải nhỏ hơn hoặc bằng {namToiThieu} (tuổi tối thiểu là {tuoiToiThieu}).");
+                        }
+                        else
+                        {
+                            sinhVien.NgaySinh = ngaySinh;
+                        }
                     }
                 }
                 else
@@ -154,7 +173,6 @@ namespace C4FAMS.Controllers
             }
             else
             {
-                // Gán ChuyenNganh để tránh lỗi validation
                 sinhVien.ChuyenNganh = await _chuyenNganhRepository.GetByIdAsync(sinhVien.MaChuyenNganh);
                 if (sinhVien.ChuyenNganh == null)
                 {
@@ -175,9 +193,6 @@ namespace C4FAMS.Controllers
             {
                 try
                 {
-                    // Debug log
-                    var chuyenNganhTen = sinhVien.ChuyenNganh?.TenChuyenNganh;
-                    Console.WriteLine($"Thêm sinh viên: MSSV={sinhVien.MSSV}, MaChuyenNganh={sinhVien.MaChuyenNganh}, TenChuyenNganh={chuyenNganhTen}");
                     await _sinhVienRepository.AddAsync(sinhVien);
                     return RedirectToAction(nameof(Index));
                 }
@@ -187,7 +202,6 @@ namespace C4FAMS.Controllers
                 }
             }
 
-            // Gán lại ViewBag khi ModelState không hợp lệ
             if (User.IsInRole("Admin"))
             {
                 var khoaList = await _khoaRepository.GetAllAsync();
@@ -233,6 +247,7 @@ namespace C4FAMS.Controllers
             return View(sinhVien);
         }
 
+        // POST: SinhVien/Edit
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(string id, SinhVien sinhVien, int? khoaId)
@@ -250,7 +265,18 @@ namespace C4FAMS.Controllers
                     }
                     else
                     {
-                        sinhVien.NgaySinh = ngaySinh;
+                        // Kiểm tra năm sinh phải lớn hơn 17 tuổi (năm hiện tại - 17)
+                        int namHienTai = DateTime.Now.Year;
+                        int tuoiToiThieu = 17;
+                        int namToiThieu = namHienTai - tuoiToiThieu;
+                        if (ngaySinh.Year > namToiThieu)
+                        {
+                            ModelState.AddModelError("NgaySinh", $"Năm sinh phải nhỏ hơn hoặc bằng {namToiThieu} (tuổi tối thiểu là {tuoiToiThieu}).");
+                        }
+                        else
+                        {
+                            sinhVien.NgaySinh = ngaySinh;
+                        }
                     }
                 }
                 else
@@ -331,20 +357,28 @@ namespace C4FAMS.Controllers
                 var user = await _userManager.GetUserAsync(User);
                 if (!user.MaKhoa.HasValue || sinhVien.ChuyenNganh?.MaKhoa != user.MaKhoa.Value)
                 {
-                    return Forbid();
+                    return StatusCode(403, "Bạn chỉ có thể xóa sinh viên thuộc khoa của mình.");
                 }
             }
 
             try
             {
+                // Sử dụng ISuKienRepository để kiểm tra ràng buộc
+                var suKienList = await _suKienRepository.GetBySinhVienAsync(id);
+                if (suKienList.Any())
+                {
+                    ModelState.AddModelError("", "Không thể xóa sinh viên này vì sinh viên đang tham gia sự kiện.");
+                    return View(sinhVien);
+                }
+
                 await _sinhVienRepository.DeleteAsync(id);
+                return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
                 ModelState.AddModelError("", $"Lỗi khi xóa sinh viên: {ex.Message}");
                 return View(sinhVien);
             }
-            return RedirectToAction(nameof(Index));
         }
 
         public async Task<IActionResult> Details(string id)
@@ -427,6 +461,13 @@ namespace C4FAMS.Controllers
                 ModelState.AddModelError("", $"Lỗi khi cập nhật trạng thái: {ex.Message}");
                 return View(sinhVien);
             }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetChuyenNganhByKhoa(int khoaId)
+        {
+            var chuyenNganhList = await _chuyenNganhRepository.GetByKhoaAsync(khoaId);
+            return Json(chuyenNganhList);
         }
     }
 }

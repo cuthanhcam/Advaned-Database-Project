@@ -36,11 +36,8 @@ namespace C4FAMS.Models
         [Required(ErrorMessage = "Mã chuyên ngành là bắt buộc")]
         public int MaChuyenNganh { get; set; }
 
-        // [ForeignKey("MaChuyenNganh")]
-        // public ChuyenNganh ChuyenNganh { get; set; } = null!;
-
         [ForeignKey("MaChuyenNganh")]
-        public ChuyenNganh? ChuyenNganh { get; set; } // Navigation property cho phép null để tránh lỗi khi thêm sinh viên mới
+        public ChuyenNganh? ChuyenNganh { get; set; }
 
         [Required(ErrorMessage = "Khóa học là bắt buộc")]
         [StringLength(10, ErrorMessage = "Khóa học không được vượt quá 10 ký tự")]
@@ -63,5 +60,7 @@ namespace C4FAMS.Models
         [StringLength(10, MinimumLength = 10, ErrorMessage = "Số điện thoại phải đúng 10 chữ số")]
         [RegularExpression(@"^[0-9]{10}$", ErrorMessage = "Số điện thoại phải là 10 chữ số")]
         public string SoDienThoai { get; set; } = null!;
+
+        public virtual ICollection<SuKienSinhVien> SuKienSinhViens { get; set; } = new List<SuKienSinhVien>(); // Thêm quan hệ nhiều-nhiều
     }
 }
