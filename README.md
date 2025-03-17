@@ -7,6 +7,14 @@ C4FAMS (Code For Food Alumni Management System) là một hệ thống quản l�
 
 Dự án được xây dựng để đáp ứng nhu cầu quản lý của các trường đại học, giúp kết nối giữa nhà trường và cựu sinh viên thông qua các sự kiện, đồng thời cung cấp công cụ để quản lý dữ liệu sinh viên và khoa một cách hiệu quả.
 
+## Thành viên nhóm
+| Tên thành viên | GitHub |
+|---------------|------------------------------------------------|
+| Cù Thanh Cầm  | [cuthanhcam](https://github.com/cuthanhcam) |
+| Trương Phước Hưng | [Vnboi2004](https://github.com/Vnboi2004) |
+| Trần Trung Hậu     | [Trunghau204](https://github.com/Trunghau204) |
+| Nguyễn Trần Đăng KHoa        | [aSher308](https://github.com/aSher308) |
+
 ## Các tính năng chính
 ### 1. Quản lý Khoa
 - **Admin**: Tạo, chỉnh sửa, xóa và xem chi tiết thông tin các khoa.
@@ -117,9 +125,12 @@ Truy cập: `https://localhost:5001`
 ## Cấu trúc thư mục
 ```
 Advaned-Database-Project/
-├── Controllers/
-├── Models/
-├── Views/
+├── Controllers
+├── Data
+├── Interfaces
+├── Models
+├── Repositories
+├── Views
 ├── wwwroot/
 │   ├── css/
 │   ├── js/
@@ -137,7 +148,13 @@ Advaned-Database-Project/
 5. Tạo Pull Request trên GitHub.
 
 ## Liên hệ
-- **Tác giả**: cuthanhcam
+- **Nhóm Tác giả**:
+| Tên thành viên | GitHub |
+|---------------|------------------------------------------------|
+| Cù Thanh Cầm  | [cuthanhcam](https://github.com/cuthanhcam) |
+| Trương Phước Hưng | [Vnboi2004](https://github.com/Vnboi2004) |
+| Trần Trung Hậu     | [Trunghau204](https://github.com/Trunghau204) |
+| Nguyễn Trần Đăng KHoa        | [aSher308](https://github.com/aSher308) |
 - **GitHub Issues**: Báo lỗi tại [đây](https://github.com/cuthanhcam/Advaned-Database-Project/issues).
 
 ## Giấy phép
