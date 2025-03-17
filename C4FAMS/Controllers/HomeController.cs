@@ -68,7 +68,7 @@ namespace C4FAMS.Controllers
                 return NotFound();
             }
 
-            var suKienChiTiet = await _suKienRepository.GetChiTietByIdAsync(id.Value); // Giả sử có method này
+            var suKienChiTiet = await _suKienRepository.GetChiTietByIdAsync(id.Value);
             ViewBag.SuKienChiTiet = suKienChiTiet;
             return View(suKien);
         }

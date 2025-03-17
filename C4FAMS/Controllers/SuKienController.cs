@@ -205,7 +205,6 @@ namespace C4FAMS.Controllers
         }
 
         // POST: SuKien/Edit
-        // POST: SuKien/Edit
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, SuKien suKien, SuKienChiTiet suKienChiTiet, List<IFormFile> images)

@@ -100,7 +100,6 @@ namespace C4FAMS.Controllers
             return RedirectToAction("Index");
         }
 
-        // Thêm action Details
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -114,7 +113,7 @@ namespace C4FAMS.Controllers
                 return NotFound();
             }
 
-            var suKienChiTiet = await _suKienRepository.GetChiTietByIdAsync(id.Value); // Giả sử bạn có method này trong ISuKienRepository
+            var suKienChiTiet = await _suKienRepository.GetChiTietByIdAsync(id.Value);
             ViewBag.SuKienChiTiet = suKienChiTiet;
             return View(suKien);
         }

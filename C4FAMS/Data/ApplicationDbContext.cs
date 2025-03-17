@@ -111,14 +111,14 @@ namespace C4FAMS.Data
             // Quan hệ giữa CuuSinhVien và CongViec (1-nhiều)
             builder.Entity<CongViec>()
                 .HasOne(c => c.CuuSinhVien)
-                .WithMany(c => c.CongViec) // Đã có thuộc tính `CongViec` trong `CuuSinhVien`
+                .WithMany(c => c.CongViec)
                 .HasForeignKey(c => c.MSSV)
                 .OnDelete(DeleteBehavior.Cascade);
 
             // Quan hệ giữa CuuSinhVien và ThanhTuu (1-nhiều)
             builder.Entity<ThanhTuu>()
                 .HasOne(t => t.CuuSinhVien)
-                .WithMany(t => t.ThanhTuu) // Đã có thuộc tính `ThanhTuu` trong `CuuSinhVien`
+                .WithMany(t => t.ThanhTuu)
                 .HasForeignKey(t => t.MSSV)
                 .OnDelete(DeleteBehavior.Cascade);
 

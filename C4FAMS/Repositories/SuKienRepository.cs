@@ -27,7 +27,7 @@ namespace C4FAMS.Repositories
             return await _context.SuKiens
                 .Include(s => s.Khoa)
                 .Include(s => s.SuKienHinhAnhs)
-                .Include(s => s.SuKienSinhViens) // Bao gồm danh sách sinh viên tham gia (nếu cần)
+                .Include(s => s.SuKienSinhViens) // Bao gồm danh sách sinh viên tham gia sự kiện
                 .Where(s => s.MaKhoa == maKhoa)
                 .ToListAsync();
         }
