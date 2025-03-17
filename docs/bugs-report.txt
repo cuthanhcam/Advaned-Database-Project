@@ -1,4 +1,0 @@
-Trong role CuuSinhVien ở CuuSinhVien/ManageProfile đã cập nhật được thông tin, ở hình thức liên lạc nên ghi rõ thêm ở title là (Hình thức liên lạc cụ thể hoặc sao đó để Cựu Sinh Viên có thể cung cấp email hoặc Sđt cụ thể chứ không phải chọn loại hình thức như email hoặc phone hoặc khác)
-
-Đã thêm Công việc được rồi, nhưng chưa xóa được, cần sửa và bổ sung chức năng sửa nữa,
-Đã thêm Thành tựu được rồi, nhưng chưa xóa được, cần sửa và bổ sung chức năng sửa nữa,
