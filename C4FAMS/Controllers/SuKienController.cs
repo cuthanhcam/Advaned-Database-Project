@@ -53,25 +53,30 @@ namespace C4FAMS.Controllers
             else if (User.IsInRole("Khoa"))
             {
                 var user = await _userManager.GetUserAsync(User);
-                if (!user.MaKhoa.HasValue) return Forbid("Bạn không thuộc khoa nào.");
+                if (!user.MaKhoa.HasValue)
+                {
+                    TempData["Error"] = "Bạn không thuộc khoa nào.";
+                    return RedirectToAction("Index", "Home");
+                }
                 khoaId = user.MaKhoa.Value;
                 ViewBag.KhoaId = khoaId;
                 suKienList = await _suKienRepository.GetByKhoaAsync(khoaId.Value);
             }
             else
             {
-                return Forbid();
+                TempData["Error"] = "Bạn không có quyền truy cập.";
+                return RedirectToAction("Index", "Home");
             }
 
             // Áp dụng bộ lọc theo khoa
-            if (khoaId.HasValue)
+            if (khoaId.HasValue && User.IsInRole("Admin"))
             {
                 suKienList = suKienList.Where(s => s.MaKhoa == khoaId.Value);
             }
 
             // Xử lý sắp xếp
-            sortOrder = string.IsNullOrEmpty(sortOrder) ? "nearest" : sortOrder; // Mặc định là "nearest"
-            ViewBag.SortOrder = sortOrder; // Gán giá trị cho ViewBag.SortOrder
+            sortOrder = string.IsNullOrEmpty(sortOrder) ? "nearest" : sortOrder;
+            ViewBag.SortOrder = sortOrder;
 
             switch (sortOrder)
             {
@@ -82,7 +87,7 @@ namespace C4FAMS.Controllers
                     suKienList = suKienList.OrderByDescending(s => s.NgayToChuc);
                     break;
                 default:
-                    suKienList = suKienList.OrderBy(s => s.NgayToChuc); // Mặc định sắp xếp gần nhất
+                    suKienList = suKienList.OrderBy(s => s.NgayToChuc);
                     break;
             }
 
@@ -107,7 +112,6 @@ namespace C4FAMS.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(SuKien suKien, SuKienChiTiet suKienChiTiet, List<IFormFile> images)
         {
-            // Gán MaKhoa trước khi kiểm tra validation
             if (User.IsInRole("Khoa"))
             {
                 var user = await _userManager.GetUserAsync(User);
@@ -133,20 +137,13 @@ namespace C4FAMS.Controllers
                 ModelState.AddModelError("NgayToChuc", $"Thời gian tổ chức phải từ ngày {ngayToiThieu:dd/MM/yyyy} trở đi.");
             }
 
-            // Kiểm tra dữ liệu gửi lên từ form trước khi validation
-            Console.WriteLine($"Form MaKhoa before validation: {suKien.MaKhoa}");
-            Console.WriteLine($"Form NgayToChuc before validation: {suKien.NgayToChuc}");
-
             if (ModelState.IsValid)
             {
-                // Thêm SuKien
                 await _suKienRepository.AddAsync(suKien);
 
-                // Thêm SuKienChiTiet
                 suKienChiTiet.MaSuKien = suKien.MaSuKien;
                 await _suKienChiTietRepository.AddAsync(suKienChiTiet);
 
-                // Xử lý upload hình ảnh
                 if (images != null && images.Any())
                 {
                     suKien.SuKienHinhAnhs ??= new List<SuKienHinhAnh>();
@@ -165,13 +162,8 @@ namespace C4FAMS.Controllers
                     await _suKienRepository.UpdateAsync(suKien);
                 }
 
+                TempData["Success"] = "Tạo sự kiện thành công!";
                 return RedirectToAction(nameof(Index));
-            }
-
-            // Log lỗi validation chi tiết
-            foreach (var error in ModelState)
-            {
-                Console.WriteLine($"Validation Error - Key: {error.Key}, Error: {error.Value.Errors.FirstOrDefault()?.ErrorMessage}");
             }
 
             if (User.IsInRole("Admin"))
@@ -195,7 +187,8 @@ namespace C4FAMS.Controllers
                 var user = await _userManager.GetUserAsync(User);
                 if (!user.MaKhoa.HasValue || suKien.MaKhoa != user.MaKhoa.Value)
                 {
-                    return Forbid("Bạn chỉ có thể sửa sự kiện của khoa mình.");
+                    TempData["Error"] = "Bạn chỉ có thể sửa sự kiện của khoa mình.";
+                    return RedirectToAction(nameof(Index));
                 }
             }
 
@@ -212,28 +205,31 @@ namespace C4FAMS.Controllers
         }
 
         // POST: SuKien/Edit
+        // POST: SuKien/Edit
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, SuKien suKien, SuKienChiTiet suKienChiTiet, List<IFormFile> images)
         {
             if (id != suKien.MaSuKien) return NotFound();
 
+            var existingSuKien = await _suKienRepository.GetByIdAsync(id);
+            if (existingSuKien == null) return NotFound();
+
             if (User.IsInRole("Khoa"))
             {
                 var user = await _userManager.GetUserAsync(User);
-                if (!user.MaKhoa.HasValue || suKien.MaKhoa != user.MaKhoa.Value)
+                if (!user.MaKhoa.HasValue || existingSuKien.MaKhoa != user.MaKhoa.Value) // Sử dụng MaKhoa từ existingSuKien
                 {
-                    return Forbid("Bạn chỉ có thể sửa sự kiện của khoa mình.");
+                    TempData["Error"] = "Bạn chỉ có thể sửa sự kiện của khoa mình.";
+                    return RedirectToAction(nameof(Index));
                 }
             }
 
-            // Xóa lỗi validation liên quan đến MaKhoa và Khoa (cho cả Admin và Khoa)
             ModelState.Remove("MaKhoa");
             ModelState.Remove("suKien.MaKhoa");
             ModelState.Remove("Khoa");
             ModelState.Remove("suKien.Khoa");
 
-            // Kiểm tra ràng buộc thời gian: NgayToChuc phải từ ngày mai trở đi
             DateTime ngayHienTai = DateTime.Today;
             DateTime ngayToiThieu = ngayHienTai.AddDays(1);
             if (suKien.NgayToChuc < ngayToiThieu)
@@ -241,20 +237,18 @@ namespace C4FAMS.Controllers
                 ModelState.AddModelError("NgayToChuc", $"Thời gian tổ chức phải từ ngày {ngayToiThieu:dd/MM/yyyy} trở đi.");
             }
 
+            Console.WriteLine($"Received MaKhoa from form: {suKien.MaKhoa}");
+            Console.WriteLine($"Existing MaKhoa: {existingSuKien.MaKhoa}");
+
             if (ModelState.IsValid)
             {
                 try
                 {
-                    var existingSuKien = await _suKienRepository.GetByIdAsync(id);
-                    if (existingSuKien == null) return NotFound();
-
-                    // Cập nhật thông tin SuKien
                     existingSuKien.TenSuKien = suKien.TenSuKien;
                     existingSuKien.NgayToChuc = suKien.NgayToChuc;
                     existingSuKien.DiaDiem = suKien.DiaDiem;
-                    if (User.IsInRole("Admin")) existingSuKien.MaKhoa = suKien.MaKhoa;
+                    if (User.IsInRole("Admin")) existingSuKien.MaKhoa = suKien.MaKhoa; // Chỉ Admin thay đổi MaKhoa
 
-                    // Cập nhật SuKienChiTiet
                     var existingChiTiet = await _suKienChiTietRepository.GetByIdAsync(id);
                     if (existingChiTiet != null)
                     {
@@ -268,7 +262,6 @@ namespace C4FAMS.Controllers
                         await _suKienChiTietRepository.AddAsync(suKienChiTiet);
                     }
 
-                    // Xử lý upload nhiều hình ảnh mới
                     if (images != null && images.Any())
                     {
                         Console.WriteLine($"Number of images uploaded: {images.Count}");
@@ -283,21 +276,27 @@ namespace C4FAMS.Controllers
                                     MaSuKien = existingSuKien.MaSuKien,
                                     HinhAnh = imagePath
                                 });
+                                Console.WriteLine($"Saved image: {imagePath}");
                             }
                         }
-                        await _suKienRepository.UpdateAsync(existingSuKien); // Đảm bảo lưu danh sách ảnh
+                        await _suKienRepository.UpdateAsync(existingSuKien);
+                    }
+                    else
+                    {
+                        Console.WriteLine("No images uploaded or images is null.");
                     }
 
                     await _suKienRepository.UpdateAsync(existingSuKien);
+                    TempData["Success"] = "Cập nhật sự kiện thành công!";
                     return RedirectToAction(nameof(Index));
                 }
                 catch (Exception ex)
                 {
+                    Console.WriteLine($"Error in Edit: {ex.Message}");
                     ModelState.AddModelError("", $"Lỗi khi cập nhật sự kiện: {ex.Message}");
                 }
             }
 
-            // Nếu ModelState không hợp lệ, trả lại view với dữ liệu hiện tại
             var khoaList = await _khoaRepository.GetAllAsync();
             ViewBag.KhoaList = khoaList;
             ViewBag.SuKienChiTiet = suKienChiTiet;
@@ -307,25 +306,24 @@ namespace C4FAMS.Controllers
         // GET: SuKien/Details
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
             var suKien = await _suKienRepository.GetByIdAsync(id.Value);
-            if (suKien == null)
-            {
-                return NotFound();
-            }
-
-            var suKienChiTiet = await _suKienChiTietRepository.GetByIdAsync(id.Value);
-            ViewBag.SuKienChiTiet = suKienChiTiet;
+            if (suKien == null) return NotFound();
 
             if (User.IsInRole("Khoa"))
             {
                 var user = await _userManager.GetUserAsync(User);
+                if (!user.MaKhoa.HasValue || suKien.MaKhoa != user.MaKhoa.Value)
+                {
+                    TempData["Error"] = "Bạn chỉ có thể xem sự kiện của khoa mình.";
+                    return RedirectToAction(nameof(Index));
+                }
                 ViewBag.KhoaId = user.MaKhoa;
             }
+
+            var suKienChiTiet = await _suKienChiTietRepository.GetByIdAsync(id.Value);
+            ViewBag.SuKienChiTiet = suKienChiTiet;
 
             return View(suKien);
         }
@@ -343,7 +341,8 @@ namespace C4FAMS.Controllers
                 var user = await _userManager.GetUserAsync(User);
                 if (!user.MaKhoa.HasValue || suKien.MaKhoa != user.MaKhoa.Value)
                 {
-                    return Forbid("Bạn chỉ có thể xóa sự kiện của khoa mình.");
+                    TempData["Error"] = "Bạn chỉ có thể xóa sự kiện của khoa mình.";
+                    return RedirectToAction(nameof(Index));
                 }
             }
 
@@ -363,11 +362,11 @@ namespace C4FAMS.Controllers
                 var user = await _userManager.GetUserAsync(User);
                 if (!user.MaKhoa.HasValue || suKien.MaKhoa != user.MaKhoa.Value)
                 {
-                    return Forbid("Bạn chỉ có thể xóa sự kiện của khoa mình.");
+                    TempData["Error"] = "Bạn chỉ có thể xóa sự kiện của khoa mình.";
+                    return RedirectToAction(nameof(Index));
                 }
             }
 
-            // Xóa file hình ảnh từ wwwroot
             if (suKien.SuKienHinhAnhs != null)
             {
                 var folderPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot");
@@ -383,6 +382,7 @@ namespace C4FAMS.Controllers
 
             await _suKienChiTietRepository.DeleteAsync(id);
             await _suKienRepository.DeleteAsync(id);
+            TempData["Success"] = "Xóa sự kiện thành công!";
             return RedirectToAction(nameof(Index));
         }
 
@@ -401,7 +401,6 @@ namespace C4FAMS.Controllers
                 Directory.CreateDirectory(folderPath);
             }
 
-            // Tạo tên file duy nhất để tránh ghi đè
             var fileName = Guid.NewGuid().ToString() + extension;
             var savePath = Path.Combine(folderPath, fileName);
             using (var fileStream = new FileStream(savePath, FileMode.Create))
@@ -413,39 +412,33 @@ namespace C4FAMS.Controllers
 
         public async Task<IActionResult> RegisteredCuuSinhVien(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
             var suKien = await _suKienRepository.GetByIdAsync(id.Value);
-            if (suKien == null)
-            {
-                return NotFound();
-            }
+            if (suKien == null) return NotFound();
 
-            var dangKyList = await _dangKySuKienRepository.GetBySuKienAsync(id.Value);
             if (User.IsInRole("Khoa"))
             {
                 var user = await _userManager.GetUserAsync(User);
                 if (!user.MaKhoa.HasValue || suKien.MaKhoa != user.MaKhoa.Value)
                 {
-                    return Forbid("Bạn chỉ có thể xem danh sách đăng ký của sự kiện thuộc khoa mình.");
+                    TempData["Error"] = "Bạn chỉ có thể xem danh sách đăng ký của sự kiện thuộc khoa mình.";
+                    return RedirectToAction(nameof(Index));
                 }
             }
 
-            // Lấy thông tin từ SinhVien thông qua CuuSinhVien
+            var dangKyList = await _dangKySuKienRepository.GetBySuKienAsync(id.Value);
+
             var registeredUsers = new List<object>();
             foreach (var dangKy in dangKyList.Where(d => d.TrangThai))
             {
-                // CuuSinhVien đã được include trong GetBySuKienAsync
-                var hoTen = dangKy.CuuSinhVien?.SinhVien?.HoTen ?? "Không xác định"; // Lấy HoTen từ SinhVien
+                var hoTen = dangKy.CuuSinhVien?.SinhVien?.HoTen ?? "Không xác định";
                 var nguoiDung = await _userManager.Users.FirstOrDefaultAsync(u => u.MSSV == dangKy.MSSV);
                 registeredUsers.Add(new
                 {
                     MSSV = dangKy.MSSV,
-                    HoTen = hoTen, // Dùng HoTen từ SinhVien
-                    Email = nguoiDung?.Email ?? "Không có email", // Email từ NguoiDung
+                    HoTen = hoTen,
+                    Email = nguoiDung?.Email ?? "Không có email",
                     NgayDangKy = dangKy.NgayDangKy
                 });
             }

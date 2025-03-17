@@ -1,77 +1,89 @@
 @model C4FAMS.Models.SuKien
 
 <div class="container">
-    <h1 class="mt-4 mb-4">Chỉnh sửa Sự kiện</h1>
+    <h1 class="mt-4 mb-4 text-cyan">Chỉnh sửa Sự kiện</h1>
 
-    <form asp-action="Edit" method="post" enctype="multipart/form-data">
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success">@TempData["Success"]</div>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger">@TempData["Error"]</div>
+    }
+
+    <form asp-action="Edit" method="post" enctype="multipart/form-data" class="mb-4">
         <input type="hidden" asp-for="MaSuKien" />
+        <input type="hidden" asp-for="MaKhoa" /> <!-- Thêm input ẩn để gửi MaKhoa -->
         <div asp-validation-summary="All" class="text-danger"></div>
 
-        <div class="form-group mb-3">
-            <label asp-for="TenSuKien" class="form-label"></label>
-            <input asp-for="TenSuKien" class="form-control" required />
-            <span asp-validation-for="TenSuKien" class="text-danger"></span>
-        </div>
-
-        <div class="form-group mb-3">
-            <label asp-for="NgayToChuc" class="form-label"></label>
-            <input asp-for="NgayToChuc" type="datetime-local" class="form-control" value="@Model.NgayToChuc.ToString("yyyy-MM-ddTHH:mm")" required />
-            <span asp-validation-for="NgayToChuc" class="text-danger"></span>
-        </div>
-
-        <div class="form-group mb-3">
-            <label asp-for="DiaDiem" class="form-label"></label>
-            <input asp-for="DiaDiem" class="form-control" required />
-            <span asp-validation-for="DiaDiem" class="text-danger"></span>
-        </div>
-
-        @if (User.IsInRole("Admin"))
-        {
-            <div class="form-group mb-3">
-                <label asp-for="MaKhoa" class="form-label">Khoa</label>
-                <select asp-for="MaKhoa" class="form-control" asp-items="@(new SelectList(ViewBag.KhoaList ?? new List<C4FAMS.Models.Khoa>(), "MaKhoa", "TenKhoa"))" required>
-                    <option value="">-- Chọn Khoa --</option>
-                </select>
-                <span asp-validation-for="MaKhoa" class="text-danger"></span>
+        <div class="row g-3">
+            <div class="col-md-6">
+                <label asp-for="TenSuKien" class="form-label fw-bold fs-6"></label>
+                <input asp-for="TenSuKien" class="form-control fs-6" required />
+                <span asp-validation-for="TenSuKien" class="text-danger"></span>
             </div>
-        }
 
-        <div class="form-group mb-3">
-            <label class="form-label">Mô tả</label>
-            <textarea name="suKienChiTiet.MoTa" class="form-control" rows="3">@ViewBag.SuKienChiTiet?.MoTa</textarea>
-        </div>
+            <div class="col-md-6">
+                <label asp-for="NgayToChuc" class="form-label fw-bold fs-6"></label>
+                <input asp-for="NgayToChuc" type="datetime-local" class="form-control fs-6" value="@Model.NgayToChuc.ToString("yyyy-MM-ddTHH:mm")" required />
+                <span asp-validation-for="NgayToChuc" class="text-danger"></span>
+            </div>
 
-        <div class="form-group mb-3">
-            <label class="form-label">Nội dung</label>
-            <textarea name="suKienChiTiet.NoiDung" class="form-control" rows="5">@ViewBag.SuKienChiTiet?.NoiDung</textarea>
-        </div>
+            <div class="col-md-12">
+                <label asp-for="DiaDiem" class="form-label fw-bold fs-6"></label>
+                <input asp-for="DiaDiem" class="form-control fs-6" required />
+                <span asp-validation-for="DiaDiem" class="text-danger"></span>
+            </div>
 
-        <div class="form-group mb-3">
-            <label class="form-label">Hình ảnh hiện tại</label>
-            @if (Model.SuKienHinhAnhs != null && Model.SuKienHinhAnhs.Any())
+            @if (User.IsInRole("Admin"))
             {
-                <div class="d-flex flex-wrap gap-2 mb-2">
-                    @foreach (var hinhAnh in Model.SuKienHinhAnhs)
-                    {
-                        <img src="@hinhAnh.HinhAnh" alt="@Model.TenSuKien" class="img-fluid rounded" style="max-width: 100px;" />
-                    }
+                <div class="col-md-6">
+                    <label asp-for="MaKhoa" class="form-label fw-bold fs-6">Khoa</label>
+                    <select asp-for="MaKhoa" class="form-control fs-6" asp-items="@(new SelectList(ViewBag.KhoaList ?? new List<C4FAMS.Models.Khoa>(), "MaKhoa", "TenKhoa"))" required>
+                        <option value="">-- Chọn Khoa --</option>
+                    </select>
+                    <span asp-validation-for="MaKhoa" class="text-danger"></span>
                 </div>
             }
-            else
-            {
-                <p class="text-muted">Không có hình ảnh nào.</p>
-            }
-        </div>
 
-        <div class="form-group mb-3">
-            <label class="form-label">Tải lên hình ảnh mới</label>
-            <input type="file" name="images" class="form-control" accept=".jpg,.jpeg,.png" multiple />
-            <small class="text-muted">Bạn có thể upload thêm hình ảnh (jpg, jpeg, png).</small>
-        </div>
+            <div class="col-md-12">
+                <label class="form-label fw-bold fs-6">Mô tả</label>
+                <textarea name="suKienChiTiet.MoTa" class="form-control fs-6" rows="3">@ViewBag.SuKienChiTiet?.MoTa</textarea>
+            </div>
 
-        <div class="form-group">
-            <button type="submit" class="btn btn-primary">Lưu</button>
-            <a asp-action="Index" class="btn btn-secondary">Quay lại</a>
+            <div class="col-md-12">
+                <label class="form-label fw-bold fs-6">Nội dung</label>
+                <textarea name="suKienChiTiet.NoiDung" class="form-control fs-6" rows="5">@ViewBag.SuKienChiTiet?.NoiDung</textarea>
+            </div>
+
+            <div class="col-md-12">
+                <label class="form-label fw-bold fs-6">Hình ảnh hiện tại</label>
+                @if (Model.SuKienHinhAnhs != null && Model.SuKienHinhAnhs.Any())
+                {
+                    <div class="d-flex flex-wrap gap-2 mb-2">
+                        @foreach (var hinhAnh in Model.SuKienHinhAnhs)
+                        {
+                            <img src="@hinhAnh.HinhAnh" alt="@Model.TenSuKien" class="img-fluid rounded img-thumbnail" style="max-width: 100px; max-height: 100px;" />
+                        }
+                    </div>
+                }
+                else
+                {
+                    <p class="text-muted">Không có hình ảnh nào.</p>
+                }
+            </div>
+
+            <div class="col-md-12">
+                <label class="form-label fw-bold fs-6">Tải lên hình ảnh mới</label>
+                <input type="file" name="images" class="form-control fs-6" accept=".jpg,.jpeg,.png" multiple />
+                <small class="text-muted">Bạn có thể upload thêm hình ảnh (jpg, jpeg, png).</small>
+            </div>
+
+            <div class="col-md-12 mt-4">
+                <button type="submit" class="btn btn-primary">Lưu</button>
+                <a asp-action="Index" class="btn btn-secondary ms-2">Quay lại</a>
+            </div>
         </div>
     </form>
 </div>
@@ -79,3 +91,10 @@
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
 }
+
+<style>
+    .text-cyan { color: #00BCD4; }
+    .form-label { color: #0288D1; }
+    .img-thumbnail { object-fit: cover; }
+    .fs-6 { font-size: 0.95rem; }
+</style>
