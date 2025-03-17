@@ -1,0 +1,573 @@
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace C4FAMS.Models
+{
+    public class ChuyenNganh
+    {
+        [Key]
+        public int MaChuyenNganh { get; set; }
+
+        [Required(ErrorMessage = "Tên chuyên ngành là bắt buộc")]
+        [StringLength(100, ErrorMessage = "Tên chuyên ngành không được vượt quá 100 ký tự")]
+        public string TenChuyenNganh { get; set; } = null!;
+
+        [Required(ErrorMessage = "Mã khoa là bắt buộc")]
+        public int MaKhoa { get; set; }
+
+        [ForeignKey("MaKhoa")]
+        public Khoa? Khoa { get; set; }
+    }
+}
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace C4FAMS.Models
+{
+    public class CongViec
+    {
+        [Key]
+        public int MaCongViec { get; set; }
+
+        [Required]
+        [StringLength(10, MinimumLength = 10, ErrorMessage = "MSSV phải đúng 10 chữ số")]
+        [RegularExpression(@"^\d{10}$", ErrorMessage = "MSSV phải là 10 chữ số")]
+        public string MSSV { get; set; } = null!;
+
+        [StringLength(100)]
+        public string? ViTri { get; set; }
+
+        [StringLength(100)]
+        public string? CongTy { get; set; }
+
+        [StringLength(100)]
+        public string? LinhVuc { get; set; }
+
+        [Range(0, double.MaxValue)]
+        public decimal? ThuNhap { get; set; }
+
+        [ForeignKey("MSSV")]
+        public CuuSinhVien CuuSinhVien { get; set; } = null!;
+    }
+}
+
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace C4FAMS.Models
+{
+    public class CongViecViewModel
+    {
+        public int MaCongViec { get; set; }
+        [StringLength(100)]
+        public string? ViTri { get; set; }
+
+        [StringLength(100)]
+        public string? CongTy { get; set; }
+
+        [StringLength(100)]
+        public string? LinhVuc { get; set; }
+
+        [Range(0, double.MaxValue)]
+        public decimal? ThuNhap { get; set; } // Có thể để trống
+    }
+}
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace C4FAMS.Models
+{
+    public class CuuSinhVien
+    { 
+        [Key]
+        [ForeignKey("SinhVien")]
+        [StringLength(10, MinimumLength = 10, ErrorMessage = "MSSV phải đúng 10 chữ số")]
+        [RegularExpression(@"^\d{10}$", ErrorMessage = "MSSV phải là 10 chữ số")]
+        public string MSSV { get; set; } = null!;
+
+        [Required(ErrorMessage = "Năm tốt nghiệp là bắt buộc")]
+        [Range(1900, 2025, ErrorMessage = "Năm tốt nghiệp phải từ 1900 đến 2025")]
+        public int NamTotNghiep { get; set; }
+
+        [Required(ErrorMessage = "Xếp loại tốt nghiệp là bắt buộc")]
+        [StringLength(50)]
+        public string XepLoaiTotNghiep { get; set; } = null!;
+
+        [StringLength(200, ErrorMessage = "Địa chỉ không được vượt quá 200 ký tự")]
+        public string? DiaChiHienTai { get; set; }
+
+        [Required(ErrorMessage = "Hình thức liên lạc là bắt buộc")]
+        [StringLength(20)]
+        public string HinhThucLienLac { get; set; } = null!;
+
+        public SinhVien SinhVien { get; set; } = null!;
+
+        // Navigation cho quan hệ 1-nhiều
+        public virtual ICollection<CongViec> CongViec { get; set; } = new List<CongViec>();
+        public virtual ICollection<ThanhTuu> ThanhTuu { get; set; } = new List<ThanhTuu>();
+    }
+}
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace C4FAMS.Models
+{
+    public class DangKySuKien
+    {
+        [Key]
+        public int MaDangKy { get; set; }
+
+        [Required(ErrorMessage = "MSSV là bắt buộc")]
+        [StringLength(10, MinimumLength = 10, ErrorMessage = "MSSV phải đúng 10 chữ số")]
+        [RegularExpression(@"^\d{10}$", ErrorMessage = "MSSV phải là 10 chữ số")]
+        public string MSSV { get; set; } = null!;
+
+        [Required(ErrorMessage = "Mã sự kiện là bắt buộc")]
+        public int MaSuKien { get; set; }
+
+        [Required(ErrorMessage = "Ngày đăng ký là bắt buộc")]
+        [DataType(DataType.DateTime)]
+        public DateTime NgayDangKy { get; set; } = DateTime.Now;
+
+        [Required(ErrorMessage = "Trạng thái là bắt buộc")]
+        [StringLength(50)]
+        public string TrangThai { get; set; } = "Đã đăng ký"; // Mặc định là "Đã đăng ký"
+
+        [ForeignKey("MSSV")]
+        public virtual CuuSinhVien CuuSinhVien { get; set; } = null!;
+
+        [ForeignKey("MaSuKien")]
+        public virtual SuKien SuKien { get; set; } = null!;
+    }
+}
+namespace C4FAMS.Models;
+
+public class ErrorViewModel
+{
+    public string? RequestId { get; set; }
+
+    public bool ShowRequestId => !string.IsNullOrEmpty(RequestId);
+}
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace C4FAMS.Models
+{
+    public class Khoa
+    {
+        [Key]
+        public int MaKhoa { get; set; }
+
+        [Required(ErrorMessage = "Tên khoa là bắt buộc")]
+        [StringLength(100, ErrorMessage = "Tên khoa không được vượt quá 100 ký tự")]
+        public string TenKhoa { get; set; } = null!;
+
+        [Required(ErrorMessage = "Email là bắt buộc")]
+        [StringLength(100)]
+        [EmailAddress(ErrorMessage = "Email không đúng định dạng")]
+        public string Email { get; set; } = null!;
+
+        [StringLength(15, ErrorMessage = "Số điện thoại không được vượt quá 15 ký tự")]
+        [RegularExpression(@"^[0-9]{10,15}$", ErrorMessage = "Số điện thoại phải là 10-15 chữ số")]
+        public string? SoDienThoai { get; set; }
+
+        // Quan hệ 1-n với ChuyenNganh
+        public virtual ICollection<ChuyenNganh> ChuyenNganh { get; set; } = new List<ChuyenNganh>();
+        // Quan hệ 1-n với SuKien
+        public virtual ICollection<SuKien> SuKiens { get; set; } = new List<SuKien>();
+    }
+}
+using System.ComponentModel.DataAnnotations;
+
+namespace C4FAMS.Models
+{
+    public class LoginViewModel
+    {
+        [Required(ErrorMessage = "Email là bắt buộc")]
+        [EmailAddress(ErrorMessage = "Email không đúng định dạng")]
+        public string Email { get; set; } = null!;
+
+        [Required(ErrorMessage = "Mật khẩu là bắt buộc")]
+        [DataType(DataType.Password)]
+        public string Password { get; set; } = null!;
+
+        [Display(Name = "Ghi nhớ đăng nhập")]
+        public bool RememberMe { get; set; }
+    }
+}
+using System.ComponentModel.DataAnnotations;
+
+namespace C4FAMS.Models
+{
+    public class ManageCuuSinhVienViewModel
+    {
+        [Required(ErrorMessage = "Năm tốt nghiệp là bắt buộc")]
+        [Range(1900, 2025, ErrorMessage = "Năm tốt nghiệp phải từ 1900 đến 2025")]
+        public int NamTotNghiep { get; set; }
+
+        [Required(ErrorMessage = "Xếp loại tốt nghiệp là bắt buộc")]
+        [StringLength(50)]
+        public string XepLoaiTotNghiep { get; set; } = null!;
+
+        [StringLength(200, ErrorMessage = "Địa chỉ không được vượt quá 200 ký tự")]
+        public string? DiaChiHienTai { get; set; }
+
+        [Required(ErrorMessage = "Hình thức liên lạc là bắt buộc")]
+        [StringLength(20, ErrorMessage = "Hình thức liên lạc không được vượt quá 20 ký tự")]
+        public string HinhThucLienLac { get; set; } = null!;
+
+        public IEnumerable<CongViecViewModel> CongViecs { get; set; } = new List<CongViecViewModel>();
+        public IEnumerable<ThanhTuuViewModel> ThanhTuus { get; set; } = new List<ThanhTuuViewModel>();
+    }
+}
+using System.ComponentModel.DataAnnotations;
+
+namespace C4FAMS.Models
+{
+    public class ManageViewModel
+    {
+        public string Email { get; set; } = null!;
+        public string VaiTro { get; set; } = null!;
+        public bool TrangThai { get; set; }
+        public string? TenKhoa { get; set; }
+
+        // Dùng cho thay đổi mật khẩu
+        [DataType(DataType.Password)]
+        public string? OldPassword { get; set; }
+
+        [DataType(DataType.Password)]
+        [StringLength(100, ErrorMessage = "Mật khẩu mới phải từ {2} đến {1} ký tự.", MinimumLength = 6)]
+        public string? NewPassword { get; set; }
+
+        [DataType(DataType.Password)]
+        [Compare("NewPassword", ErrorMessage = "Mật khẩu mới và xác nhận mật khẩu không khớp.")]
+        public string? ConfirmNewPassword { get; set; }
+    }
+}
+using Microsoft.AspNetCore.Identity;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace C4FAMS.Models
+{
+    public class NguoiDung : IdentityUser<int>
+    {
+        [Required(ErrorMessage = "Vai trò là bắt buộc")]
+        [StringLength(20)]
+        public string VaiTro { get; set; } = null!;
+
+        // // MaKhoa chỉ bắt buộc với Role "Khoa", không cần thiết với "Admin" hoặc "CuuSinhVien"
+        // [Required(ErrorMessage = "Mã khoa là bắt buộc", AllowEmptyStrings = false)] 
+        public int? MaKhoa { get; set; }
+
+        [ForeignKey("MaKhoa")]
+        public virtual Khoa? Khoa { get; set; }
+
+        [Required]
+        public bool TrangThai { get; set; } = true;
+
+        public string? MSSV { get; set; }
+        [ForeignKey("MSSV")]
+        public SinhVien? SinhVien { get; set; }
+        
+        [ForeignKey("MSSV")]
+        public virtual CuuSinhVien? CuuSinhVien { get; set; }
+    }
+}
+// Models/ViewModels/RegisterViewModel.cs
+using System.ComponentModel.DataAnnotations;
+
+namespace C4FAMS.Models
+{
+    public class RegisterViewModel
+    {
+        [Required(ErrorMessage = "Email là bắt buộc")]
+        [EmailAddress(ErrorMessage = "Email không hợp lệ")]
+        public string Email { get; set; }
+
+        [Required(ErrorMessage = "Mật khẩu là bắt buộc")]
+        [DataType(DataType.Password)]
+        [StringLength(100, MinimumLength = 6, ErrorMessage = "Mật khẩu phải có ít nhất 6 ký tự")]
+        public string Password { get; set; }
+
+        [DataType(DataType.Password)]
+        [Compare("Password", ErrorMessage = "Mật khẩu xác nhận không khớp")]
+        public string ConfirmPassword { get; set; }
+
+        [Required(ErrorMessage = "MSSV là bắt buộc")]
+        [StringLength(10, MinimumLength = 10, ErrorMessage = "MSSV phải đúng 10 chữ số")]
+        [RegularExpression(@"^\d{10}$", ErrorMessage = "MSSV phải là 10 chữ số")]
+        public string MSSV { get; set; }
+
+        [Required(ErrorMessage = "Năm tốt nghiệp là bắt buộc")]
+        [Range(1900, 2025, ErrorMessage = "Năm tốt nghiệp phải từ 1900 đến 2025")]
+        public int NamTotNghiep { get; set; }
+
+        [Required(ErrorMessage = "Xếp loại tốt nghiệp là bắt buộc")]
+        [StringLength(50)]
+        public string XepLoaiTotNghiep { get; set; }
+
+        [StringLength(200, ErrorMessage = "Địa chỉ không được vượt quá 200 ký tự")]
+        public string? DiaChiHienTai { get; set; }
+
+        [Required(ErrorMessage = "Hình thức liên lạc là bắt buộc")]
+        [StringLength(20)]
+        public string HinhThucLienLac { get; set; }
+    }
+}
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace C4FAMS.Models
+{
+    public enum TrangThaiSinhVien
+    {
+        ConHoc = 0,
+        BaoLuu = 1,
+        ThoiHoc = 2,
+        DaTotNghiep = 3
+    }
+
+    public class SinhVien
+    {
+        [Key]
+        [Required(ErrorMessage = "MSSV là bắt buộc")]
+        [RegularExpression(@"^\d{10}$", ErrorMessage = "MSSV phải là 10 chữ số")]
+        [StringLength(10, MinimumLength = 10, ErrorMessage = "MSSV phải đúng 10 chữ số")]
+        public string MSSV { get; set; } = null!;
+
+        [Required(ErrorMessage = "Họ tên là bắt buộc")]
+        [StringLength(100, ErrorMessage = "Họ tên không được vượt quá 100 ký tự")]
+        public string HoTen { get; set; } = null!;
+
+        [Required(ErrorMessage = "Giới tính là bắt buộc")]
+        public bool GioiTinh { get; set; }
+
+        [Required(ErrorMessage = "Ngày sinh là bắt buộc")]
+        [DataType(DataType.Date)]
+        public DateTime NgaySinh { get; set; }
+
+        [StringLength(100, ErrorMessage = "Quê quán không được vượt quá 100 ký tự")]
+        public string? QueQuan { get; set; }
+
+        [Required(ErrorMessage = "Mã chuyên ngành là bắt buộc")]
+        public int MaChuyenNganh { get; set; }
+
+        [ForeignKey("MaChuyenNganh")]
+        public ChuyenNganh? ChuyenNganh { get; set; }
+
+        [Required(ErrorMessage = "Khóa học là bắt buộc")]
+        [StringLength(10, ErrorMessage = "Khóa học không được vượt quá 10 ký tự")]
+        [RegularExpression(@"^K\d{2}$", ErrorMessage = "Khóa học phải có định dạng KXX (ví dụ: K22)")]
+        public string KhoaHoc { get; set; } = null!;
+
+        [Required(ErrorMessage = "Lớp là bắt buộc")]
+        [StringLength(20, ErrorMessage = "Lớp không được vượt quá 20 ký tự")]
+        public string Lop { get; set; } = null!;
+
+        [Required(ErrorMessage = "Trạng thái là bắt buộc")]
+        public TrangThaiSinhVien TrangThai { get; set; }
+
+        [Required(ErrorMessage = "Email là bắt buộc")]
+        [StringLength(100, ErrorMessage = "Email không được vượt quá 100 ký tự")]
+        [EmailAddress(ErrorMessage = "Email không đúng định dạng")]
+        public string Email { get; set; } = null!;
+
+        [Required(ErrorMessage = "Số điện thoại là bắt buộc")]
+        [StringLength(10, MinimumLength = 10, ErrorMessage = "Số điện thoại phải đúng 10 chữ số")]
+        [RegularExpression(@"^[0-9]{10}$", ErrorMessage = "Số điện thoại phải là 10 chữ số")]
+        public string SoDienThoai { get; set; } = null!;
+
+        public virtual ICollection<SuKienSinhVien> SuKienSinhViens { get; set; } = new List<SuKienSinhVien>(); // Thêm quan hệ nhiều-nhiều
+    }
+}
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace C4FAMS.Models
+{
+    public class SuKien
+    {
+        [Key]
+        public int MaSuKien { get; set; }
+
+        [Required(ErrorMessage = "Tên sự kiện là bắt buộc")]
+        [StringLength(100, ErrorMessage = "Tên sự kiện không được vượt quá 100 ký tự")]
+        public string TenSuKien { get; set; } = null!;
+
+        [Required(ErrorMessage = "Ngày tổ chức là bắt buộc")]
+        [DataType(DataType.DateTime)]
+        public DateTime NgayToChuc { get; set; }
+
+        [Required(ErrorMessage = "Địa điểm là bắt buộc")]
+        [StringLength(200, ErrorMessage = "Địa điểm không được vượt quá 200 ký tự")]
+        public string DiaDiem { get; set; } = null!;
+
+        public int? MaKhoa { get; set; }
+
+        [ForeignKey("MaKhoa")]
+        public Khoa? Khoa { get; set; }
+
+        public virtual ICollection<SuKienHinhAnh> SuKienHinhAnhs { get; set; } = new List<SuKienHinhAnh>(); // 1-n
+        public virtual ICollection<SuKienSinhVien> SuKienSinhViens { get; set; } = new List<SuKienSinhVien>(); // n-n
+    }
+}
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace C4FAMS.Models
+{
+    public class SuKienChiTiet
+    {
+        [Key]
+        [ForeignKey("SuKien")]
+        public int MaSuKien { get; set; }
+
+        [StringLength(500, ErrorMessage = "Mô tả không được vượt quá 500 ký tự")]
+        public string? MoTa { get; set; }
+
+        public string? NoiDung { get; set; } // NVARCHAR(MAX) không giới hạn độ dài
+
+        public virtual SuKien? SuKien { get; set; } // Navigation property cho phép null
+    }
+}
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace C4FAMS.Models
+{
+    public class SuKienHinhAnh
+    {
+        [Key]
+        public int MaHinhAnh { get; set; }
+
+        [Required(ErrorMessage = "Mã sự kiện là bắt buộc")]
+        public int MaSuKien { get; set; }
+
+        [Required(ErrorMessage = "Đường dẫn hình ảnh là bắt buộc")]
+        [StringLength(255, ErrorMessage = "Đường dẫn không được vượt quá 255 ký tự")]
+        [RegularExpression(@"^[\w\-\./]+$", ErrorMessage = "Đường dẫn hình ảnh phải hợp lệ")]
+        public string HinhAnh { get; set; } = null!;
+
+        [ForeignKey("MaSuKien")]
+        public virtual SuKien SuKien { get; set; } = null!;
+    }
+}
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace C4FAMS.Models
+{
+    public class SuKienSinhVien
+    {
+        [Key]
+        [Column(Order = 0)]
+        public int MaSuKien { get; set; }
+
+        [Key]
+        [Column(Order = 1)]
+        public string MSSV { get; set; } = null!;
+
+        [ForeignKey("MaSuKien")]
+        public SuKien SuKien { get; set; } = null!;
+
+        [ForeignKey("MSSV")]
+        public SinhVien SinhVien { get; set; } = null!;
+    }
+}
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace C4FAMS.Models
+{
+    public class ThanhTuu
+    { 
+        [Key]
+        public int MaThanhTuu { get; set; }
+
+        [Required]
+        [StringLength(10, MinimumLength = 10, ErrorMessage = "MSSV phải đúng 10 chữ số")]
+        [RegularExpression(@"^\d{10}$", ErrorMessage = "MSSV phải là 10 chữ số")]
+        public string MSSV { get; set; } = null!;
+
+        [Required]
+        [StringLength(100)]
+        public string TenThanhTuu { get; set; } = null!;
+
+        [StringLength(500)]
+        public string? MoTa { get; set; }
+
+        [Required]
+        [Range(1900, 9999, ErrorMessage = "Năm đạt được phải từ 1900 trở đi")]
+        [CustomValidation(typeof(ThanhTuu), nameof(ValidateNamDatDuoc))]
+        public int NamDatDuoc { get; set; }
+
+        [ForeignKey("MSSV")]
+        public CuuSinhVien CuuSinhVien { get; set; } = null!;
+
+        public static ValidationResult? ValidateNamDatDuoc(int namDatDuoc, ValidationContext context)
+        {
+            var thanhTuu = (ThanhTuu)context.ObjectInstance;
+            if (thanhTuu.CuuSinhVien != null && namDatDuoc < thanhTuu.CuuSinhVien.NamTotNghiep)
+            {
+                return new ValidationResult("Năm đạt thành tựu phải sau năm tốt nghiệp.");
+            }
+            return ValidationResult.Success;
+        }
+    }
+}
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace C4FAMS.Models
+{
+    public class ThanhTuuViewModel
+    {
+        public int MaThanhTuu { get; set; }
+        [Required]
+        [StringLength(100)]
+        public string TenThanhTuu { get; set; } = null!;
+
+        [StringLength(500)]
+        public string? MoTa { get; set; }
+
+        [Required]
+        [Range(1900, 9999, ErrorMessage = "Năm đạt được phải từ 1900 trở đi")]
+        public int NamDatDuoc { get; set; }
+    }
+}
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace C4FAMS.Models
+{
+    public class ThongBao
+    {
+        [Key]
+        public int MaThongBao { get; set; }
+
+        [Required]
+        [StringLength(10, MinimumLength = 10, ErrorMessage = "MSSV phải đúng 10 chữ số")]
+        [RegularExpression(@"^\d{10}$", ErrorMessage = "MSSV phải là 10 chữ số")]
+        public string MSSV { get; set; } = null!;
+
+        [Required]
+        [StringLength(500)]
+        public string NoiDung { get; set; } = null!;
+
+        [Required]
+        public DateTime NgayGui { get; set; }
+
+        [Required]
+        public bool TrangThai { get; set; } = false;
+
+        [ForeignKey("MSSV")]
+        public CuuSinhVien CuuSinhVien { get; set; } = null!;
+    }
+}

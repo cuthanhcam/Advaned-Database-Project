@@ -1,14 +1,4 @@
-Trong sinh viên thêm ràng buộc năm sinh phải lớn hơn 17 tuổi (dùng năm hiện tại trừ đi 17), ví dụ năm 2008 là hợp lệ
+Trong role CuuSinhVien ở CuuSinhVien/ManageProfile đã cập nhật được thông tin, ở hình thức liên lạc nên ghi rõ thêm ở title là (Hình thức liên lạc cụ thể hoặc sao đó để Cựu Sinh Viên có thể cung cấp email hoặc Sđt cụ thể chứ không phải chọn loại hình thức như email hoặc phone hoặc khác)
 
-Hiện tại trong SinhVien/Create, tôi nhập MSSV, HoTen, GioiTinh, NgaySinh, QueQuan,
-
-Khi vừa chọn Khoa(droplist) một khoa bất kì thì hiện thông báo
-The value '' is invalid.
-Vui lòng chọn chuyên ngành.
-Khóa học là bắt buộc
-Lớp là bắt buộc
-Email là bắt buộc
-Số điện thoại là bắt buộc
-
-Hoặc khi tôi đã điền chuyên ngành (ở đây xử lý chọn khoa rồi mới chọn chuyên ngành) vào rồi sau đó chọn khoa thì tự động thêm tạo sinh viên mới mặc dù tôi chưa nhấn thêm, Tương tự với sửa
-Hiện tại nhấn xóa sinh viên thì sẽ hiện lỗi 500
+Đã thêm Công việc được rồi, nhưng chưa xóa được, cần sửa và bổ sung chức năng sửa nữa,
+Đã thêm Thành tựu được rồi, nhưng chưa xóa được, cần sửa và bổ sung chức năng sửa nữa,
