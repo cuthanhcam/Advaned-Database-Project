@@ -155,6 +155,7 @@ Advaned-Database-Project/
 | Trương Phước Hưng | [Vnboi2004](https://github.com/Vnboi2004) |
 | Trần Trung Hậu     | [Trunghau204](https://github.com/Trunghau204) |
 | Nguyễn Trần Đăng KHoa        | [aSher308](https://github.com/aSher308) |
+
 - **GitHub Issues**: Báo lỗi tại [đây](https://github.com/cuthanhcam/Advaned-Database-Project/issues).
 
 ## Giấy phép
