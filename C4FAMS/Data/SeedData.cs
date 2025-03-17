@@ -142,9 +142,9 @@ namespace C4FAMS.Data
                             await context.Database.ExecuteSqlRawAsync("SET IDENTITY_INSERT [Khoa] ON");
 
                             context.Khoa.AddRange(
-                                new Khoa { MaKhoa = 1, TenKhoa = "Công Nghệ Thông Tin", Email = "cntt@hutech.edu.vn", SoDienThoai = "02854450000" },
-                                new Khoa { MaKhoa = 2, TenKhoa = "Ngoại Ngữ", Email = "nn@hutech.edu.vn", SoDienThoai = "02854450001" },
-                                new Khoa { MaKhoa = 3, TenKhoa = "Cơ Khí", Email = "ck@hutech.edu.vn", SoDienThoai = "02854450002" }
+                                new Khoa { MaKhoa = 1, TenKhoa = "Công Nghệ Thông Tin", Email = "cntt@c4f.edu.vn", SoDienThoai = "02854450000" },
+                                new Khoa { MaKhoa = 2, TenKhoa = "Ngoại Ngữ", Email = "nn@c4f.edu.vn", SoDienThoai = "02854450001" },
+                                new Khoa { MaKhoa = 3, TenKhoa = "Cơ Khí", Email = "ck@c4f.edu.vn", SoDienThoai = "02854450002" }
                             );
                             await context.SaveChangesAsync();
 

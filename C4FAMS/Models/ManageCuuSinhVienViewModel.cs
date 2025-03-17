@@ -16,7 +16,7 @@ namespace C4FAMS.Models
         public string? DiaChiHienTai { get; set; }
 
         [Required(ErrorMessage = "Hình thức liên lạc là bắt buộc")]
-        [StringLength(20, ErrorMessage = "Hình thức liên lạc không được vượt quá 20 ký tự")]
+        [StringLength(100, ErrorMessage = "Hình thức liên lạc không được vượt quá 100 ký tự")]
         public string HinhThucLienLac { get; set; } = null!;
 
         public IEnumerable<CongViecViewModel> CongViecs { get; set; } = new List<CongViecViewModel>();

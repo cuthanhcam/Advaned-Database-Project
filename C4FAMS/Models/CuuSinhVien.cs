@@ -23,7 +23,7 @@ namespace C4FAMS.Models
         public string? DiaChiHienTai { get; set; }
 
         [Required(ErrorMessage = "Hình thức liên lạc là bắt buộc")]
-        [StringLength(20)]
+        [StringLength(100)]
         public string HinhThucLienLac { get; set; } = null!;
 
         public SinhVien SinhVien { get; set; } = null!;
