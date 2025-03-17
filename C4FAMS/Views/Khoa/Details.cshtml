@@ -1,24 +1,39 @@
 @model C4FAMS.Models.Khoa
 
 <div class="container">
-    <h1 class="mt-4 mb-4">Chi tiết Khoa: @Model.TenKhoa</h1>
+    <h1 class="mt-4 mb-4" style="background: linear-gradient(90deg, #00BCD4, #0288D1); color: white; padding: 10px; border-radius: 5px;">Chi tiết Khoa: @Model.TenKhoa</h1>
 
-    <div class="card mb-4">
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="card mb-4 shadow-sm rounded">
         <div class="card-body">
-            <dl class="row">
-                <dt class="col-sm-3">Email</dt>
-                <dd class="col-sm-9">@Model.Email</dd>
-                <dt class="col-sm-3">Số Điện Thoại</dt>
-                <dd class="col-sm-9">@Model.SoDienThoai</dd>
+            <dl class="row g-3">
+                <dt class="col-sm-3 fw-bold fs-6 text-cyan">Email</dt>
+                <dd class="col-sm-9 fs-6">@Model.Email</dd>
+                <dt class="col-sm-3 fw-bold fs-6 text-cyan">Số Điện Thoại</dt>
+                <dd class="col-sm-9 fs-6">@Model.SoDienThoai</dd>
             </dl>
         </div>
     </div>
 
-    <h3>Danh sách chuyên ngành</h3>
+    <h3 class="text-cyan mb-3">Danh sách chuyên ngành</h3>
     @if (ViewBag.ChuyenNganhList != null && ViewBag.ChuyenNganhList.Count > 0)
     {
-        <table class="table table-bordered table-hover">
-            <thead class="thead-dark">
+        <table class="table table-bordered table-hover shadow-sm rounded">
+            <thead style="background: linear-gradient(90deg, #00BCD4, #0288D1); color: white;">
                 <tr>
                     <th>Tên Chuyên ngành</th>
                     @if (User.IsInRole("Admin"))
@@ -27,16 +42,18 @@
                     }
                 </tr>
             </thead>
-            <tbody>
+            <tbody class="fs-6">
                 @foreach (var cn in ViewBag.ChuyenNganhList)
                 {
                     <tr>
                         <td>@cn.TenChuyenNganh</td>
                         @if (User.IsInRole("Admin"))
                         {
-                            <td>
-                                <a asp-action="EditChuyenNganh" asp-route-id="@cn.MaChuyenNganh" class="btn btn-sm btn-primary">Sửa</a>
-                                <a asp-action="DeleteChuyenNganh" asp-route-id="@cn.MaChuyenNganh" class="btn btn-sm btn-danger">Xóa</a>
+                            <td class="text-center">
+                                <div class="d-flex gap-1 justify-content-center">
+                                    <a asp-action="EditChuyenNganh" asp-route-id="@cn.MaChuyenNganh" class="btn btn-sm btn-primary">Sửa</a>
+                                    <a asp-action="DeleteChuyenNganh" asp-route-id="@cn.MaChuyenNganh" class="btn btn-sm btn-danger">Xóa</a>
+                                </div>
                             </td>
                         }
                     </tr>
@@ -46,14 +63,21 @@
     }
     else
     {
-        <p>Chưa có chuyên ngành nào.</p>
+        <p class="text-muted fs-6">Chưa có chuyên ngành nào.</p>
     }
 
-    @if (User.IsInRole("Admin"))
-    {
-        <p>
+    <div class="mt-4 d-flex gap-2">
+        @if (User.IsInRole("Admin"))
+        {
             <a asp-action="CreateChuyenNganh" asp-route-maKhoa="@Model.MaKhoa" class="btn btn-primary">Thêm chuyên ngành</a>
-        </p>
-    }
-    <a asp-action="Index" class="btn btn-secondary">Quay lại</a>
+        }
+        <a asp-action="Index" class="btn btn-secondary">Quay lại</a>
+    </div>
 </div>
+
+<style>
+    .text-cyan { color: #00BCD4; }
+    .fs-6 { font-size: 0.95rem; }
+    .shadow-sm { box-shadow: 0 .125rem .25rem rgba(0,0,0,.075); }
+    .rounded { border-radius: 8px; }
+</style>

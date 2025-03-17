@@ -1,43 +1,94 @@
 @model IEnumerable<C4FAMS.Models.NguoiDung>
 
 <div class="container">
-    <h1 class="mt-4 mb-4 text-cyan">Quản lý Tài khoản Khoa và Admin</h1>
+    <h1 class="mt-4 mb-4" style="background: linear-gradient(90deg, #00BCD4, #0288D1); color: white; padding: 10px; border-radius: 5px;">Quản lý Tài khoản Khoa và Admin</h1>
 
-    <p>
-        <a asp-action="CreateUser" class="btn btn-primary mb-3">Tạo Tài khoản mới</a>
-    </p>
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
 
-    <table class="table table-bordered table-hover shadow-sm">
-        <thead class="table-dark" style="background-color: #00BCD4;">
-            <tr>
-                <th>Tên đăng nhập</th>
-                <th>Email</th>
-                <th>Vai trò</th>
-                <th>Khoa</th>
-                <th>Trạng thái</th>
-                <th>Hành động</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model)
-            {
+    <div class="mb-4">
+        <a asp-action="CreateUser" class="btn btn-primary">Tạo Tài khoản mới</a>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover shadow-sm rounded">
+            <thead style="background: linear-gradient(90deg, #00BCD4, #0288D1); color: white;" class="fs-6">
                 <tr>
-                    <td>@item.UserName</td>
-                    <td>@item.Email</td>
-                    <td>@item.VaiTro</td>
-                    <td>@(item.Khoa != null ? item.Khoa.TenKhoa : "Chưa gán")</td>
-                    <td>@(item.TrangThai ? "Hoạt động" : "Ngưng hoạt động")</td>
-                    <td>
-                        <a asp-action="EditUser" asp-route-id="@item.Id" class="btn btn-sm btn-primary me-1">Sửa</a>
-                        <a asp-action="DeleteUser" asp-route-id="@item.Id" class="btn btn-sm btn-danger">Xóa</a>
-                    </td>
+                    <th style="width: 15%;">Tên đăng nhập</th>
+                    <th style="width: 20%;">Email</th>
+                    <th style="width: 15%;">Vai trò</th>
+                    <th style="width: 15%;">Khoa</th>
+                    <th style="width: 15%; text-align: center;">Trạng thái</th>
+                    <th style="width: 20%; text-align: center;">Hành động</th>
                 </tr>
-            }
-        </tbody>
-    </table>
+            </thead>
+            <tbody class="fs-6">
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.UserName</td>
+                        <td>@item.Email</td>
+                        <td>@item.VaiTro</td>
+                        <td>@(item.Khoa != null ? item.Khoa.TenKhoa : "Chưa gán")</td>
+                        <td class="text-center">
+                            @if (item.TrangThai)
+                            {
+                                <span class="badge bg-success">Hoạt động</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-danger">Ngưng hoạt động</span>
+                            }
+                        </td>
+                        <td class="text-center">
+                            <div class="btn-group" role="group">
+                                <a asp-action="EditUser" asp-route-id="@item.Id" class="btn btn-sm btn-primary" title="Sửa"><i class="bi bi-pencil"></i></a>
+                                <a asp-action="DeleteUser" asp-route-id="@item.Id" class="btn btn-sm btn-danger" title="Xóa"><i class="bi bi-trash"></i></a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
 </div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"></script>
+}
 
 <style>
     .text-cyan { color: #00BCD4; }
+    .fs-6 { font-size: 0.95rem; }
     .shadow-sm { box-shadow: 0 .125rem .25rem rgba(0,0,0,.075); }
+    .rounded { border-radius: 8px; }
+    .btn-sm { 
+        padding: 0.25rem 0.4rem;
+        font-size: 0.75rem;
+        width: 34px;
+        text-align: center;
+    }
+    .btn-group .btn {
+        margin: 0;
+    }
+    .btn-group {
+        display: flex;
+        gap: 2px;
+    }
+    .table th, .table td {
+        vertical-align: middle;
+        padding: 0.5rem;
+    }
 </style>

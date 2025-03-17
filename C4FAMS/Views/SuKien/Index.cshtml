@@ -1,27 +1,41 @@
 @model IEnumerable<C4FAMS.Models.SuKien>
 
 <div class="container">
-    <h1 class="mt-4 mb-4">Danh sách Sự kiện</h1>
+    <h1 class="mt-4 mb-4" style="background: linear-gradient(90deg, #00BCD4, #0288D1); color: white; padding: 10px; border-radius: 5px;">Danh sách Sự kiện</h1>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
 
     <!-- Form lọc -->
-    <form asp-action="Index" method="get" class="mb-4">
-        <div class="row">
+    <form asp-action="Index" method="get" class="mb-4 shadow-sm rounded p-3">
+        <div class="row g-3">
             @if (User.IsInRole("Admin"))
             {
                 <div class="col-md-6">
-                    <label class="form-label">Khoa</label>
-                    <select name="khoaId" class="form-control" onchange="this.form.submit()"
+                    <label class="form-label fw-bold fs-6 text-cyan">Khoa</label>
+                    <select name="khoaId" class="form-control fs-6" onchange="this.form.submit()"
                         asp-items="@(new SelectList(ViewBag.KhoaList ?? new List<C4FAMS.Models.Khoa>(), "MaKhoa", "TenKhoa", ViewBag.SelectedKhoaId))">
                         <option value="">-- Chọn Khoa --</option>
                     </select>
                 </div>
             }
-
             <div class="col-md-6">
-                <label class="form-label">Sắp xếp</label>
-                <select name="sortOrder" class="form-control" onchange="this.form.submit()">
+                <label class="form-label fw-bold fs-6 text-cyan">Sắp xếp</label>
+                <select name="sortOrder" class="form-control fs-6" onchange="this.form.submit()">
                     @{
-                        var sortOrder = ViewBag.SortOrder as string ?? "nearest"; // Ép kiểu và gán giá trị mặc định
+                        var sortOrder = ViewBag.SortOrder as string ?? "nearest";
                     }
                     <option value="nearest" selected="@(sortOrder == "nearest")">Gần nhất</option>
                     <option value="farthest" selected="@(sortOrder == "farthest")">Xa nhất</option>
@@ -32,53 +46,87 @@
 
     @if (User.IsInRole("Admin") || User.IsInRole("Khoa"))
     {
-        <p>
+        <div class="mb-4">
             <a asp-action="Create" class="btn btn-primary">Tạo Sự kiện mới</a>
-        </p>
+        </div>
     }
 
-    <table class="table table-bordered table-hover">
-        <thead class="thead-dark">
-            <tr>
-                <th>Hình ảnh</th>
-                <th>Tên Sự kiện</th>
-                <th>Ngày tổ chức</th>
-                <th>Địa điểm</th>
-                <th>Khoa</th>
-                <th>Hành động</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model)
-            {
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover shadow-sm rounded">
+            <thead style="background: linear-gradient(90deg, #00BCD4, #0288D1); color: white;" class="fs-6">
                 <tr>
-                    <td>
-                        @if (item.SuKienHinhAnhs != null && item.SuKienHinhAnhs.Any())
-                        {
-                            <img src="@item.SuKienHinhAnhs.First().HinhAnh" alt="@item.TenSuKien" class="img-fluid rounded"
-                                style="max-width: 100px;" />
-                        }
-                        else
-                        {
-                            <span class="text-muted">Không có ảnh</span>
-                        }
-                    </td>
-                    <td>@item.TenSuKien</td>
-                    <td>@item.NgayToChuc.ToString("dd/MM/yyyy HH:mm")</td>
-                    <td>@item.DiaDiem</td>
-                    <td>@(item.Khoa?.TenKhoa ?? "N/A")</td>
-                    <td>
-                        <a asp-action="Details" asp-route-id="@item.MaSuKien" class="btn btn-sm btn-info">Chi tiết</a>
-                        @if (User.IsInRole("Admin") || (User.IsInRole("Khoa") && item.MaKhoa == ViewBag.KhoaId))
-                        {
-                            <a asp-action="Edit" asp-route-id="@item.MaSuKien" class="btn btn-sm btn-primary">Sửa</a>
-                            <a asp-action="Delete" asp-route-id="@item.MaSuKien" class="btn btn-sm btn-danger">Xóa</a>
-                            <a asp-action="RegisteredCuuSinhVien" asp-route-id="@item.MaSuKien"
-                                class="btn btn-sm btn-success">Danh sách đăng ký</a>
-                        }
-                    </td>
+                    <th style="width: 10%;">Hình ảnh</th>
+                    <th style="width: 25%;">Tên Sự kiện</th>
+                    <th style="width: 15%; text-align: center;">Ngày tổ chức</th>
+                    <th style="width: 15%;">Địa điểm</th>
+                    <th style="width: 10%;">Khoa</th>
+                    <th style="width: 25%; text-align: center;">Hành động</th>
                 </tr>
-            }
-        </tbody>
-    </table>
+            </thead>
+            <tbody class="fs-6">
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td class="text-center">
+                            @if (item.SuKienHinhAnhs != null && item.SuKienHinhAnhs.Any())
+                            {
+                                <img src="@item.SuKienHinhAnhs.First().HinhAnh" alt="@item.TenSuKien" class="img-fluid rounded img-thumbnail" style="max-width: 80px; max-height: 80px;" />
+                            }
+                            else
+                            {
+                                <span class="text-muted">Không có ảnh</span>
+                            }
+                        </td>
+                        <td>@item.TenSuKien</td>
+                        <td class="text-center">@item.NgayToChuc.ToString("dd/MM/yyyy HH:mm")</td>
+                        <td>@item.DiaDiem</td>
+                        <td>@(item.Khoa?.TenKhoa ?? "N/A")</td>
+                        <td class="text-center">
+                            <div class="btn-group" role="group">
+                                <a asp-action="Details" asp-route-id="@item.MaSuKien" class="btn btn-sm btn-info" title="Chi tiết"><i class="bi bi-eye"></i></a>
+                                @if (User.IsInRole("Admin") || (User.IsInRole("Khoa") && item.MaKhoa == ViewBag.KhoaId))
+                                {
+                                    <a asp-action="Edit" asp-route-id="@item.MaSuKien" class="btn btn-sm btn-primary" title="Sửa"><i class="bi bi-pencil"></i></a>
+                                    <a asp-action="Delete" asp-route-id="@item.MaSuKien" class="btn btn-sm btn-danger" title="Xóa"><i class="bi bi-trash"></i></a>
+                                    <a asp-action="RegisteredCuuSinhVien" asp-route-id="@item.MaSuKien" class="btn btn-sm btn-success" title="Danh sách đăng ký"><i class="bi bi-list"></i></a>
+                                }
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
 </div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"></script>
+}
+
+<style>
+    .text-cyan { color: #00BCD4; }
+    .fs-6 { font-size: 0.95rem; }
+    .shadow-sm { box-shadow: 0 .125rem .25rem rgba(0,0,0,.075); }
+    .rounded { border-radius: 8px; }
+    .img-thumbnail { object-fit: cover; }
+    .btn-sm { 
+        padding: 0.25rem 0.4rem; /* Nút nhỏ gọn */
+        font-size: 0.75rem;
+        width: 34px; /* Đặt chiều rộng cố định cho nút */
+        text-align: center;
+    }
+    .btn-group .btn {
+        margin: 0;
+    }
+    .btn-group {
+        display: flex;
+        gap: 2px;
+    }
+    .table th, .table td {
+        vertical-align: middle;
+        padding: 0.5rem;
+    }
+    .table td.text-center img {
+        margin: 0 auto;
+    }
+</style>

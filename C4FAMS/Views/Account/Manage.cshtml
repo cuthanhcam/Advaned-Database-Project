@@ -1,60 +1,70 @@
 @model C4FAMS.Models.ManageViewModel
 
 <div class="container">
-    <h1 class="mt-4 mb-4 text-cyan">Quản lý tài khoản</h1>
+    <h1 class="mt-4 mb-4" style="background: linear-gradient(90deg, #00BCD4, #0288D1); color: white; padding: 10px; border-radius: 5px;">Quản lý tài khoản</h1>
 
     @if (TempData["SuccessMessage"] != null)
     {
-        <div class="alert alert-success" role="alert">
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
             @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     }
 
-    <div class="card mb-4 shadow-sm">
-        <div class="card-header" style="background-color: #E0F7FA; color: #0288D1;">Thông tin tài khoản</div>
+    <div class="card mb-4 shadow-sm rounded">
+        <div class="card-header" style="background: #00BCD4; color: white;">
+            Thông tin tài khoản
+        </div>
         <div class="card-body">
-            <dl class="row">
-                <dt class="col-sm-3">Email</dt>
-                <dd class="col-sm-9">@Model.Email</dd>
-                <dt class="col-sm-3">Vai trò</dt>
-                <dd class="col-sm-9">@Model.VaiTro</dd>
-                <dt class="col-sm-3">Trạng thái</dt>
-                <dd class="col-sm-9">@(Model.TrangThai ? "Hoạt động" : "Ngưng hoạt động")</dd>
+            <dl class="row g-3">
+                <dt class="col-sm-3 fw-bold fs-6 text-cyan">Email</dt>
+                <dd class="col-sm-9 fs-6">@Model.Email</dd>
+                <dt class="col-sm-3 fw-bold fs-6 text-cyan">Vai trò</dt>
+                <dd class="col-sm-9 fs-6">@Model.VaiTro</dd>
+                <dt class="col-sm-3 fw-bold fs-6 text-cyan">Trạng thái</dt>
+                <dd class="col-sm-9 fs-6">@(Model.TrangThai ? "Hoạt động" : "Ngưng hoạt động")</dd>
                 @if (!string.IsNullOrEmpty(Model.TenKhoa))
                 {
-                    <dt class="col-sm-3">Khoa</dt>
-                    <dd class="col-sm-9">@Model.TenKhoa</dd>
+                    <dt class="col-sm-3 fw-bold fs-6 text-cyan">Khoa</dt>
+                    <dd class="col-sm-9 fs-6">@Model.TenKhoa</dd>
                 }
             </dl>
         </div>
     </div>
 
-    <div class="card mb-4 shadow-sm">
-        <div class="card-header" style="background-color: #E0F7FA; color: #0288D1;">Đổi mật khẩu</div>
+    <div class="card mb-4 shadow-sm rounded">
+        <div class="card-header" style="background: #00BCD4; color: white;">
+            Đổi mật khẩu
+        </div>
         <div class="card-body">
             <form asp-action="Manage" method="post">
                 <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
-
-                <div class="form-group mb-3">
-                    <label asp-for="OldPassword" class="form-label fw-bold">Mật khẩu cũ</label>
-                    <input asp-for="OldPassword" class="form-control" />
-                    <span asp-validation-for="OldPassword" class="text-danger"></span>
-                </div>
-
-                <div class="form-group mb-3">
-                    <label asp-for="NewPassword" class="form-label fw-bold">Mật khẩu mới</label>
-                    <input asp-for="NewPassword" class="form-control" />
-                    <span asp-validation-for="NewPassword" class="text-danger"></span>
-                </div>
-
-                <div class="form-group mb-3">
-                    <label asp-for="ConfirmNewPassword" class="form-label fw-bold">Xác nhận mật khẩu mới</label>
-                    <input asp-for="ConfirmNewPassword" class="form-control" />
-                    <span asp-validation-for="ConfirmNewPassword" class="text-danger"></span>
-                </div>
-
-                <div class="form-group d-flex gap-2">
-                    <button type="submit" class="btn btn-primary">Đổi mật khẩu</button>
+                <div class="row g-3">
+                    <div class="col-md-12">
+                        <label asp-for="OldPassword" class="form-label fw-bold fs-6 text-cyan">Mật khẩu cũ</label>
+                        <input asp-for="OldPassword" class="form-control fs-6" type="password" placeholder="Nhập mật khẩu cũ" required />
+                        <span asp-validation-for="OldPassword" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-12">
+                        <label asp-for="NewPassword" class="form-label fw-bold fs-6 text-cyan">Mật khẩu mới</label>
+                        <input asp-for="NewPassword" class="form-control fs-6" type="password" placeholder="Nhập mật khẩu mới" required />
+                        <span asp-validation-for="NewPassword" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-12">
+                        <label asp-for="ConfirmNewPassword" class="form-label fw-bold fs-6 text-cyan">Xác nhận mật khẩu mới</label>
+                        <input asp-for="ConfirmNewPassword" class="form-control fs-6" type="password" placeholder="Xác nhận mật khẩu mới" required />
+                        <span asp-validation-for="ConfirmNewPassword" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-12 mt-4">
+                        <button type="submit" class="btn btn-primary">Đổi mật khẩu</button>
+                    </div>
                 </div>
             </form>
         </div>
@@ -74,5 +84,7 @@
 
 <style>
     .text-cyan { color: #00BCD4; }
+    .fs-6 { font-size: 0.95rem; }
     .shadow-sm { box-shadow: 0 .125rem .25rem rgba(0,0,0,.075); }
+    .rounded { border-radius: 8px; }
 </style>

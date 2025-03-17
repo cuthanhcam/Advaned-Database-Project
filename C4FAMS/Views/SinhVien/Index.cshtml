@@ -1,30 +1,43 @@
 @model IEnumerable<C4FAMS.Models.SinhVien>
 
 <div class="container">
-    <h1 class="mt-4 mb-4 text-cyan">Danh sách Sinh viên</h1>
+    <h1 class="mt-4 mb-4" style="background: linear-gradient(90deg, #00BCD4, #0288D1); color: white; padding: 10px; border-radius: 5px;">Danh sách Sinh viên</h1>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
 
     <!-- Form lọc -->
-    <form asp-action="Index" method="get" class="mb-4">
+    <form asp-action="Index" method="get" class="mb-4 shadow-sm rounded p-3">
         <div class="row g-3">
             @if (User.IsInRole("Admin"))
             {
                 <div class="col-md-4">
-                    <label class="form-label fw-bold fs-6">Khoa</label>
+                    <label class="form-label fw-bold fs-6 text-cyan">Khoa</label>
                     <select name="khoaId" class="form-control fs-6" onchange="this.form.submit()" asp-items="@(new SelectList(ViewBag.KhoaList ?? new List<C4FAMS.Models.Khoa>(), "MaKhoa", "TenKhoa", ViewBag.SelectedKhoaId))">
                         <option value="">-- Chọn Khoa --</option>
                     </select>
                 </div>
             }
-
             <div class="col-md-4">
-                <label class="form-label fw-bold fs-6">Chuyên ngành</label>
+                <label class="form-label fw-bold fs-6 text-cyan">Chuyên ngành</label>
                 <select name="chuyenNganhId" class="form-control fs-6" onchange="this.form.submit()" asp-items="@(new SelectList(ViewBag.ChuyenNganhList ?? new List<C4FAMS.Models.ChuyenNganh>(), "MaChuyenNganh", "TenChuyenNganh", ViewBag.SelectedChuyenNganhId))">
                     <option value="">-- Chọn Chuyên ngành --</option>
                 </select>
             </div>
-
             <div class="col-md-4">
-                <label class="form-label fw-bold fs-6">Khóa học</label>
+                <label class="form-label fw-bold fs-6 text-cyan">Khóa học</label>
                 <select name="khoaHoc" class="form-control fs-6" onchange="this.form.submit()" asp-items="@(new SelectList(ViewBag.KhoaHocList ?? new List<string>(), null, null, ViewBag.SelectedKhoaHoc))">
                     <option value="">-- Chọn Khóa học --</option>
                 </select>
@@ -34,9 +47,9 @@
 
     @if (User.IsInRole("Admin") || User.IsInRole("Khoa"))
     {
-        <p class="mb-3">
+        <div class="mb-4">
             <a asp-action="Create" class="btn btn-primary">Thêm Sinh viên mới</a>
-        </p>
+        </div>
     }
 
     <div class="table-responsive">
@@ -88,13 +101,13 @@
                             }
                         </td>
                         <td class="text-center">
-                            <div class="d-flex justify-content-center gap-1">
-                                <a asp-action="Details" asp-route-id="@item.MSSV" class="btn btn-sm btn-info flex-fill">Chi tiết</a>
+                            <div class="btn-group" role="group">
+                                <a asp-action="Details" asp-route-id="@item.MSSV" class="btn btn-sm btn-info" title="Chi tiết"><i class="bi bi-eye"></i></a>
                                 @if (User.IsInRole("Admin") || User.IsInRole("Khoa"))
                                 {
-                                    <a asp-action="Edit" asp-route-id="@item.MSSV" class="btn btn-sm btn-primary flex-fill">Sửa</a>
-                                    <a asp-action="Delete" asp-route-id="@item.MSSV" class="btn btn-sm btn-danger flex-fill">Xóa</a>
-                                    <a asp-action="TrangThai" asp-route-id="@item.MSSV" class="btn btn-sm btn-warning flex-fill">Trạng thái</a>
+                                    <a asp-action="Edit" asp-route-id="@item.MSSV" class="btn btn-sm btn-primary" title="Sửa"><i class="bi bi-pencil"></i></a>
+                                    <a asp-action="Delete" asp-route-id="@item.MSSV" class="btn btn-sm btn-danger" title="Xóa"><i class="bi bi-trash"></i></a>
+                                    <a asp-action="TrangThai" asp-route-id="@item.MSSV" class="btn btn-sm btn-warning" title="Trạng thái"><i class="bi bi-gear"></i></a>
                                 }
                             </div>
                         </td>
@@ -105,22 +118,27 @@
     </div>
 </div>
 
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"></script>
+}
+
 <style>
     .text-cyan { color: #00BCD4; }
+    .fs-6 { font-size: 0.95rem; }
     .shadow-sm { box-shadow: 0 .125rem .25rem rgba(0,0,0,.075); }
     .rounded { border-radius: 8px; }
     .table th, .table td { 
         vertical-align: middle; 
-        padding: 0.5rem; /* Giảm padding để tiết kiệm không gian */
+        padding: 0.5rem;
     }
     .table th {
-        white-space: normal; /* Cho phép tiêu đề xuống dòng */
-        line-height: 1.2; /* Điều chỉnh khoảng cách dòng */
+        white-space: normal;
+        line-height: 1.2;
     }
     .table td {
-        white-space: nowrap; /* Ngăn nội dung trong ô xuống dòng */
-        overflow: hidden; /* Ẩn nội dung thừa */
-        text-overflow: ellipsis; /* Thêm dấu ba chấm khi nội dung bị cắt */
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
     .badge {
         font-size: 0.85rem;
@@ -136,17 +154,17 @@
         border-color: #FFCA2C;
         color: #fff;
     }
-    .fs-6 { font-size: 0.875rem; } /* Kích thước chữ tiêu đề và nội dung */
-    .form-label { color: #0288D1; }
-    .table-responsive { overflow-x: hidden; } /* Loại bỏ thanh cuộn ngang */
     .btn-sm { 
-        padding: 0.25rem 0.5rem; /* Đảm bảo nút nhỏ gọn */
-        font-size: 0.75rem; /* Giảm kích thước chữ trong nút */
+        padding: 0.25rem 0.4rem;
+        font-size: 0.75rem;
+        width: 34px;
+        text-align: center;
     }
-    .d-flex { 
-        flex-wrap: nowrap; /* Đảm bảo các nút không xuống dòng */
+    .btn-group .btn {
+        margin: 0;
     }
-    .flex-fill { 
-        flex: 1; /* Các nút chia đều không gian trong cột hành động */
+    .btn-group {
+        display: flex;
+        gap: 2px;
     }
 </style>

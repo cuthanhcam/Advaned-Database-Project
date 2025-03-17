@@ -1,51 +1,61 @@
 @model C4FAMS.Models.SuKien
 
 <div class="container">
-    <h1 class="mt-4 mb-4">Chi tiết Sự kiện</h1>
+    <h1 class="mt-4 mb-4" style="background: linear-gradient(90deg, #00BCD4, #0288D1); color: white; padding: 10px; border-radius: 5px;">Chi tiết Sự kiện</h1>
 
-    <div class="card mb-4">
-        <div class="card-header">
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="card mb-4 shadow-sm rounded">
+        <div class="card-header" style="background: #00BCD4; color: white;">
             Thông tin Sự kiện
         </div>
         <div class="card-body">
-            <dl class="row">
-                <dt class="col-sm-3">Tên sự kiện</dt>
-                <dd class="col-sm-9">@Model.TenSuKien</dd>
-
-                <dt class="col-sm-3">Ngày tổ chức</dt>
-                <dd class="col-sm-9">@Model.NgayToChuc.ToString("dd/MM/yyyy HH:mm")</dd>
-
-                <dt class="col-sm-3">Địa điểm</dt>
-                <dd class="col-sm-9">@Model.DiaDiem</dd>
-
-                <dt class="col-sm-3">Khoa</dt>
-                <dd class="col-sm-9">@(Model.Khoa?.TenKhoa ?? "N/A")</dd>
-
-                <dt class="col-sm-3">Mô tả</dt>
-                <dd class="col-sm-9">@ViewBag.SuKienChiTiet?.MoTa</dd>
-
-                <dt class="col-sm-3">Nội dung</dt>
-                <dd class="col-sm-9">@ViewBag.SuKienChiTiet?.NoiDung</dd>
+            <dl class="row g-3">
+                <dt class="col-sm-3 fw-bold fs-6 text-cyan">Tên sự kiện</dt>
+                <dd class="col-sm-9 fs-6">@Model.TenSuKien</dd>
+                <dt class="col-sm-3 fw-bold fs-6 text-cyan">Ngày tổ chức</dt>
+                <dd class="col-sm-9 fs-6">@Model.NgayToChuc.ToString("dd/MM/yyyy HH:mm")</dd>
+                <dt class="col-sm-3 fw-bold fs-6 text-cyan">Địa điểm</dt>
+                <dd class="col-sm-9 fs-6">@Model.DiaDiem</dd>
+                <dt class="col-sm-3 fw-bold fs-6 text-cyan">Khoa</dt>
+                <dd class="col-sm-9 fs-6">@(Model.Khoa?.TenKhoa ?? "N/A")</dd>
+                <dt class="col-sm-3 fw-bold fs-6 text-cyan">Mô tả</dt>
+                <dd class="col-sm-9 fs-6">@(ViewBag.SuKienChiTiet?.MoTa ?? "Chưa có mô tả")</dd>
+                <dt class="col-sm-3 fw-bold fs-6 text-cyan">Nội dung</dt>
+                <dd class="col-sm-9 fs-6">@(ViewBag.SuKienChiTiet?.NoiDung ?? "Chưa có nội dung")</dd>
             </dl>
         </div>
     </div>
 
-    <h3>Hình ảnh</h3>
+    <h3 class="text-cyan mb-3">Hình ảnh</h3>
     @if (Model.SuKienHinhAnhs != null && Model.SuKienHinhAnhs.Any())
     {
         <div class="d-flex flex-wrap gap-2 justify-content-center mb-3">
             @foreach (var hinhAnh in Model.SuKienHinhAnhs)
             {
-                <img src="@hinhAnh.HinhAnh" alt="@Model.TenSuKien" class="img-fluid rounded" style="max-width: 200px;" />
+                <img src="@hinhAnh.HinhAnh" alt="@Model.TenSuKien" class="img-fluid img-thumbnail rounded" style="max-width: 200px; max-height: 200px;" />
             }
         </div>
     }
     else
     {
-        <p class="text-muted">Không có hình ảnh nào.</p>
+        <p class="text-muted fs-6">Không có hình ảnh nào.</p>
     }
 
-    <div class="mt-3">
+    <div class="mt-4 d-flex gap-2">
         <a asp-action="Index" class="btn btn-secondary">Quay lại</a>
         @if (User.IsInRole("Admin") || (User.IsInRole("Khoa") && Model.MaKhoa == ViewBag.KhoaId))
         {
@@ -61,3 +71,11 @@
         }
     </div>
 </div>
+
+<style>
+    .text-cyan { color: #00BCD4; }
+    .fs-6 { font-size: 0.95rem; }
+    .shadow-sm { box-shadow: 0 .125rem .25rem rgba(0,0,0,.075); }
+    .rounded { border-radius: 8px; }
+    .img-thumbnail { object-fit: cover; }
+</style>

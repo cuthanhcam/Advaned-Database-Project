@@ -1,14 +1,29 @@
 @model C4FAMS.Models.ChuyenNganh
 
 <div class="container">
-    <h1 class="mt-4 mb-4">Xóa Chuyên ngành</h1>
+    <h1 class="mt-4 mb-4" style="background: linear-gradient(90deg, #00BCD4, #0288D1); color: white; padding: 10px; border-radius: 5px;">Xóa Chuyên ngành</h1>
 
-    <h3>Bạn có chắc muốn xóa chuyên ngành này?</h3>
-    <div class="card mb-4">
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <h3 class="mb-4">Bạn có chắc muốn xóa chuyên ngành này?</h3>
+    <div class="card mb-4 shadow-sm rounded">
         <div class="card-body">
-            <dl class="row">
-                <dt class="col-sm-3">Tên Chuyên ngành</dt>
-                <dd class="col-sm-9">@Model.TenChuyenNganh</dd>
+            <dl class="row g-3">
+                <dt class="col-sm-3 fw-bold fs-6 text-cyan">Tên Chuyên ngành</dt>
+                <dd class="col-sm-9 fs-6">@Model.TenChuyenNganh</dd>
             </dl>
         </div>
     </div>
@@ -18,6 +33,13 @@
         <input type="hidden" asp-for="MaChuyenNganh" />
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         <button type="submit" class="btn btn-danger">Xóa</button>
-        <a asp-action="Details" asp-route-id="@Model.MaKhoa" class="btn btn-secondary">Hủy</a>
+        <a asp-action="Details" asp-route-id="@Model.MaKhoa" class="btn btn-secondary ms-2">Hủy</a>
     </form>
 </div>
+
+<style>
+    .text-cyan { color: #00BCD4; }
+    .fs-6 { font-size: 0.95rem; }
+    .shadow-sm { box-shadow: 0 .125rem .25rem rgba(0,0,0,.075); }
+    .rounded { border-radius: 8px; }
+</style>

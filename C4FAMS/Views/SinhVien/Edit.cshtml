@@ -1,98 +1,115 @@
 @model C4FAMS.Models.SinhVien
 
 <div class="container">
-    <h1 class="mt-4 mb-4">Sửa Sinh viên</h1>
+    <h1 class="mt-4 mb-4" style="background: linear-gradient(90deg, #00BCD4, #0288D1); color: white; padding: 10px; border-radius: 5px;">Sửa Sinh viên</h1>
 
-    <form asp-action="Edit" method="post" id="editForm">
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <form asp-action="Edit" method="post" id="editForm" class="shadow-sm rounded p-3">
         <input type="hidden" asp-for="MSSV" />
         <div asp-validation-summary="All" class="text-danger"></div>
-        <div class="form-group mb-3">
-            <label asp-for="HoTen" class="form-label"></label>
-            <input asp-for="HoTen" class="form-control" required />
-            <span asp-validation-for="HoTen" class="text-danger"></span>
-        </div>
-        <div class="form-group mb-3">
-            <label asp-for="GioiTinh" class="form-label"></label>
-            <select asp-for="GioiTinh" class="form-control" required>
-                <option value="">-- Chọn giới tính --</option>
-                <option value="true">Nam</option>
-                <option value="false">Nữ</option>
-            </select>
-            <span asp-validation-for="GioiTinh" class="text-danger"></span>
-        </div>
-        <div class="form-group mb-3">
-            <label asp-for="NgaySinh" class="form-label"></label>
-            <input asp-for="NgaySinh" type="date" class="form-control" value="@Model.NgaySinh.ToString("yyyy-MM-dd")" required />
-            <span asp-validation-for="NgaySinh" class="text-danger"></span>
-        </div>
-        <div class="form-group mb-3">
-            <label asp-for="QueQuan" class="form-label"></label>
-            <input asp-for="QueQuan" class="form-control" required />
-            <span asp-validation-for="QueQuan" class="text-danger"></span>
-        </div>
-        @if (User.IsInRole("Admin"))
-        {
-            <div class="form-group mb-3">
-                <label class="form-label">Khoa</label>
-                @if (ViewBag.KhoaList != null)
+        <div class="row g-3">
+            <div class="col-md-6">
+                <label asp-for="HoTen" class="form-label fw-bold fs-6 text-cyan"></label>
+                <input asp-for="HoTen" class="form-control fs-6" placeholder="Nhập họ tên" required />
+                <span asp-validation-for="HoTen" class="text-danger"></span>
+            </div>
+            <div class="col-md-6">
+                <label asp-for="GioiTinh" class="form-label fw-bold fs-6 text-cyan"></label>
+                <select asp-for="GioiTinh" class="form-control fs-6" required>
+                    <option value="">-- Chọn giới tính --</option>
+                    <option value="true">Nam</option>
+                    <option value="false">Nữ</option>
+                </select>
+                <span asp-validation-for="GioiTinh" class="text-danger"></span>
+            </div>
+            <div class="col-md-6">
+                <label asp-for="NgaySinh" class="form-label fw-bold fs-6 text-cyan"></label>
+                <input asp-for="NgaySinh" type="date" class="form-control fs-6" value="@Model.NgaySinh.ToString("yyyy-MM-dd")" required />
+                <span asp-validation-for="NgaySinh" class="text-danger"></span>
+            </div>
+            <div class="col-md-6">
+                <label asp-for="QueQuan" class="form-label fw-bold fs-6 text-cyan"></label>
+                <input asp-for="QueQuan" class="form-control fs-6" placeholder="Nhập quê quán" required />
+                <span asp-validation-for="QueQuan" class="text-danger"></span>
+            </div>
+            @if (User.IsInRole("Admin"))
+            {
+                <div class="col-md-6">
+                    <label class="form-label fw-bold fs-6 text-cyan">Khoa</label>
+                    @if (ViewBag.KhoaList != null)
+                    {
+                        <select name="khoaId" id="khoaId" class="form-control fs-6" asp-items="@(new SelectList(ViewBag.KhoaList, "MaKhoa", "TenKhoa", Model.ChuyenNganh?.MaKhoa))" required>
+                            <option value="">-- Chọn Khoa --</option>
+                        </select>
+                    }
+                    else
+                    {
+                        <p class="text-danger">Không có khoa nào để chọn.</p>
+                    }
+                </div>
+            }
+            <div class="col-md-6">
+                <label asp-for="MaChuyenNganh" class="form-label fw-bold fs-6 text-cyan">Chuyên ngành</label>
+                @if (ViewBag.ChuyenNganhList != null && ((IEnumerable<object>)ViewBag.ChuyenNganhList).Any())
                 {
-                    <select name="khoaId" id="khoaId" class="form-control" asp-items="@(new SelectList(ViewBag.KhoaList, "MaKhoa", "TenKhoa", Model.ChuyenNganh?.MaKhoa))" required>
-                        <option value="">-- Chọn Khoa --</option>
+                    <select asp-for="MaChuyenNganh" id="maChuyenNganh" class="form-control fs-6" asp-items="@(new SelectList(ViewBag.ChuyenNganhList, "MaChuyenNganh", "TenChuyenNganh", Model.MaChuyenNganh))" required>
+                        <option value="">-- Chọn Chuyên ngành --</option>
                     </select>
                 }
                 else
                 {
-                    <p class="text-danger">Không có khoa nào để chọn.</p>
+                    <select asp-for="MaChuyenNganh" id="maChuyenNganh" class="form-control fs-6" required>
+                        <option value="">-- Chọn Chuyên ngành --</option>
+                    </select>
+                    <p class="text-danger">Không có chuyên ngành nào để chọn.</p>
                 }
+                <span asp-validation-for="MaChuyenNganh" class="text-danger"></span>
             </div>
-        }
-        <div class="form-group mb-3">
-            <label asp-for="MaChuyenNganh" class="form-label">Chuyên ngành</label>
-            @if (ViewBag.ChuyenNganhList != null && ((IEnumerable<object>)ViewBag.ChuyenNganhList).Any())
-            {
-                <select asp-for="MaChuyenNganh" id="maChuyenNganh" class="form-control" asp-items="@(new SelectList(ViewBag.ChuyenNganhList, "MaChuyenNganh", "TenChuyenNganh", Model.MaChuyenNganh))" required>
-                    <option value="">-- Chọn Chuyên ngành --</option>
+            <div class="col-md-6">
+                <label asp-for="KhoaHoc" class="form-label fw-bold fs-6 text-cyan"></label>
+                <input asp-for="KhoaHoc" class="form-control fs-6" placeholder="Nhập khóa học" required />
+                <span asp-validation-for="KhoaHoc" class="text-danger"></span>
+            </div>
+            <div class="col-md-6">
+                <label asp-for="Lop" class="form-label fw-bold fs-6 text-cyan"></label>
+                <input asp-for="Lop" class="form-control fs-6" placeholder="Nhập lớp" required />
+                <span asp-validation-for="Lop" class="text-danger"></span>
+            </div>
+            <div class="col-md-6">
+                <label asp-for="TrangThai" class="form-label fw-bold fs-6 text-cyan"></label>
+                <select asp-for="TrangThai" class="form-control fs-6" asp-items="Html.GetEnumSelectList<TrangThaiSinhVien>()" required>
+                    <option value="">-- Chọn Trạng thái --</option>
                 </select>
-            }
-            else
-            {
-                <select asp-for="MaChuyenNganh" id="maChuyenNganh" class="form-control" required>
-                    <option value="">-- Chọn Chuyên ngành --</option>
-                </select>
-                <p class="text-danger">Không có chuyên ngành nào để chọn.</p>
-            }
-            <span asp-validation-for="MaChuyenNganh" class="text-danger"></span>
-        </div>
-        <div class="form-group mb-3">
-            <label asp-for="KhoaHoc" class="form-label"></label>
-            <input asp-for="KhoaHoc" class="form-control" required />
-            <span asp-validation-for="KhoaHoc" class="text-danger"></span>
-        </div>
-        <div class="form-group mb-3">
-            <label asp-for="Lop" class="form-label"></label>
-            <input asp-for="Lop" class="form-control" required />
-            <span asp-validation-for="Lop" class="text-danger"></span>
-        </div>
-        <div class="form-group mb-3">
-            <label asp-for="TrangThai" class="form-label"></label>
-            <select asp-for="TrangThai" class="form-control" asp-items="Html.GetEnumSelectList<TrangThaiSinhVien>()" required>
-                <option value="">-- Chọn Trạng thái --</option>
-            </select>
-            <span asp-validation-for="TrangThai" class="text-danger"></span>
-        </div>
-        <div class="form-group mb-3">
-            <label asp-for="Email" class="form-label"></label>
-            <input asp-for="Email" class="form-control" type="email" required />
-            <span asp-validation-for="Email" class="text-danger"></span>
-        </div>
-        <div class="form-group mb-3">
-            <label asp-for="SoDienThoai" class="form-label"></label>
-            <input asp-for="SoDienThoai" class="form-control" required />
-            <span asp-validation-for="SoDienThoai" class="text-danger"></span>
-        </div>
-        <div class="form-group">
-            <button type="submit" class="btn btn-primary">Lưu</button>
-            <a asp-action="Index" class="btn btn-secondary">Hủy</a>
+                <span asp-validation-for="TrangThai" class="text-danger"></span>
+            </div>
+            <div class="col-md-6">
+                <label asp-for="Email" class="form-label fw-bold fs-6 text-cyan"></label>
+                <input asp-for="Email" class="form-control fs-6" type="email" placeholder="Nhập email" required />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="col-md-6">
+                <label asp-for="SoDienThoai" class="form-label fw-bold fs-6 text-cyan"></label>
+                <input asp-for="SoDienThoai" class="form-control fs-6" placeholder="Nhập số điện thoại" required />
+                <span asp-validation-for="SoDienThoai" class="text-danger"></span>
+            </div>
+            <div class="col-md-12 mt-4">
+                <button type="submit" class="btn btn-primary">Lưu</button>
+                <a asp-action="Index" class="btn btn-secondary ms-2">Hủy</a>
+            </div>
         </div>
     </form>
 </div>
@@ -127,3 +144,10 @@
         });
     </script>
 }
+
+<style>
+    .text-cyan { color: #00BCD4; }
+    .fs-6 { font-size: 0.95rem; }
+    .shadow-sm { box-shadow: 0 .125rem .25rem rgba(0,0,0,.075); }
+    .rounded { border-radius: 8px; }
+</style>

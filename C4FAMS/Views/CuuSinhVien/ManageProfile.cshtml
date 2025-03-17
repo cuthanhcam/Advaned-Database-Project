@@ -1,7 +1,7 @@
 @model C4FAMS.Models.ManageCuuSinhVienViewModel
 
 <div class="container">
-    <h1 class="mt-4 mb-4">Hồ Sơ Cá Nhân</h1>
+    <h1 class="mt-4 mb-4" style="background: linear-gradient(90deg, #00BCD4, #0288D1); color: white; padding: 10px; border-radius: 5px;">Hồ Sơ Cá Nhân</h1>
 
     @if (TempData["SuccessMessage"] != null)
     {
@@ -10,53 +10,61 @@
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     }
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
 
-    <form asp-action="ManageProfile" method="post">
+    <form asp-action="ManageProfile" method="post" class="shadow-sm rounded p-3 mb-4">
         <div asp-validation-summary="All" class="text-danger"></div>
 
-        <div class="form-group mb-3">
-            <label asp-for="NamTotNghiep" class="form-label">Năm tốt nghiệp</label>
-            <input asp-for="NamTotNghiep" class="form-control" type="number" required />
-            <span asp-validation-for="NamTotNghiep" class="text-danger"></span>
-        </div>
+        <div class="row g-3">
+            <div class="col-md-6">
+                <label asp-for="NamTotNghiep" class="form-label fw-bold fs-6 text-cyan"></label>
+                <input asp-for="NamTotNghiep" class="form-control fs-6" type="number" placeholder="Nhập năm tốt nghiệp" required />
+                <span asp-validation-for="NamTotNghiep" class="text-danger"></span>
+            </div>
 
-        <div class="form-group mb-3">
-            <label asp-for="XepLoaiTotNghiep" class="form-label">Xếp loại tốt nghiệp</label>
-            <select asp-for="XepLoaiTotNghiep" class="form-control" required>
-                <option value="">Chọn xếp loại</option>
-                <option value="Xuất Sắc">Xuất Sắc</option>
-                <option value="Giỏi">Giỏi</option>
-                <option value="Khá">Khá</option>
-                <option value="Trung Bình">Trung Bình</option>
-            </select>
-            <span asp-validation-for="XepLoaiTotNghiep" class="text-danger"></span>
-        </div>
+            <div class="col-md-6">
+                <label asp-for="XepLoaiTotNghiep" class="form-label fw-bold fs-6 text-cyan"></label>
+                <select asp-for="XepLoaiTotNghiep" class="form-control fs-6" required>
+                    <option value="">Chọn xếp loại</option>
+                    <option value="Xuất Sắc">Xuất Sắc</option>
+                    <option value="Giỏi">Giỏi</option>
+                    <option value="Khá">Khá</option>
+                    <option value="Trung Bình">Trung Bình</option>
+                </select>
+                <span asp-validation-for="XepLoaiTotNghiep" class="text-danger"></span>
+            </div>
 
-        <div class="form-group mb-3">
-            <label asp-for="DiaChiHienTai" class="form-label">Địa chỉ hiện tại</label>
-            <input asp-for="DiaChiHienTai" class="form-control" />
-            <span asp-validation-for="DiaChiHienTai" class="text-danger"></span>
-        </div>
+            <div class="col-md-12">
+                <label asp-for="DiaChiHienTai" class="form-label fw-bold fs-6 text-cyan"></label>
+                <input asp-for="DiaChiHienTai" class="form-control fs-6" placeholder="Nhập địa chỉ hiện tại" />
+                <span asp-validation-for="DiaChiHienTai" class="text-danger"></span>
+            </div>
 
-        <div class="form-group mb-3">
-            <label asp-for="HinhThucLienLac" class="form-label">Hình thức liên lạc cụ thể (Email hoặc SĐT)</label>
-            <input asp-for="HinhThucLienLac" class="form-control" required
-                placeholder="Ghi rõ Email hoặc Số Điện Thoại" />
-            <span asp-validation-for="HinhThucLienLac" class="text-danger"></span>
-        </div>
+            <div class="col-md-12">
+                <label asp-for="HinhThucLienLac" class="form-label fw-bold fs-6 text-cyan"></label>
+                <input asp-for="HinhThucLienLac" class="form-control fs-6" placeholder="Ghi rõ Email hoặc Số Điện Thoại" required />
+                <span asp-validation-for="HinhThucLienLac" class="text-danger"></span>
+            </div>
 
-        <div class="form-group mb-3">
-            <button type="submit" class="btn btn-primary">Cập nhật</button>
+            <div class="col-md-12 mt-4">
+                <button type="submit" class="btn btn-primary">Cập nhật</button>
+            </div>
         </div>
     </form>
 
-    <h2 class="mt-4">Công việc</h2>
+    <h2 class="mt-4 text-cyan">Công việc</h2>
     <a asp-action="AddJob" class="btn btn-success mb-3">Thêm Công việc</a>
 
     @if (Model.CongViecs != null && Model.CongViecs.Any())
     {
-        <table class="table table-bordered">
-            <thead>
+        <table class="table table-bordered table-hover shadow-sm rounded">
+            <thead style="background: linear-gradient(90deg, #00BCD4, #0288D1); color: white;">
                 <tr>
                     <th>Vị trí</th>
                     <th>Công ty</th>
@@ -65,7 +73,7 @@
                     <th>Hành động</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody class="fs-6">
                 @foreach (var congViec in Model.CongViecs)
                 {
                     <tr>
@@ -73,14 +81,15 @@
                         <td>@congViec.CongTy</td>
                         <td>@congViec.LinhVuc</td>
                         <td>@(congViec.ThuNhap.HasValue ? congViec.ThuNhap.Value.ToString("N0") : "Chưa cập nhật")</td>
-                        <td>
-                            <a asp-action="EditJob" asp-route-id="@congViec.MaCongViec" class="btn btn-warning btn-sm">Sửa</a>
-                            <form asp-action="DeleteJob" method="post" style="display:inline;">
-                                <input type="hidden" name="id" value="@congViec.MaCongViec" />
-                                @Html.AntiForgeryToken()
-                                <button type="submit" class="btn btn-danger btn-sm"
-                                    onclick="return confirm('Bạn có chắc chắn muốn xóa không?')">Xóa</button>
-                            </form>
+                        <td class="text-center">
+                            <div class="d-flex gap-1 justify-content-center">
+                                <a asp-action="EditJob" asp-route-id="@congViec.MaCongViec" class="btn btn-sm btn-warning">Sửa</a>
+                                <form asp-action="DeleteJob" method="post" style="display:inline;">
+                                    <input type="hidden" name="id" value="@congViec.MaCongViec" />
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Bạn có chắc chắn muốn xóa không?')">Xóa</button>
+                                </form>
+                            </div>
                         </td>
                     </tr>
                 }
@@ -89,16 +98,16 @@
     }
     else
     {
-        <p>Chưa có công việc nào.</p>
+        <p class="text-muted fs-6">Chưa có công việc nào.</p>
     }
 
-    <h2 class="mt-4">Thành tựu</h2>
+    <h2 class="mt-4 text-cyan">Thành tựu</h2>
     <a asp-action="AddAchievement" class="btn btn-success mb-3">Thêm Thành tựu</a>
 
     @if (Model.ThanhTuus != null && Model.ThanhTuus.Any())
     {
-        <table class="table table-bordered">
-            <thead>
+        <table class="table table-bordered table-hover shadow-sm rounded">
+            <thead style="background: linear-gradient(90deg, #00BCD4, #0288D1); color: white;">
                 <tr>
                     <th>Tên thành tựu</th>
                     <th>Năm đạt được</th>
@@ -106,22 +115,22 @@
                     <th>Hành động</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody class="fs-6">
                 @foreach (var thanhTuu in Model.ThanhTuus)
                 {
                     <tr>
                         <td>@thanhTuu.TenThanhTuu</td>
                         <td>@thanhTuu.NamDatDuoc</td>
                         <td>@thanhTuu.MoTa</td>
-                        <td>
-                            <a asp-action="EditAchievement" asp-route-id="@thanhTuu.MaThanhTuu"
-                                class="btn btn-warning btn-sm">Sửa</a>
-                            <form asp-action="DeleteAchievement" method="post" style="display:inline;">
-                                <input type="hidden" name="id" value="@thanhTuu.MaThanhTuu" />
-                                @Html.AntiForgeryToken()
-                                <button type="submit" class="btn btn-danger btn-sm"
-                                    onclick="return confirm('Bạn có chắc chắn muốn xóa không?')">Xóa</button>
-                            </form>
+                        <td class="text-center">
+                            <div class="d-flex gap-1 justify-content-center">
+                                <a asp-action="EditAchievement" asp-route-id="@thanhTuu.MaThanhTuu" class="btn btn-sm btn-warning">Sửa</a>
+                                <form asp-action="DeleteAchievement" method="post" style="display:inline;">
+                                    <input type="hidden" name="id" value="@thanhTuu.MaThanhTuu" />
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Bạn có chắc chắn muốn xóa không?')">Xóa</button>
+                                </form>
+                            </div>
                         </td>
                     </tr>
                 }
@@ -130,10 +139,17 @@
     }
     else
     {
-        <p>Chưa có thành tựu nào.</p>
+        <p class="text-muted fs-6">Chưa có thành tựu nào.</p>
     }
 </div>
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
 }
+
+<style>
+    .text-cyan { color: #00BCD4; }
+    .fs-6 { font-size: 0.95rem; }
+    .shadow-sm { box-shadow: 0 .125rem .25rem rgba(0,0,0,.075); }
+    .rounded { border-radius: 8px; }
+</style>

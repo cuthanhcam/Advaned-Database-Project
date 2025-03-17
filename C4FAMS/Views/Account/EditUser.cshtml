@@ -1,53 +1,64 @@
 @model C4FAMS.Models.NguoiDung
 
 <div class="container">
-    <h1 class="mt-4 mb-4 text-cyan">Chỉnh sửa Tài khoản</h1>
+    <h1 class="mt-4 mb-4" style="background: linear-gradient(90deg, #00BCD4, #0288D1); color: white; padding: 10px; border-radius: 5px;">Chỉnh sửa Tài khoản</h1>
 
-    <form asp-action="EditUser" method="post" class="card p-4 shadow-sm">
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <form asp-action="EditUser" method="post" class="card p-4 shadow-sm rounded">
         <div asp-validation-summary="All" class="text-danger mb-3"></div>
         <input type="hidden" asp-for="Id" />
-
-        <div class="form-group mb-3">
-            <label asp-for="UserName" class="form-label fw-bold">Tên đăng nhập</label>
-            <input asp-for="UserName" class="form-control" required />
-            <span asp-validation-for="UserName" class="text-danger"></span>
-        </div>
-
-        <div class="form-group mb-3">
-            <label asp-for="Email" class="form-label fw-bold">Email</label>
-            <input asp-for="Email" class="form-control" required />
-            <span asp-validation-for="Email" class="text-danger"></span>
-        </div>
-
-        <div class="form-group mb-3">
-            <label asp-for="VaiTro" class="form-label fw-bold">Vai trò</label>
-            <select asp-for="VaiTro" class="form-control" required onchange="toggleMaKhoa(this)">
-                <option value="Admin">Admin</option>
-                <option value="Khoa">Khoa</option>
-            </select>
-            <span asp-validation-for="VaiTro" class="text-danger"></span>
-        </div>
-
-        <div class="form-group mb-3" id="maKhoaGroup" style="@(Model.VaiTro == "Khoa" ? "" : "display:none;")">
-            <label asp-for="MaKhoa" class="form-label fw-bold">Khoa</label>
-            <select asp-for="MaKhoa" class="form-control" asp-items="@(new SelectList(ViewBag.KhoaList ?? new List<C4FAMS.Models.Khoa>(), "MaKhoa", "TenKhoa"))">
-                <option value="">-- Chọn Khoa --</option>
-            </select>
-            <span asp-validation-for="MaKhoa" class="text-danger"></span>
-        </div>
-
-        <div class="form-group mb-3">
-            <label asp-for="TrangThai" class="form-label fw-bold">Trạng thái</label>
-            <select asp-for="TrangThai" class="form-control">
-                <option value="true">Hoạt động</option>
-                <option value="false">Ngưng hoạt động</option>
-            </select>
-            <span asp-validation-for="TrangThai" class="text-danger"></span>
-        </div>
-
-        <div class="form-group d-flex gap-2">
-            <button type="submit" class="btn btn-primary">Lưu</button>
-            <a asp-action="ManageUsers" class="btn btn-secondary">Quay lại</a>
+        <div class="row g-3">
+            <div class="col-md-12">
+                <label asp-for="UserName" class="form-label fw-bold fs-6 text-cyan">Tên đăng nhập</label>
+                <input asp-for="UserName" class="form-control fs-6" placeholder="Nhập tên đăng nhập" required />
+                <span asp-validation-for="UserName" class="text-danger"></span>
+            </div>
+            <div class="col-md-12">
+                <label asp-for="Email" class="form-label fw-bold fs-6 text-cyan">Email</label>
+                <input asp-for="Email" class="form-control fs-6" placeholder="Nhập email" required />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="col-md-12">
+                <label asp-for="VaiTro" class="form-label fw-bold fs-6 text-cyan">Vai trò</label>
+                <select asp-for="VaiTro" class="form-control fs-6" required onchange="toggleMaKhoa(this)">
+                    <option value="Admin">Admin</option>
+                    <option value="Khoa">Khoa</option>
+                </select>
+                <span asp-validation-for="VaiTro" class="text-danger"></span>
+            </div>
+            <div class="col-md-12" id="maKhoaGroup" style="@(Model.VaiTro == "Khoa" ? "" : "display:none;")">
+                <label asp-for="MaKhoa" class="form-label fw-bold fs-6 text-cyan">Khoa</label>
+                <select asp-for="MaKhoa" class="form-control fs-6" asp-items="@(new SelectList(ViewBag.KhoaList ?? new List<C4FAMS.Models.Khoa>(), "MaKhoa", "TenKhoa"))">
+                    <option value="">-- Chọn Khoa --</option>
+                </select>
+                <span asp-validation-for="MaKhoa" class="text-danger"></span>
+            </div>
+            <div class="col-md-12">
+                <label asp-for="TrangThai" class="form-label fw-bold fs-6 text-cyan">Trạng thái</label>
+                <select asp-for="TrangThai" class="form-control fs-6">
+                    <option value="true">Hoạt động</option>
+                    <option value="false">Ngưng hoạt động</option>
+                </select>
+                <span asp-validation-for="TrangThai" class="text-danger"></span>
+            </div>
+            <div class="col-md-12 mt-4">
+                <button type="submit" class="btn btn-primary">Lưu</button>
+                <a asp-action="ManageUsers" class="btn btn-secondary ms-2">Quay lại</a>
+            </div>
         </div>
     </form>
 </div>
@@ -81,6 +92,8 @@
 
 <style>
     .text-cyan { color: #00BCD4; }
+    .fs-6 { font-size: 0.95rem; }
     .card { border: 1px solid #E0F7FA; }
     .shadow-sm { box-shadow: 0 .125rem .25rem rgba(0,0,0,.075); }
+    .rounded { border-radius: 8px; }
 </style>

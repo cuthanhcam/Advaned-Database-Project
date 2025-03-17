@@ -1,15 +1,21 @@
 @model IEnumerable<C4FAMS.Models.DangKySuKien>
 
 <div class="container">
-    <h1 class="mt-4 mb-4 text-cyan">Sự kiện đã đăng ký</h1>
+    <h1 class="mt-4 mb-4" style="background: linear-gradient(90deg, #00BCD4, #0288D1); color: white; padding: 10px; border-radius: 5px;">Sự kiện đã đăng ký</h1>
 
     @if (TempData["Success"] != null)
     {
-        <div class="alert alert-success">@TempData["Success"]</div>
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
     }
     @if (TempData["Error"] != null)
     {
-        <div class="alert alert-danger">@TempData["Error"]</div>
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
     }
 
     <div class="table-responsive">
@@ -61,7 +67,9 @@
             </tbody>
         </table>
     </div>
-    <a asp-action="Index" class="btn btn-secondary mt-3">Quay lại</a>
+    <div class="mt-3">
+        <a asp-action="Index" class="btn btn-secondary">Quay lại</a>
+    </div>
 </div>
 
 <style>
@@ -73,5 +81,5 @@
         font-size: 0.85rem;
         padding: 0.35em 0.65em;
     }
-    .fs-6 { font-size: 0.95rem; } /* Giữ kích thước chữ trong tbody */
+    .fs-6 { font-size: 0.95rem; }
 </style>

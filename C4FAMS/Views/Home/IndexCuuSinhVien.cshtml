@@ -3,20 +3,36 @@
 @inject SignInManager<NguoiDung> SignInManager
 
 <div class="container">
-    <h1 class="mt-4 mb-4">Danh sách Sự kiện</h1>
+    <h1 class="mt-4 mb-4" style="background: linear-gradient(90deg, #00BCD4, #0288D1); color: white; padding: 10px; border-radius: 5px;">Danh sách Sự kiện</h1>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
 
     <!-- Form lọc -->
-    <form asp-action="Index" method="get" class="mb-4">
-        <div class="row">
+    <form asp-action="Index" method="get" class="mb-4 shadow-sm rounded p-3">
+        <div class="row g-3">
             <div class="col-md-6">
-                <label class="form-label">Khoa</label>
-                <select name="khoaId" class="form-control" onchange="this.form.submit()" asp-items="@(new SelectList(ViewBag.KhoaList ?? new List<C4FAMS.Models.Khoa>(), "MaKhoa", "TenKhoa", ViewBag.SelectedKhoaId))">
+                <label class="form-label fw-bold fs-6 text-cyan">Khoa</label>
+                <select name="khoaId" class="form-control fs-6" onchange="this.form.submit()"
+                    asp-items="@(new SelectList(ViewBag.KhoaList ?? new List<C4FAMS.Models.Khoa>(), "MaKhoa", "TenKhoa", ViewBag.SelectedKhoaId))">
                     <option value="">-- Chọn Khoa --</option>
                 </select>
             </div>
             <div class="col-md-6">
-                <label class="form-label">Sắp xếp</label>
-                <select name="sortOrder" class="form-control" onchange="this.form.submit()">
+                <label class="form-label fw-bold fs-6 text-cyan">Sắp xếp</label>
+                <select name="sortOrder" class="form-control fs-6" onchange="this.form.submit()">
                     @{
                         var sortOrder = ViewBag.SortOrder as string ?? "nearest";
                     }
@@ -27,20 +43,11 @@
         </div>
     </form>
 
-    @if (TempData["Success"] != null)
-    {
-        <div class="alert alert-success">@TempData["Success"]</div>
-    }
-    @if (TempData["Error"] != null)
-    {
-        <div class="alert alert-danger">@TempData["Error"]</div>
-    }
-
     <div class="row">
         @foreach (var item in Model)
         {
             <div class="col-md-4 mb-4">
-                <div class="card h-100">
+                <div class="card h-100 shadow-sm rounded event-card">
                     @if (item.SuKienHinhAnhs != null && item.SuKienHinhAnhs.Any())
                     {
                         <img src="@item.SuKienHinhAnhs.First().HinhAnh" class="card-img-top" alt="@item.TenSuKien" style="height: 200px; object-fit: cover;" />
@@ -50,27 +57,43 @@
                         <img src="/images/default-event.jpg" class="card-img-top" alt="No Image" style="height: 200px; object-fit: cover;" />
                     }
                     <div class="card-body">
-                        <h5 class="card-title">@item.TenSuKien</h5>
-                        <p class="card-text"><strong>Ngày:</strong> @item.NgayToChuc.ToString("dd/MM/yyyy HH:mm")</p>
-                        <p class="card-text"><strong>Địa điểm:</strong> @item.DiaDiem</p>
-                        <p class="card-text"><strong>Khoa:</strong> @(item.Khoa?.TenKhoa ?? "N/A")</p>
+                        <h5 class="card-title text-cyan">@item.TenSuKien</h5>
+                        <p class="card-text fs-6"><strong>Ngày:</strong> @item.NgayToChuc.ToString("dd/MM/yyyy HH:mm")</p>
+                        <p class="card-text fs-6"><strong>Địa điểm:</strong> @item.DiaDiem</p>
+                        <p class="card-text fs-6"><strong>Khoa:</strong> @(item.Khoa?.TenKhoa ?? "N/A")</p>
                     </div>
                     <div class="card-footer">
-                        @if (SignInManager.IsSignedIn(User) && User.IsInRole("CuuSinhVien"))
-                        {
-                            <a asp-controller="CuuSinhVienSuKien" asp-action="Details" asp-route-id="@item.MaSuKien" class="btn btn-info">Xem chi tiết</a>
-                            <form asp-controller="CuuSinhVienSuKien" asp-action="DangKy" method="post" class="d-inline">
-                                <input type="hidden" name="maSuKien" value="@item.MaSuKien" />
-                                <button type="submit" class="btn btn-success">Đăng ký</button>
-                            </form>
-                        }
-                        else
-                        {
-                            <a asp-controller="Home" asp-action="Details" asp-route-id="@item.MaSuKien" class="btn btn-info">Xem chi tiết</a>
-                        }
+                        <div class="d-flex gap-1 justify-content-center">
+                            @if (SignInManager.IsSignedIn(User) && User.IsInRole("CuuSinhVien"))
+                            {
+                                <a asp-controller="CuuSinhVienSuKien" asp-action="Details" asp-route-id="@item.MaSuKien" class="btn btn-info btn-sm">Xem chi tiết</a>
+                                <form asp-controller="CuuSinhVienSuKien" asp-action="DangKy" method="post" class="d-inline">
+                                    <input type="hidden" name="maSuKien" value="@item.MaSuKien" />
+                                    <button type="submit" class="btn btn-success btn-sm">Đăng ký</button>
+                                </form>
+                            }
+                            else
+                            {
+                                <a asp-controller="Home" asp-action="Details" asp-route-id="@item.MaSuKien" class="btn btn-info btn-sm">Xem chi tiết</a>
+                            }
+                        </div>
                     </div>
                 </div>
             </div>
         }
     </div>
 </div>
+
+<style>
+    .text-cyan { color: #00BCD4; }
+    .fs-6 { font-size: 0.95rem; }
+    .shadow-sm { box-shadow: 0 .125rem .25rem rgba(0,0,0,.075); }
+    .rounded { border-radius: 8px; }
+    .event-card {
+        transition: transform 0.3s ease;
+    }
+    .event-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    }
+</style>

@@ -1,28 +1,45 @@
 @model C4FAMS.Models.Khoa
 
 <div class="container">
-    <h1 class="mt-4 mb-4">Thêm Khoa</h1>
+    <h1 class="mt-4 mb-4" style="background: linear-gradient(90deg, #00BCD4, #0288D1); color: white; padding: 10px; border-radius: 5px;">Thêm Khoa</h1>
 
-    <form asp-action="Create" method="post">
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <form asp-action="Create" method="post" class="shadow-sm rounded p-3">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-        <div class="form-group mb-3">
-            <label asp-for="TenKhoa" class="form-label"></label>
-            <input asp-for="TenKhoa" class="form-control" />
-            <span asp-validation-for="TenKhoa" class="text-danger"></span>
-        </div>
-        <div class="form-group mb-3">
-            <label asp-for="Email" class="form-label"></label>
-            <input asp-for="Email" class="form-control" />
-            <span asp-validation-for="Email" class="text-danger"></span>
-        </div>
-        <div class="form-group mb-3">
-            <label asp-for="SoDienThoai" class="form-label"></label>
-            <input asp-for="SoDienThoai" class="form-control" />
-            <span asp-validation-for="SoDienThoai" class="text-danger"></span>
-        </div>
-        <div class="form-group">
-            <button type="submit" class="btn btn-primary">Thêm</button>
-            <a asp-action="Index" class="btn btn-secondary">Hủy</a>
+        <div class="row g-3">
+            <div class="col-md-12">
+                <label asp-for="TenKhoa" class="form-label fw-bold fs-6 text-cyan"></label>
+                <input asp-for="TenKhoa" class="form-control fs-6" placeholder="Nhập tên khoa" />
+                <span asp-validation-for="TenKhoa" class="text-danger"></span>
+            </div>
+            <div class="col-md-6">
+                <label asp-for="Email" class="form-label fw-bold fs-6 text-cyan"></label>
+                <input asp-for="Email" class="form-control fs-6" placeholder="Nhập email" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="col-md-6">
+                <label asp-for="SoDienThoai" class="form-label fw-bold fs-6 text-cyan"></label>
+                <input asp-for="SoDienThoai" class="form-control fs-6" placeholder="Nhập số điện thoại" />
+                <span asp-validation-for="SoDienThoai" class="text-danger"></span>
+            </div>
+            <div class="col-md-12 mt-4">
+                <button type="submit" class="btn btn-primary">Thêm</button>
+                <a asp-action="Index" class="btn btn-secondary ms-2">Hủy</a>
+            </div>
         </div>
     </form>
 </div>
@@ -30,3 +47,10 @@
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
 }
+
+<style>
+    .text-cyan { color: #00BCD4; }
+    .fs-6 { font-size: 0.95rem; }
+    .shadow-sm { box-shadow: 0 .125rem .25rem rgba(0,0,0,.075); }
+    .rounded { border-radius: 8px; }
+</style>

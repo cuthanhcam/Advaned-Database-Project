@@ -1,31 +1,54 @@
 @model C4FAMS.Models.NguoiDung
 
 <div class="container">
-    <h1 class="mt-4 mb-4 text-cyan">Xóa Tài khoản</h1>
+    <h1 class="mt-4 mb-4" style="background: linear-gradient(90deg, #00BCD4, #0288D1); color: white; padding: 10px; border-radius: 5px;">Xóa Tài khoản</h1>
 
-    <h3>Bạn có chắc chắn muốn xóa tài khoản này?</h3>
-    <div>
-        <dl class="row">
-            <dt class="col-sm-2">Tên đăng nhập</dt>
-            <dd class="col-sm-10">@Model.UserName</dd>
-            <dt class="col-sm-2">Email</dt>
-            <dd class="col-sm-10">@Model.Email</dd>
-            <dt class="col-sm-2">Vai trò</dt>
-            <dd class="col-sm-10">@Model.VaiTro</dd>
-            <dt class="col-sm-2">Khoa</dt>
-            <dd class="col-sm-10">@(Model.Khoa != null ? Model.Khoa.TenKhoa : "Chưa gán")</dd>
-            <dt class="col-sm-2">Trạng thái</dt>
-            <dd class="col-sm-10">@(Model.TrangThai ? "Hoạt động" : "Ngưng hoạt động")</dd>
-        </dl>
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
 
-        <form asp-action="DeleteUserConfirmed" method="post" class="mt-3">
-            <input type="hidden" asp-for="Id" />
-            <button type="submit" class="btn btn-danger me-2">Xóa</button>
-            <a asp-action="ManageUsers" class="btn btn-secondary">Quay lại</a>
-        </form>
+    <div class="alert alert-danger">
+        Bạn có chắc chắn muốn xóa tài khoản <strong>@Model.UserName</strong> không? Hành động này không thể hoàn tác.
     </div>
+
+    <div class="card mb-4 shadow-sm rounded">
+        <div class="card-body">
+            <dl class="row g-3">
+                <dt class="col-sm-3 fw-bold fs-6 text-cyan">Tên đăng nhập</dt>
+                <dd class="col-sm-9 fs-6">@Model.UserName</dd>
+                <dt class="col-sm-3 fw-bold fs-6 text-cyan">Email</dt>
+                <dd class="col-sm-9 fs-6">@Model.Email</dd>
+                <dt class="col-sm-3 fw-bold fs-6 text-cyan">Vai trò</dt>
+                <dd class="col-sm-9 fs-6">@Model.VaiTro</dd>
+                <dt class="col-sm-3 fw-bold fs-6 text-cyan">Khoa</dt>
+                <dd class="col-sm-9 fs-6">@(Model.Khoa != null ? Model.Khoa.TenKhoa : "Chưa gán")</dd>
+                <dt class="col-sm-3 fw-bold fs-6 text-cyan">Trạng thái</dt>
+                <dd class="col-sm-9 fs-6">@(Model.TrangThai ? "Hoạt động" : "Ngưng hoạt động")</dd>
+            </dl>
+        </div>
+    </div>
+
+    <form asp-action="DeleteUserConfirmed" method="post">
+        <input type="hidden" asp-for="Id" />
+        <button type="submit" class="btn btn-danger">Xóa</button>
+        <a asp-action="ManageUsers" class="btn btn-secondary ms-2">Quay lại</a>
+    </form>
 </div>
 
 <style>
     .text-cyan { color: #00BCD4; }
+    .fs-6 { font-size: 0.95rem; }
+    .shadow-sm { box-shadow: 0 .125rem .25rem rgba(0,0,0,.075); }
+    .rounded { border-radius: 8px; }
 </style>

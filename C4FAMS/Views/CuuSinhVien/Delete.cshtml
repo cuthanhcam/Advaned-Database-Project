@@ -1,23 +1,45 @@
 @model C4FAMS.Models.CuuSinhVien
 
 <div class="container">
-    <h1 class="mt-4 mb-4">Xóa Cựu Sinh Viên</h1>
+    <h1 class="mt-4 mb-4" style="background: linear-gradient(90deg, #00BCD4, #0288D1); color: white; padding: 10px; border-radius: 5px;">Xóa Cựu Sinh Viên</h1>
 
-    <h3>Bạn có chắc chắn muốn xóa cựu sinh viên này?</h3>
-    <div>
-        <dl class="row">
-            <dt class="col-sm-3">MSSV</dt>
-            <dd class="col-sm-9">@Model.MSSV</dd>
-            <dt class="col-sm-3">Họ tên</dt>
-            <dd class="col-sm-9">@Model.SinhVien?.HoTen</dd>
-            <dt class="col-sm-3">Năm tốt nghiệp</dt>
-            <dd class="col-sm-9">@Model.NamTotNghiep</dd>
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <h3 class="mb-4">Bạn có chắc chắn muốn xóa cựu sinh viên này?</h3>
+    <div class="shadow-sm rounded p-3">
+        <dl class="row g-3">
+            <dt class="col-sm-3 fw-bold fs-6 text-cyan">MSSV</dt>
+            <dd class="col-sm-9 fs-6">@Model.MSSV</dd>
+            <dt class="col-sm-3 fw-bold fs-6 text-cyan">Họ tên</dt>
+            <dd class="col-sm-9 fs-6">@Model.SinhVien?.HoTen</dd>
+            <dt class="col-sm-3 fw-bold fs-6 text-cyan">Năm tốt nghiệp</dt>
+            <dd class="col-sm-9 fs-6">@Model.NamTotNghiep</dd>
         </dl>
 
-        <form asp-action="DeleteConfirmed" method="post">
+        <form asp-action="DeleteConfirmed" method="post" class="mt-4">
             <input type="hidden" asp-for="MSSV" />
             <button type="submit" class="btn btn-danger">Xóa</button>
-            <a asp-action="Index" class="btn btn-secondary">Quay lại</a>
+            <a asp-action="Index" class="btn btn-secondary ms-2">Quay lại</a>
         </form>
     </div>
 </div>
+
+<style>
+    .text-cyan { color: #00BCD4; }
+    .fs-6 { font-size: 0.95rem; }
+    .shadow-sm { box-shadow: 0 .125rem .25rem rgba(0,0,0,.075); }
+    .rounded { border-radius: 8px; }
+</style>

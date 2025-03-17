@@ -1,64 +1,63 @@
 @model C4FAMS.Models.SuKien
 
 <div class="container">
-    <h1 class="mt-4 mb-4 text-cyan">Chỉnh sửa Sự kiện</h1>
+    <h1 class="mt-4 mb-4" style="background: linear-gradient(90deg, #00BCD4, #0288D1); color: white; padding: 10px; border-radius: 5px;">Chỉnh sửa Sự kiện</h1>
 
     @if (TempData["Success"] != null)
     {
-        <div class="alert alert-success">@TempData["Success"]</div>
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
     }
     @if (TempData["Error"] != null)
     {
-        <div class="alert alert-danger">@TempData["Error"]</div>
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
     }
 
-    <form asp-action="Edit" method="post" enctype="multipart/form-data" class="mb-4">
+    <form asp-action="Edit" method="post" enctype="multipart/form-data" class="mb-4 shadow-sm rounded p-3">
         <input type="hidden" asp-for="MaSuKien" />
-        <input type="hidden" asp-for="MaKhoa" /> <!-- Thêm input ẩn để gửi MaKhoa -->
+        <input type="hidden" asp-for="MaKhoa" />
         <div asp-validation-summary="All" class="text-danger"></div>
-
         <div class="row g-3">
             <div class="col-md-6">
-                <label asp-for="TenSuKien" class="form-label fw-bold fs-6"></label>
-                <input asp-for="TenSuKien" class="form-control fs-6" required />
+                <label asp-for="TenSuKien" class="form-label fw-bold fs-6 text-cyan"></label>
+                <input asp-for="TenSuKien" class="form-control fs-6" placeholder="Nhập tên sự kiện" required />
                 <span asp-validation-for="TenSuKien" class="text-danger"></span>
             </div>
-
             <div class="col-md-6">
-                <label asp-for="NgayToChuc" class="form-label fw-bold fs-6"></label>
+                <label asp-for="NgayToChuc" class="form-label fw-bold fs-6 text-cyan"></label>
                 <input asp-for="NgayToChuc" type="datetime-local" class="form-control fs-6" value="@Model.NgayToChuc.ToString("yyyy-MM-ddTHH:mm")" required />
                 <span asp-validation-for="NgayToChuc" class="text-danger"></span>
             </div>
-
             <div class="col-md-12">
-                <label asp-for="DiaDiem" class="form-label fw-bold fs-6"></label>
-                <input asp-for="DiaDiem" class="form-control fs-6" required />
+                <label asp-for="DiaDiem" class="form-label fw-bold fs-6 text-cyan"></label>
+                <input asp-for="DiaDiem" class="form-control fs-6" placeholder="Nhập địa điểm" required />
                 <span asp-validation-for="DiaDiem" class="text-danger"></span>
             </div>
-
             @if (User.IsInRole("Admin"))
             {
                 <div class="col-md-6">
-                    <label asp-for="MaKhoa" class="form-label fw-bold fs-6">Khoa</label>
+                    <label asp-for="MaKhoa" class="form-label fw-bold fs-6 text-cyan">Khoa</label>
                     <select asp-for="MaKhoa" class="form-control fs-6" asp-items="@(new SelectList(ViewBag.KhoaList ?? new List<C4FAMS.Models.Khoa>(), "MaKhoa", "TenKhoa"))" required>
                         <option value="">-- Chọn Khoa --</option>
                     </select>
                     <span asp-validation-for="MaKhoa" class="text-danger"></span>
                 </div>
             }
-
             <div class="col-md-12">
-                <label class="form-label fw-bold fs-6">Mô tả</label>
-                <textarea name="suKienChiTiet.MoTa" class="form-control fs-6" rows="3">@ViewBag.SuKienChiTiet?.MoTa</textarea>
+                <label class="form-label fw-bold fs-6 text-cyan">Mô tả</label>
+                <textarea name="suKienChiTiet.MoTa" class="form-control fs-6" rows="3" placeholder="Nhập mô tả sự kiện">@ViewBag.SuKienChiTiet?.MoTa</textarea>
             </div>
-
             <div class="col-md-12">
-                <label class="form-label fw-bold fs-6">Nội dung</label>
-                <textarea name="suKienChiTiet.NoiDung" class="form-control fs-6" rows="5">@ViewBag.SuKienChiTiet?.NoiDung</textarea>
+                <label class="form-label fw-bold fs-6 text-cyan">Nội dung</label>
+                <textarea name="suKienChiTiet.NoiDung" class="form-control fs-6" rows="5" placeholder="Nhập nội dung sự kiện">@ViewBag.SuKienChiTiet?.NoiDung</textarea>
             </div>
-
             <div class="col-md-12">
-                <label class="form-label fw-bold fs-6">Hình ảnh hiện tại</label>
+                <label class="form-label fw-bold fs-6 text-cyan">Hình ảnh hiện tại</label>
                 @if (Model.SuKienHinhAnhs != null && Model.SuKienHinhAnhs.Any())
                 {
                     <div class="d-flex flex-wrap gap-2 mb-2">
@@ -70,16 +69,14 @@
                 }
                 else
                 {
-                    <p class="text-muted">Không có hình ảnh nào.</p>
+                    <p class="text-muted fs-6">Không có hình ảnh nào.</p>
                 }
             </div>
-
             <div class="col-md-12">
-                <label class="form-label fw-bold fs-6">Tải lên hình ảnh mới</label>
+                <label class="form-label fw-bold fs-6 text-cyan">Tải lên hình ảnh mới</label>
                 <input type="file" name="images" class="form-control fs-6" accept=".jpg,.jpeg,.png" multiple />
                 <small class="text-muted">Bạn có thể upload thêm hình ảnh (jpg, jpeg, png).</small>
             </div>
-
             <div class="col-md-12 mt-4">
                 <button type="submit" class="btn btn-primary">Lưu</button>
                 <a asp-action="Index" class="btn btn-secondary ms-2">Quay lại</a>
@@ -94,7 +91,8 @@
 
 <style>
     .text-cyan { color: #00BCD4; }
-    .form-label { color: #0288D1; }
-    .img-thumbnail { object-fit: cover; }
     .fs-6 { font-size: 0.95rem; }
+    .shadow-sm { box-shadow: 0 .125rem .25rem rgba(0,0,0,.075); }
+    .rounded { border-radius: 8px; }
+    .img-thumbnail { object-fit: cover; }
 </style>

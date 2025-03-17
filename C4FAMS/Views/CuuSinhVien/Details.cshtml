@@ -1,28 +1,43 @@
 @model C4FAMS.Models.CuuSinhVien
 
 <div class="container">
-    <h1 class="mt-4 mb-4">Chi tiết Cựu Sinh Viên</h1>
+    <h1 class="mt-4 mb-4" style="background: linear-gradient(90deg, #00BCD4, #0288D1); color: white; padding: 10px; border-radius: 5px;">Chi tiết Cựu Sinh Viên</h1>
 
-    <dl class="row">
-        <dt class="col-sm-3">MSSV</dt>
-        <dd class="col-sm-9">@Model.MSSV</dd>
-        <dt class="col-sm-3">Họ tên</dt>
-        <dd class="col-sm-9">@Model.SinhVien?.HoTen</dd>
-        <dt class="col-sm-3">Năm tốt nghiệp</dt>
-        <dd class="col-sm-9">@Model.NamTotNghiep</dd>
-        <dt class="col-sm-3">Xếp loại tốt nghiệp</dt>
-        <dd class="col-sm-9">@Model.XepLoaiTotNghiep</dd>
-        <dt class="col-sm-3">Địa chỉ hiện tại</dt>
-        <dd class="col-sm-9">@Model.DiaChiHienTai</dd>
-        <dt class="col-sm-3">Hình thức liên lạc</dt>
-        <dd class="col-sm-9">@Model.HinhThucLienLac</dd>
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <dl class="row g-3">
+        <dt class="col-sm-3 fw-bold fs-6 text-cyan">MSSV</dt>
+        <dd class="col-sm-9 fs-6">@Model.MSSV</dd>
+        <dt class="col-sm-3 fw-bold fs-6 text-cyan">Họ tên</dt>
+        <dd class="col-sm-9 fs-6">@Model.SinhVien?.HoTen</dd>
+        <dt class="col-sm-3 fw-bold fs-6 text-cyan">Năm tốt nghiệp</dt>
+        <dd class="col-sm-9 fs-6">@Model.NamTotNghiep</dd>
+        <dt class="col-sm-3 fw-bold fs-6 text-cyan">Xếp loại tốt nghiệp</dt>
+        <dd class="col-sm-9 fs-6">@Model.XepLoaiTotNghiep</dd>
+        <dt class="col-sm-3 fw-bold fs-6 text-cyan">Địa chỉ hiện tại</dt>
+        <dd class="col-sm-9 fs-6">@Model.DiaChiHienTai</dd>
+        <dt class="col-sm-3 fw-bold fs-6 text-cyan">Hình thức liên lạc</dt>
+        <dd class="col-sm-9 fs-6">@Model.HinhThucLienLac</dd>
     </dl>
 
-    <h4>Công việc</h4>
+    <h4 class="mt-4 text-cyan">Công việc</h4>
     @if (Model.CongViec != null && Model.CongViec.Any())
     {
-        <table class="table">
-            <thead>
+        <table class="table table-bordered table-hover shadow-sm rounded">
+            <thead style="background: linear-gradient(90deg, #00BCD4, #0288D1); color: white;">
                 <tr>
                     <th>Vị trí</th>
                     <th>Công ty</th>
@@ -30,7 +45,7 @@
                     <th>Thu nhập</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody class="fs-6">
                 @foreach (var job in Model.CongViec)
                 {
                     <tr>
@@ -45,21 +60,21 @@
     }
     else
     {
-        <p>Chưa có công việc nào.</p>
+        <p class="text-muted fs-6">Chưa có công việc nào.</p>
     }
 
-    <h4>Thành tựu</h4>
+    <h4 class="mt-4 text-cyan">Thành tựu</h4>
     @if (Model.ThanhTuu != null && Model.ThanhTuu.Any())
     {
-        <table class="table">
-            <thead>
+        <table class="table table-bordered table-hover shadow-sm rounded">
+            <thead style="background: linear-gradient(90deg, #00BCD4, #0288D1); color: white;">
                 <tr>
                     <th>Tên thành tựu</th>
                     <th>Mô tả</th>
                     <th>Năm đạt được</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody class="fs-6">
                 @foreach (var achievement in Model.ThanhTuu)
                 {
                     <tr>
@@ -73,8 +88,17 @@
     }
     else
     {
-        <p>Chưa có thành tựu nào.</p>
+        <p class="text-muted fs-6">Chưa có thành tựu nào.</p>
     }
 
-    <a asp-action="Index" class="btn btn-secondary">Quay lại</a>
+    <div class="mt-4">
+        <a asp-action="Index" class="btn btn-secondary">Quay lại</a>
+    </div>
 </div>
+
+<style>
+    .text-cyan { color: #00BCD4; }
+    .fs-6 { font-size: 0.95rem; }
+    .shadow-sm { box-shadow: 0 .125rem .25rem rgba(0,0,0,.075); }
+    .rounded { border-radius: 8px; }
+</style>

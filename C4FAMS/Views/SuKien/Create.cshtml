@@ -1,60 +1,69 @@
 @model C4FAMS.Models.SuKien
 
 <div class="container">
-    <h1 class="mt-4 mb-4">Tạo Sự kiện mới</h1>
+    <h1 class="mt-4 mb-4" style="background: linear-gradient(90deg, #00BCD4, #0288D1); color: white; padding: 10px; border-radius: 5px;">Tạo Sự kiện mới</h1>
 
-    <form asp-action="Create" method="post" enctype="multipart/form-data">
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <form asp-action="Create" method="post" enctype="multipart/form-data" class="shadow-sm rounded p-3">
         <div asp-validation-summary="All" class="text-danger"></div>
-
-        <div class="form-group mb-3">
-            <label asp-for="TenSuKien" class="form-label"></label>
-            <input asp-for="TenSuKien" class="form-control" required />
-            <span asp-validation-for="TenSuKien" class="text-danger"></span>
-        </div>
-
-        <div class="form-group mb-3">
-            <label asp-for="NgayToChuc" class="form-label"></label>
-            <input asp-for="NgayToChuc" type="datetime-local" class="form-control" required 
-                   min="@DateTime.Today.ToString("yyyy-MM-ddTHH:mm")" />
-            <span asp-validation-for="NgayToChuc" class="text-danger"></span>
-        </div>
-
-        <div class="form-group mb-3">
-            <label asp-for="DiaDiem" class="form-label"></label>
-            <input asp-for="DiaDiem" class="form-control" required />
-            <span asp-validation-for="DiaDiem" class="text-danger"></span>
-        </div>
-
-        @if (User.IsInRole("Admin"))
-        {
-            <div class="form-group mb-3">
-                <label asp-for="MaKhoa" class="form-label">Khoa</label>
-                <select asp-for="MaKhoa" class="form-control" asp-items="@(new SelectList(ViewBag.KhoaList ?? new List<C4FAMS.Models.Khoa>(), "MaKhoa", "TenKhoa"))" required>
-                    <option value="">-- Chọn Khoa --</option>
-                </select>
-                <span asp-validation-for="MaKhoa" class="text-danger"></span>
+        <div class="row g-3">
+            <div class="col-md-6">
+                <label asp-for="TenSuKien" class="form-label fw-bold fs-6 text-cyan"></label>
+                <input asp-for="TenSuKien" class="form-control fs-6" placeholder="Nhập tên sự kiện" required />
+                <span asp-validation-for="TenSuKien" class="text-danger"></span>
             </div>
-        }
-
-        <div class="form-group mb-3">
-            <label class="form-label">Mô tả</label>
-            <textarea name="suKienChiTiet.MoTa" class="form-control" rows="3"></textarea>
-        </div>
-
-        <div class="form-group mb-3">
-            <label class="form-label">Nội dung</label>
-            <textarea name="suKienChiTiet.NoiDung" class="form-control" rows="5"></textarea>
-        </div>
-
-        <div class="form-group mb-3">
-            <label class="form-label">Hình ảnh</label>
-            <input type="file" name="images" class="form-control" accept=".jpg,.jpeg,.png" multiple />
-            <small class="text-muted">Bạn có thể upload nhiều hình ảnh (jpg, jpeg, png).</small>
-        </div>
-
-        <div class="form-group">
-            <button type="submit" class="btn btn-primary">Tạo</button>
-            <a asp-action="Index" class="btn btn-secondary">Quay lại</a>
+            <div class="col-md-6">
+                <label asp-for="NgayToChuc" class="form-label fw-bold fs-6 text-cyan"></label>
+                <input asp-for="NgayToChuc" type="datetime-local" class="form-control fs-6" required 
+                       min="@DateTime.Today.ToString("yyyy-MM-ddTHH:mm")" />
+                <span asp-validation-for="NgayToChuc" class="text-danger"></span>
+            </div>
+            <div class="col-md-12">
+                <label asp-for="DiaDiem" class="form-label fw-bold fs-6 text-cyan"></label>
+                <input asp-for="DiaDiem" class="form-control fs-6" placeholder="Nhập địa điểm" required />
+                <span asp-validation-for="DiaDiem" class="text-danger"></span>
+            </div>
+            @if (User.IsInRole("Admin"))
+            {
+                <div class="col-md-6">
+                    <label asp-for="MaKhoa" class="form-label fw-bold fs-6 text-cyan">Khoa</label>
+                    <select asp-for="MaKhoa" class="form-control fs-6" asp-items="@(new SelectList(ViewBag.KhoaList ?? new List<C4FAMS.Models.Khoa>(), "MaKhoa", "TenKhoa"))" required>
+                        <option value="">-- Chọn Khoa --</option>
+                    </select>
+                    <span asp-validation-for="MaKhoa" class="text-danger"></span>
+                </div>
+            }
+            <div class="col-md-12">
+                <label class="form-label fw-bold fs-6 text-cyan">Mô tả</label>
+                <textarea name="suKienChiTiet.MoTa" class="form-control fs-6" rows="3" placeholder="Nhập mô tả sự kiện"></textarea>
+            </div>
+            <div class="col-md-12">
+                <label class="form-label fw-bold fs-6 text-cyan">Nội dung</label>
+                <textarea name="suKienChiTiet.NoiDung" class="form-control fs-6" rows="5" placeholder="Nhập nội dung sự kiện"></textarea>
+            </div>
+            <div class="col-md-12">
+                <label class="form-label fw-bold fs-6 text-cyan">Hình ảnh</label>
+                <input type="file" name="images" class="form-control fs-6" accept=".jpg,.jpeg,.png" multiple />
+                <small class="text-muted">Bạn có thể upload nhiều hình ảnh (jpg, jpeg, png).</small>
+            </div>
+            <div class="col-md-12 mt-4">
+                <button type="submit" class="btn btn-primary">Tạo</button>
+                <a asp-action="Index" class="btn btn-secondary ms-2">Quay lại</a>
+            </div>
         </div>
     </form>
 </div>
@@ -74,3 +83,10 @@
         });
     </script>
 }
+
+<style>
+    .text-cyan { color: #00BCD4; }
+    .fs-6 { font-size: 0.95rem; }
+    .shadow-sm { box-shadow: 0 .125rem .25rem rgba(0,0,0,.075); }
+    .rounded { border-radius: 8px; }
+</style>

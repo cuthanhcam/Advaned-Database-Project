@@ -27,94 +27,140 @@
         /* Navbar với gradient */
         .navbar-custom {
             background: linear-gradient(90deg, #00BCD4, #0288D1); /* Gradient từ cyan đến xanh dương */
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            @* padding: 10px 0; *@
+            padding: 5px 0;
         }
         .navbar-custom .navbar-brand {
             font-weight: 700;
             font-size: 1.8rem;
-            background: linear-gradient(45deg, #E0F7FA, #B0E0E6); /* Gradient nhạt cho chữ */
+            background: linear-gradient(45deg, #E0F7FA, #B0E0E6);
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
-            transition: transform 0.3s ease;
+            transition: transform 0.3s ease, color 0.3s ease;
         }
         .navbar-custom .navbar-brand:hover {
-            transform: scale(1.05); /* Hiệu ứng phóng to khi hover */
+            transform: scale(1.05);
+            color: #E0F7FA;
         }
         .navbar-custom .nav-link {
             color: #fff !important;
             font-weight: 500;
-            transition: color 0.3s ease-in-out;
+            font-size: 1rem;
+            padding: 8px 15px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
         .navbar-custom .nav-link:hover {
-            color: #E0F7FA !important; /* Cyan nhạt khi hover */
+            background-color: rgba(255, 255, 255, 0.1);
+            color: #E0F7FA !important;
+        }
+        .navbar-custom .nav-item.active .nav-link {
+            background-color: #0288D1;
+            color: #E0F7FA !important;
         }
 
         /* Nút tùy chỉnh */
         .btn-primary {
             background-color: #00BCD4;
             border-color: #00BCD4;
+            transition: background-color 0.3s ease, transform 0.2s ease;
         }
         .btn-primary:hover {
             background-color: #0288D1;
             border-color: #0288D1;
+            transform: translateY(-2px);
         }
         .btn-danger {
             background-color: #F44336;
             border-color: #F44336;
+            transition: background-color 0.3s ease, transform 0.2s ease;
         }
         .btn-danger:hover {
             background-color: #D32F2F;
             border-color: #D32F2F;
+            transform: translateY(-2px);
         }
         .btn-success {
             background-color: #4CAF50;
             border-color: #4CAF50;
+            transition: background-color 0.3s ease, transform 0.2s ease;
         }
         .btn-success:hover {
             background-color: #388E3C;
             border-color: #388E3C;
+            transform: translateY(-2px);
         }
         .btn-secondary {
             background-color: #757575;
             border-color: #757575;
+            transition: background-color 0.3s ease, transform 0.2s ease;
         }
         .btn-secondary:hover {
             background-color: #616161;
             border-color: #616161;
+            transform: translateY(-2px);
         }
         .btn-info {
             background-color: #0288D1;
             border-color: #0288D1;
+            transition: background-color 0.3s ease, transform 0.2s ease;
         }
         .btn-info:hover {
             background-color: #0277BD;
             border-color: #0277BD;
+            transform: translateY(-2px);
         }
 
-        /* Đảm bảo footer luôn ở dưới cùng */
+        /* Main content */
         main {
-            flex: 1 0 auto; /* Nội dung chính mở rộng */
+            flex: 1 0 auto;
+            padding-top: 20px;
+            padding-bottom: 40px;
         }
+
+        /* Footer */
         .footer {
-            flex-shrink: 0; /* Footer không co lại */
-            background: linear-gradient(90deg, #00BCD4, #0288D1); /* Gradient giống navbar */
+            flex-shrink: 0;
+            background: linear-gradient(90deg, #00BCD4, #0288D1);
             color: #fff;
             font-size: 0.9rem;
             padding: 20px 0;
-            box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.1);
             text-align: center;
         }
         .footer a {
-            color: #E0F7FA; /* Cyan nhạt cho link */
+            color: #E0F7FA;
             text-decoration: none;
+            transition: color 0.3s ease;
         }
         .footer a:hover {
-            color: #B0E0E6; /* Cyan nhạt hơn khi hover */
+            color: #B0E0E6;
             text-decoration: underline;
         }
         .footer .heart {
-            color: #F44336; /* Màu đỏ cho trái tim */
+            color: #F44336;
+        }
+        .footer .small {
+            margin-top: 5px;
+            font-size: 0.8rem;
+            opacity: 0.8;
+        }
+
+        /* Responsive adjustments */
+        @@media (max-width: 576px) {
+            .navbar-custom .navbar-brand {
+                font-size: 1.5rem;
+            }
+            .navbar-custom .nav-link {
+                font-size: 0.9rem;
+                padding: 6px 10px;
+            }
+            .footer {
+                font-size: 0.8rem;
+                padding: 15px 0;
+            }
         }
     </style>
 </head>
@@ -134,46 +180,46 @@
                             @if (User.IsInRole("Admin"))
                             {
                                 <li class="nav-item">
-                                    <a class="nav-link" asp-controller="Khoa" asp-action="Index">Quản lý Khoa</a>
+                                    <a class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Khoa" ? "active" : "")" asp-controller="Khoa" asp-action="Index">Quản lý Khoa</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" asp-controller="SinhVien" asp-action="Index">Quản lý Sinh Viên</a>
+                                    <a class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "SinhVien" ? "active" : "")" asp-controller="SinhVien" asp-action="Index">Quản lý Sinh Viên</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" asp-controller="SuKien" asp-action="Index">Quản lý Sự Kiện</a>
+                                    <a class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "SuKien" ? "active" : "")" asp-controller="SuKien" asp-action="Index">Quản lý Sự Kiện</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" asp-controller="CuuSinhVien" asp-action="Index">Quản lý Cựu Sinh Viên</a>
+                                    <a class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "CuuSinhVien" ? "active" : "")" asp-controller="CuuSinhVien" asp-action="Index">Quản lý Cựu Sinh Viên</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" asp-controller="Account" asp-action="ManageUsers">Quản lý Tài Khoản</a>
+                                    <a class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Account" && ViewContext.RouteData.Values["Action"]?.ToString() == "ManageUsers" ? "active" : "")" asp-controller="Account" asp-action="ManageUsers">Quản lý Tài Khoản</a>
                                 </li>
                             }
                             @if (User.IsInRole("Khoa"))
                             {
                                 <li class="nav-item">
-                                    <a class="nav-link" asp-controller="Khoa" asp-action="Index">Thông tin Khoa</a>
+                                    <a class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Khoa" ? "active" : "")" asp-controller="Khoa" asp-action="Index">Thông tin Khoa</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" asp-controller="SinhVien" asp-action="Index">Quản lý Sinh Viên</a>
+                                    <a class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "SinhVien" ? "active" : "")" asp-controller="SinhVien" asp-action="Index">Quản lý Sinh Viên</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" asp-controller="SuKien" asp-action="Index">Quản lý Sự Kiện</a>
+                                    <a class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "SuKien" ? "active" : "")" asp-controller="SuKien" asp-action="Index">Quản lý Sự Kiện</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" asp-controller="CuuSinhVien" asp-action="Index">Quản lý Cựu Sinh Viên</a>
+                                    <a class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "CuuSinhVien" ? "active" : "")" asp-controller="CuuSinhVien" asp-action="Index">Quản lý Cựu Sinh Viên</a>
                                 </li>
                             }
                             @if (User.IsInRole("CuuSinhVien"))
                             {
                                 <li class="nav-item">
-                                    <a class="nav-link" asp-controller="CuuSinhVienSuKien" asp-action="Index">Sự Kiện</a>
+                                    <a class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "CuuSinhVienSuKien" && ViewContext.RouteData.Values["Action"]?.ToString() == "Index" ? "active" : "")" asp-controller="CuuSinhVienSuKien" asp-action="Index">Sự Kiện</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" asp-controller="CuuSinhVienSuKien" asp-action="MyEvents">Sự kiện của tôi</a>
+                                    <a class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "CuuSinhVienSuKien" && ViewContext.RouteData.Values["Action"]?.ToString() == "MyEvents" ? "active" : "")" asp-controller="CuuSinhVienSuKien" asp-action="MyEvents">Sự kiện của tôi</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" asp-controller="CuuSinhVien" asp-action="ManageProfile">Hồ Sơ Cá Nhân</a>
+                                    <a class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "CuuSinhVien" && ViewContext.RouteData.Values["Action"]?.ToString() == "ManageProfile" ? "active" : "")" asp-controller="CuuSinhVien" asp-action="ManageProfile">Hồ Sơ Cá Nhân</a>
                                 </li>
                             }
                         }
@@ -193,7 +239,7 @@
     <footer class="footer">
         <div class="container">
             <p>© 2025 - C4FAMS | 
-                <a href="https://github.com/cuthanhcam/Advaned-Database-Project" target="_blank">GitHub</a>
+                <a href="https://github.com/cuthanhcam/Advaned-Database-Project" target="_blank">GitHub <i class="bi bi-github"></i></a>
             </p>
             <p class="small">From Code For Food with <span class="heart"><i class="bi bi-heart-fill"></i></span></p>
         </div>

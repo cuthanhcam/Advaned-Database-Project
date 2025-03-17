@@ -1,37 +1,61 @@
 @model C4FAMS.Models.SinhVien
 
 <div class="container">
-    <h1 class="mt-4 mb-4">Chi tiết Sinh viên</h1>
+    <h1 class="mt-4 mb-4" style="background: linear-gradient(90deg, #00BCD4, #0288D1); color: white; padding: 10px; border-radius: 5px;">Chi tiết Sinh viên</h1>
 
-    <div class="card mb-4">
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="card mb-4 shadow-sm rounded">
         <div class="card-body">
-            <dl class="row">
-                <dt class="col-sm-3">MSSV</dt>
-                <dd class="col-sm-9">@Model.MSSV</dd>
-                <dt class="col-sm-3">Họ tên</dt>
-                <dd class="col-sm-9">@Model.HoTen</dd>
-                <dt class="col-sm-3">Giới tính</dt>
-                <dd class="col-sm-9">@(Model.GioiTinh ? "Nam" : "Nữ")</dd>
-                <dt class="col-sm-3">Ngày sinh</dt>
-                <dd class="col-sm-9">@Model.NgaySinh.ToString("dd/MM/yyyy")</dd>
-                <dt class="col-sm-3">Quê quán</dt>
-                <dd class="col-sm-9">@Model.QueQuan</dd>
-                <dt class="col-sm-3">Chuyên ngành</dt>
-                <dd class="col-sm-9">@Model.ChuyenNganh?.TenChuyenNganh</dd>
-                <dt class="col-sm-3">Khoa</dt>
-                <dd class="col-sm-9">@Model.ChuyenNganh?.Khoa?.TenKhoa</dd>
-                <dt class="col-sm-3">Khóa học</dt>
-                <dd class="col-sm-9">@Model.KhoaHoc</dd>
-                <dt class="col-sm-3">Lớp</dt>
-                <dd class="col-sm-9">@Model.Lop</dd>
-                <dt class="col-sm-3">Trạng thái</dt>
-                <dd class="col-sm-9">@Model.TrangThai</dd>
-                <dt class="col-sm-3">Email</dt>
-                <dd class="col-sm-9">@Model.Email</dd>
-                <dt class="col-sm-3">Số điện thoại</dt>
-                <dd class="col-sm-9">@Model.SoDienThoai</dd>
+            <dl class="row g-3">
+                <dt class="col-sm-3 fw-bold fs-6 text-cyan">MSSV</dt>
+                <dd class="col-sm-9 fs-6">@Model.MSSV</dd>
+                <dt class="col-sm-3 fw-bold fs-6 text-cyan">Họ tên</dt>
+                <dd class="col-sm-9 fs-6">@Model.HoTen</dd>
+                <dt class="col-sm-3 fw-bold fs-6 text-cyan">Giới tính</dt>
+                <dd class="col-sm-9 fs-6">@(Model.GioiTinh ? "Nam" : "Nữ")</dd>
+                <dt class="col-sm-3 fw-bold fs-6 text-cyan">Ngày sinh</dt>
+                <dd class="col-sm-9 fs-6">@Model.NgaySinh.ToString("dd/MM/yyyy")</dd>
+                <dt class="col-sm-3 fw-bold fs-6 text-cyan">Quê quán</dt>
+                <dd class="col-sm-9 fs-6">@Model.QueQuan</dd>
+                <dt class="col-sm-3 fw-bold fs-6 text-cyan">Chuyên ngành</dt>
+                <dd class="col-sm-9 fs-6">@Model.ChuyenNganh?.TenChuyenNganh</dd>
+                <dt class="col-sm-3 fw-bold fs-6 text-cyan">Khoa</dt>
+                <dd class="col-sm-9 fs-6">@Model.ChuyenNganh?.Khoa?.TenKhoa</dd>
+                <dt class="col-sm-3 fw-bold fs-6 text-cyan">Khóa học</dt>
+                <dd class="col-sm-9 fs-6">@Model.KhoaHoc</dd>
+                <dt class="col-sm-3 fw-bold fs-6 text-cyan">Lớp</dt>
+                <dd class="col-sm-9 fs-6">@Model.Lop</dd>
+                <dt class="col-sm-3 fw-bold fs-6 text-cyan">Trạng thái</dt>
+                <dd class="col-sm-9 fs-6">@Model.TrangThai</dd>
+                <dt class="col-sm-3 fw-bold fs-6 text-cyan">Email</dt>
+                <dd class="col-sm-9 fs-6">@Model.Email</dd>
+                <dt class="col-sm-3 fw-bold fs-6 text-cyan">Số điện thoại</dt>
+                <dd class="col-sm-9 fs-6">@Model.SoDienThoai</dd>
             </dl>
         </div>
     </div>
-    <a asp-action="Index" class="btn btn-secondary">Quay lại</a>
+    <div class="mt-4">
+        <a asp-action="Index" class="btn btn-secondary">Quay lại</a>
+    </div>
 </div>
+
+<style>
+    .text-cyan { color: #00BCD4; }
+    .fs-6 { font-size: 0.95rem; }
+    .shadow-sm { box-shadow: 0 .125rem .25rem rgba(0,0,0,.075); }
+    .rounded { border-radius: 8px; }
+</style>

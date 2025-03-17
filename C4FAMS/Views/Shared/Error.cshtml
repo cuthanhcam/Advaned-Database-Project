@@ -4,11 +4,30 @@
 }
 
 <div class="container text-center mt-5">
-    <h1 class="display-4">500 - Có lỗi xảy ra</h1>
-    <p class="lead">Đã có lỗi xảy ra trong hệ thống. Vui lòng thử lại sau.</p>
-    @if (!string.IsNullOrEmpty(Model))
-    {
-        <p class="text-muted">@Model</p>
-    }
-    <a asp-controller="Home" asp-action="Index" class="btn btn-primary mt-3">Quay lại trang chủ</a>
+    <h1 class="mb-4" style="background: linear-gradient(90deg, #00BCD4, #0288D1); color: white; padding: 15px; border-radius: 8px;">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i>500 - Có lỗi xảy ra
+    </h1>
+    <div class="card shadow-sm rounded p-4">
+        <p class="lead mb-3">Đã có lỗi xảy ra trong hệ thống. Vui lòng thử lại sau.</p>
+        @if (!string.IsNullOrEmpty(Model))
+        {
+            <p class="text-muted mb-3">@Model</p>
+        }
+        <a asp-controller="Home" asp-action="Index" class="btn btn-primary mt-3">
+            <i class="bi bi-house-door-fill me-2"></i>Quay lại trang chủ
+        </a>
+    </div>
 </div>
+
+<style>
+    .card {
+        border: 1px solid #E0F7FA;
+        background-color: #fff;
+    }
+    .shadow-sm {
+        box-shadow: 0 .125rem .25rem rgba(0,0,0,.075);
+    }
+    .rounded {
+        border-radius: 8px;
+    }
+</style>

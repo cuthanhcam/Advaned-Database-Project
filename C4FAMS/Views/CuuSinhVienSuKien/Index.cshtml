@@ -1,21 +1,36 @@
 @model IEnumerable<C4FAMS.Models.SuKien>
 
 <div class="container">
-    <h1 class="mt-4 mb-4">Danh sách Sự kiện</h1>
+    <h1 class="mt-4 mb-4" style="background: linear-gradient(90deg, #00BCD4, #0288D1); color: white; padding: 10px; border-radius: 5px;">Danh sách Sự kiện</h1>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
 
     <!-- Form lọc -->
-    <form asp-action="Index" method="get" class="mb-4">
-        <div class="row">
+    <form asp-action="Index" method="get" class="mb-4 shadow-sm rounded p-3">
+        <div class="row g-3">
             <div class="col-md-6">
-                <label class="form-label">Khoa</label>
-                <select name="khoaId" class="form-control" onchange="this.form.submit()"
+                <label class="form-label fw-bold fs-6 text-cyan">Khoa</label>
+                <select name="khoaId" class="form-control fs-6" onchange="this.form.submit()"
                     asp-items="@(new SelectList(ViewBag.KhoaList ?? new List<C4FAMS.Models.Khoa>(), "MaKhoa", "TenKhoa", ViewBag.SelectedKhoaId))">
                     <option value="">-- Chọn Khoa --</option>
                 </select>
             </div>
             <div class="col-md-6">
-                <label class="form-label">Sắp xếp</label>
-                <select name="sortOrder" class="form-control" onchange="this.form.submit()">
+                <label class="form-label fw-bold fs-6 text-cyan">Sắp xếp</label>
+                <select name="sortOrder" class="form-control fs-6" onchange="this.form.submit()">
                     @{
                         var sortOrder = ViewBag.SortOrder as string ?? "nearest";
                     }
@@ -26,17 +41,8 @@
         </div>
     </form>
 
-    @if (TempData["Success"] != null)
-    {
-        <div class="alert alert-success">@TempData["Success"]</div>
-    }
-    @if (TempData["Error"] != null)
-    {
-        <div class="alert alert-danger">@TempData["Error"]</div>
-    }
-
-    <table class="table table-bordered table-hover">
-        <thead class="thead-dark">
+    <table class="table table-bordered table-hover shadow-sm rounded">
+        <thead style="background: linear-gradient(90deg, #00BCD4, #0288D1); color: white;">
             <tr>
                 <th>Hình ảnh</th>
                 <th>Tên Sự kiện</th>
@@ -46,15 +52,15 @@
                 <th>Hành động</th>
             </tr>
         </thead>
-        <tbody>
+        <tbody class="fs-6">
             @foreach (var item in Model)
             {
                 <tr>
                     <td>
                         @if (item.SuKienHinhAnhs != null && item.SuKienHinhAnhs.Any())
                         {
-                            <img src="@item.SuKienHinhAnhs.First().HinhAnh" alt="@item.TenSuKien" class="img-fluid rounded"
-                                style="max-width: 100px;" />
+                            <img src="@item.SuKienHinhAnhs.First().HinhAnh" alt="@item.TenSuKien" class="img-fluid rounded img-thumbnail"
+                                style="max-width: 100px; max-height: 100px;" />
                         }
                         else
                         {
@@ -65,15 +71,25 @@
                     <td>@item.NgayToChuc.ToString("dd/MM/yyyy HH:mm")</td>
                     <td>@item.DiaDiem</td>
                     <td>@(item.Khoa?.TenKhoa ?? "N/A")</td>
-                    <td>
-                        <a asp-action="Details" asp-route-id="@item.MaSuKien" class="btn btn-sm btn-info">Chi tiết</a>
-                        <form asp-action="DangKy" method="post" class="d-inline">
-                            <input type="hidden" name="maSuKien" value="@item.MaSuKien" />
-                            <button type="submit" class="btn btn-sm btn-success">Đăng ký</button>
-                        </form>
+                    <td class="text-center">
+                        <div class="d-flex gap-1 justify-content-center">
+                            <a asp-action="Details" asp-route-id="@item.MaSuKien" class="btn btn-sm btn-info">Chi tiết</a>
+                            <form asp-action="DangKy" method="post" class="d-inline">
+                                <input type="hidden" name="maSuKien" value="@item.MaSuKien" />
+                                <button type="submit" class="btn btn-sm btn-success">Đăng ký</button>
+                            </form>
+                        </div>
                     </td>
                 </tr>
             }
         </tbody>
     </table>
 </div>
+
+<style>
+    .text-cyan { color: #00BCD4; }
+    .fs-6 { font-size: 0.95rem; }
+    .shadow-sm { box-shadow: 0 .125rem .25rem rgba(0,0,0,.075); }
+    .rounded { border-radius: 8px; }
+    .img-thumbnail { object-fit: cover; }
+</style>

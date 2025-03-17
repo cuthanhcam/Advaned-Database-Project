@@ -1,46 +1,62 @@
 @model C4FAMS.Models.ManageCuuSinhVienViewModel
 
 <div class="container">
-    <h1 class="mt-4 mb-4">Chỉnh sửa Cựu Sinh Viên</h1>
+    <h1 class="mt-4 mb-4" style="background: linear-gradient(90deg, #00BCD4, #0288D1); color: white; padding: 10px; border-radius: 5px;">Chỉnh sửa Cựu Sinh Viên</h1>
 
-    <form asp-action="Edit" method="post">
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <form asp-action="Edit" method="post" class="shadow-sm rounded p-3">
         <div asp-validation-summary="All" class="text-danger"></div>
         <input type="hidden" name="mssv" value="@ViewBag.MSSV" />
 
-        <div class="form-group mb-3">
-            <label asp-for="NamTotNghiep" class="form-label">Năm tốt nghiệp</label>
-            <input asp-for="NamTotNghiep" class="form-control" type="number" required />
-            <span asp-validation-for="NamTotNghiep" class="text-danger"></span>
-        </div>
+        <div class="row g-3">
+            <div class="col-md-6">
+                <label asp-for="NamTotNghiep" class="form-label fw-bold fs-6 text-cyan"></label>
+                <input asp-for="NamTotNghiep" class="form-control fs-6" type="number" placeholder="Nhập năm tốt nghiệp" required />
+                <span asp-validation-for="NamTotNghiep" class="text-danger"></span>
+            </div>
 
-        <div class="form-group mb-3">
-            <label asp-for="XepLoaiTotNghiep" class="form-label">Xếp loại tốt nghiệp</label>
-            <select asp-for="XepLoaiTotNghiep" class="form-control" required>
-                <option value="">Chọn xếp loại</option>
-                <option value="Xuất Sắc">Xuất Sắc</option>
-                <option value="Giỏi">Giỏi</option>
-                <option value="Khá">Khá</option>
-                <option value="Trung Bình">Trung Bình</option>
-            </select>
-            <span asp-validation-for="XepLoaiTotNghiep" class="text-danger"></span>
-        </div>
+            <div class="col-md-6">
+                <label asp-for="XepLoaiTotNghiep" class="form-label fw-bold fs-6 text-cyan"></label>
+                <select asp-for="XepLoaiTotNghiep" class="form-control fs-6" required>
+                    <option value="">Chọn xếp loại</option>
+                    <option value="Xuất Sắc">Xuất Sắc</option>
+                    <option value="Giỏi">Giỏi</option>
+                    <option value="Khá">Khá</option>
+                    <option value="Trung Bình">Trung Bình</option>
+                </select>
+                <span asp-validation-for="XepLoaiTotNghiep" class="text-danger"></span>
+            </div>
 
-        <div class="form-group mb-3">
-            <label asp-for="DiaChiHienTai" class="form-label">Địa chỉ hiện tại</label>
-            <input asp-for="DiaChiHienTai" class="form-control" />
-            <span asp-validation-for="DiaChiHienTai" class="text-danger"></span>
-        </div>
+            <div class="col-md-12">
+                <label asp-for="DiaChiHienTai" class="form-label fw-bold fs-6 text-cyan"></label>
+                <input asp-for="DiaChiHienTai" class="form-control fs-6" placeholder="Nhập địa chỉ hiện tại" />
+                <span asp-validation-for="DiaChiHienTai" class="text-danger"></span>
+            </div>
 
-        <div class="form-group mb-3">
-            <label asp-for="HinhThucLienLac" class="form-label">Hình thức liên lạc cụ thể (Email hoặc SĐT)</label>
-            <input asp-for="HinhThucLienLac" class="form-control" required
-                placeholder="Ghi rõ Email hoặc Số Điện Thoại" />
-            <span asp-validation-for="HinhThucLienLac" class="text-danger"></span>
-        </div>
+            <div class="col-md-12">
+                <label asp-for="HinhThucLienLac" class="form-label fw-bold fs-6 text-cyan"></label>
+                <input asp-for="HinhThucLienLac" class="form-control fs-6" placeholder="Ghi rõ Email hoặc Số Điện Thoại" required />
+                <span asp-validation-for="HinhThucLienLac" class="text-danger"></span>
+            </div>
 
-        <div class="form-group mb-3">
-            <button type="submit" class="btn btn-primary">Lưu</button>
-            <a asp-action="Index" class="btn btn-secondary">Quay lại</a>
+            <div class="col-md-12 mt-4">
+                <button type="submit" class="btn btn-primary">Lưu</button>
+                <a asp-action="Index" class="btn btn-secondary ms-2">Quay lại</a>
+            </div>
         </div>
     </form>
 </div>
@@ -48,3 +64,8 @@
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
 }
+
+<style>
+    .text-cyan { color: #00BCD4; }
+    .fs-6 { font-size: 0.95rem; }
+</style>
