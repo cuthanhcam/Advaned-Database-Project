@@ -46,7 +46,8 @@ namespace C4FAMS.Repositories
         {
             return await _context.DangKySuKiens
                 .Include(d => d.SuKien)
-                .Include(d => d.CuuSinhVien)
+                    .ThenInclude(s => s.Khoa)
+                .Include(d => d.CuuSinhVien)    
                 .Where(d => d.MSSV == mssv)
                 .ToListAsync();
         }

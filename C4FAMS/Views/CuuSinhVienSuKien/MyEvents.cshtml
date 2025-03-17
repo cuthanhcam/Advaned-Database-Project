@@ -1,7 +1,7 @@
 @model IEnumerable<C4FAMS.Models.DangKySuKien>
 
 <div class="container">
-    <h1 class="mt-4 mb-4">Sự kiện đã đăng ký</h1>
+    <h1 class="mt-4 mb-4 text-cyan">Sự kiện đã đăng ký</h1>
 
     @if (TempData["Success"] != null)
     {
@@ -12,41 +12,66 @@
         <div class="alert alert-danger">@TempData["Error"]</div>
     }
 
-    <table class="table table-bordered table-hover">
-        <thead class="thead-dark">
-            <tr>
-                <th>Tên Sự kiện</th>
-                <th>Ngày tổ chức</th>
-                <th>Địa điểm</th>
-                <th>Khoa</th>
-                <th>Ngày đăng ký</th>
-                <th>Trạng thái</th>
-                <th>Hành động</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model)
-            {
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover shadow-sm rounded">
+            <thead style="background: linear-gradient(90deg, #00BCD4, #0288D1); color: white;" class="fs-6">
                 <tr>
-                    <td>@item.SuKien.TenSuKien</td>
-                    <td>@item.SuKien.NgayToChuc.ToString("dd/MM/yyyy HH:mm")</td>
-                    <td>@item.SuKien.DiaDiem</td>
-                    <td>@(item.SuKien.Khoa?.TenKhoa ?? "N/A")</td>
-                    <td>@item.NgayDangKy.ToString("dd/MM/yyyy HH:mm")</td>
-                    <td>@(item.TrangThai ? "Đã đăng ký" : "Đã hủy")</td>
-                    <td>
-                        <a asp-action="Details" asp-route-id="@item.MaSuKien" class="btn btn-sm btn-info">Chi tiết</a>
-                        @if (item.TrangThai && item.SuKien.NgayToChuc > DateTime.Now)
-                        {
-                            <form asp-action="HuyDangKy" method="post" class="d-inline">
-                                <input type="hidden" name="maDangKy" value="@item.MaDangKy" />
-                                <button type="submit" class="btn btn-sm btn-danger">Hủy đăng ký</button>
-                            </form>
-                        }
-                    </td>
+                    <th style="min-width: 200px;">Tên Sự kiện</th>
+                    <th class="text-center" style="min-width: 120px;">Ngày tổ chức</th>
+                    <th style="min-width: 150px;">Địa điểm</th>
+                    <th class="text-center" style="min-width: 120px;">Tên khoa</th>
+                    <th class="text-center" style="min-width: 120px;">Ngày đăng ký</th>
+                    <th class="text-center" style="min-width: 120px;">Trạng thái</th>
+                    <th class="text-center" style="min-width: 200px;">Hành động</th>
                 </tr>
-            }
-        </tbody>
-    </table>
-    <a asp-action="Index" class="btn btn-secondary">Quay lại</a>
+            </thead>
+            <tbody class="fs-6">
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.SuKien.TenSuKien</td>
+                        <td class="text-center">@item.SuKien.NgayToChuc.ToString("dd/MM/yyyy HH:mm")</td>
+                        <td>@item.SuKien.DiaDiem</td>
+                        <td class="text-center">@(item.SuKien.Khoa?.TenKhoa ?? "N/A")</td>
+                        <td class="text-center">@item.NgayDangKy.ToString("dd/MM/yyyy HH:mm")</td>
+                        <td class="text-center">
+                            @if (item.TrangThai)
+                            {
+                                <span class="badge bg-success">Đã đăng ký</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-danger">Đã hủy</span>
+                            }
+                        </td>
+                        <td class="text-center">
+                            <div class="d-flex justify-content-center gap-1">
+                                <a asp-action="Details" asp-route-id="@item.MaSuKien" class="btn btn-sm btn-info">Chi tiết</a>
+                                @if (item.TrangThai && item.SuKien.NgayToChuc > DateTime.Now)
+                                {
+                                    <form asp-action="HuyDangKy" method="post" class="d-inline">
+                                        <input type="hidden" name="maDangKy" value="@item.MaDangKy" />
+                                        <button type="submit" class="btn btn-sm btn-danger">Hủy đăng ký</button>
+                                    </form>
+                                }
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <a asp-action="Index" class="btn btn-secondary mt-3">Quay lại</a>
 </div>
+
+<style>
+    .text-cyan { color: #00BCD4; }
+    .shadow-sm { box-shadow: 0 .125rem .25rem rgba(0,0,0,.075); }
+    .rounded { border-radius: 8px; }
+    .table th, .table td { vertical-align: middle; }
+    .badge {
+        font-size: 0.85rem;
+        padding: 0.35em 0.65em;
+    }
+    .fs-6 { font-size: 0.95rem; } /* Giữ kích thước chữ trong tbody */
+</style>

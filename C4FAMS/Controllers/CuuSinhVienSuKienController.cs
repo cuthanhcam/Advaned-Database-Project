@@ -119,7 +119,6 @@ namespace C4FAMS.Controllers
             return View(suKien);
         }
 
-        // Thêm vào cuối Controller
         public async Task<IActionResult> MyEvents()
         {
             var user = await _userManager.GetUserAsync(User);
